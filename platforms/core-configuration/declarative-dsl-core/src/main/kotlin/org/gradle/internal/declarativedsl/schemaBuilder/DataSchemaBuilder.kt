@@ -29,6 +29,7 @@ import org.gradle.declarative.dsl.schema.DataTypeRef
 import org.gradle.declarative.dsl.schema.FqName
 import org.gradle.declarative.dsl.schema.FunctionSemantics
 import org.gradle.declarative.dsl.schema.SchemaFunction
+import org.gradle.internal.declarativedsl.Workarounds
 import org.gradle.internal.declarativedsl.analysis.DataTypeRefInternal
 import org.gradle.internal.declarativedsl.analysis.DefaultAnalysisSchema
 import org.gradle.internal.declarativedsl.analysis.DefaultDataClass
@@ -36,12 +37,14 @@ import org.gradle.internal.declarativedsl.analysis.DefaultDataProperty
 import org.gradle.internal.declarativedsl.analysis.DefaultEnumClass
 import org.gradle.internal.declarativedsl.analysis.DefaultExternalObjectProviderKey
 import org.gradle.internal.declarativedsl.analysis.DefaultFqName
+import org.gradle.internal.declarativedsl.analysis.DefaultVarargSignature
 import org.gradle.internal.declarativedsl.analysis.SchemaTypeRefContext
 import org.gradle.internal.declarativedsl.analysis.TypeArgumentInternal
 import org.gradle.internal.declarativedsl.analysis.fqName
 import org.gradle.internal.declarativedsl.analysis.ref
 import org.gradle.internal.declarativedsl.language.DataTypeInternal
 import org.gradle.internal.declarativedsl.schemaBuilder.SchemaBuildingContextElement.TagContextElement
+import org.gradle.internal.declarativedsl.schemaBuilder.SchemaBuildingTags.varargType
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -57,6 +60,7 @@ import kotlin.reflect.typeOf
 interface SchemaBuildingHost {
     fun containerTypeRef(kClass: KClass<*>): DataTypeRef
     fun modelTypeRef(kType: KType): DataTypeRef
+    fun varargTypeRef(varargType: KType): DataTypeRef
 
     fun enterSchemaBuildingContext(contextElement: SchemaBuildingContextElement)
     fun leaveSchemaBuildingContext(contextElement: SchemaBuildingContextElement)
@@ -94,6 +98,7 @@ sealed interface SchemaBuildingContextElement {
 object SchemaBuildingTags {
     fun parameter(name: String) = TagContextElement("parameter '$name'")
     fun receiverType(kClass: KClass<*>) = TagContextElement("receiver type '$kClass'")
+    fun varargType(kType: KType) = TagContextElement("vararg type '$kType'")
     fun returnValueType(kType: KType) = TagContextElement("return value type '$kType'")
     fun externalObject(fqName: FqName) = TagContextElement("external object '${fqName.qualifiedName}'")
     fun namedDomainObjectContainer(name: String) = TagContextElement("nested named domain object container '$name'")
@@ -148,6 +153,21 @@ class DataSchemaBuilder(
         override fun modelTypeRef(kType: KType): DataTypeRef =
             typeRef(kType)
 
+        override fun varargTypeRef(varargType: KType): DataTypeRef {
+            val varargTypeSignature = typeSignatures.getOrPut(DefaultVarargSignature.name) { DefaultVarargSignature }
+
+            val elementTypeRef = withTag(varargType(varargType)) {
+                when (varargType) {
+                    typeOf<IntArray>() -> DataTypeInternal.DefaultIntDataType.ref
+                    typeOf<LongArray>() -> DataTypeInternal.DefaultLongDataType.ref
+                    typeOf<BooleanArray>() -> DataTypeInternal.DefaultBooleanDataType.ref
+                    else -> modelTypeRef(varargType.arguments.singleOrNull()?.type ?: schemaBuildingFailure("unexpected vararg type"))
+                }
+            }
+
+            return registerTypeInstance(varargTypeSignature, listOf(TypeArgumentInternal.DefaultConcreteTypeArgument(elementTypeRef))).ref
+        }
+
         override fun enterSchemaBuildingContext(contextElement: SchemaBuildingContextElement) {
             currentContextStack.add(contextElement)
         }
@@ -185,7 +205,11 @@ class DataSchemaBuilder(
         }
 
         private fun isAllowedTypeParameter(typeParameter: KTypeParameter): Boolean =
-            currentContextStack.any { contextElement -> contextElement is SchemaBuildingContextElement.ModelMemberContextElement && contextElement.kCallable.typeParameters.any { it == typeParameter } }
+            currentContextStack.any { contextElement ->
+                contextElement is SchemaBuildingContextElement.ModelMemberContextElement && contextElement.kCallable.typeParameters.any {
+                    Workarounds.typeParameterMatches(it, typeParameter)
+                }
+            }
 
         private fun instantiateGenericOpaqueType(kType: KType): DataTypeRef {
             require(kType.arguments.isNotEmpty())
@@ -221,11 +245,16 @@ class DataSchemaBuilder(
                 )
             }
 
-            val instance = typeInstances.getOrPut(fqn) { mutableMapOf() }.getOrPut(typeArguments) {
-                DataTypeInternal.DefaultParameterizedTypeInstance(registeredTypeSignature, typeArguments)
-            }
+            val instance = registerTypeInstance(registeredTypeSignature, typeArguments)
 
             return DataTypeRefInternal.DefaultNameWithArgs(instance.name, instance.typeArguments)
+        }
+
+        private fun registerTypeInstance(
+            registeredTypeSignature: ParameterizedTypeSignature,
+            typeArguments: List<TypeArgument>
+        ) = typeInstances.getOrPut(registeredTypeSignature.name) { mutableMapOf() }.getOrPut(typeArguments) {
+            DataTypeInternal.DefaultParameterizedTypeInstance(registeredTypeSignature, typeArguments)
         }
 
         private fun typeVariableUsage(kTypeParameter: KTypeParameter): DataType.TypeVariableUsage =
@@ -311,6 +340,7 @@ class DataSchemaBuilder(
                         checkTypeInScope(semantics.configuredType)
                     }
                 }
+
                 else -> Unit
             }
         }

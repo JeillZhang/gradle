@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package org.gradle.declarative.dsl.schema
+package org.gradle.internal.declarativedsl.schemaBuilder
 
-import org.gradle.tooling.ToolingModelContract
-import java.io.Serializable
+import org.gradle.declarative.dsl.schema.FqName
 
-@ToolingModelContract(subTypes = [VarargParameter::class])
-interface DataParameter : Serializable {
-
-    val name: String?
-
-    val type: DataTypeRef
-
-    val isDefault: Boolean
-
-    val semantics: ParameterSemantics
+interface DefaultImportsProvider {
+    fun defaultImports(): List<FqName>
 }
 
-interface VarargParameter : DataParameter, Serializable
+class CompositeDefaultImportsProvider(private val delegates: Iterable<DefaultImportsProvider>) : DefaultImportsProvider {
+    override fun defaultImports(): List<FqName> = delegates.flatMap { it.defaultImports() }
+}

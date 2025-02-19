@@ -32,6 +32,7 @@ import org.gradle.internal.declarativedsl.analysis.DefaultDataConstructor
 import org.gradle.internal.declarativedsl.analysis.DefaultDataMemberFunction
 import org.gradle.internal.declarativedsl.analysis.DefaultDataParameter
 import org.gradle.internal.declarativedsl.analysis.DefaultDataTopLevelFunction
+import org.gradle.internal.declarativedsl.analysis.DefaultVarargParameter
 import org.gradle.internal.declarativedsl.analysis.FunctionSemanticsInternal
 import org.gradle.internal.declarativedsl.analysis.ParameterSemanticsInternal
 import kotlin.reflect.KClass
@@ -184,8 +185,11 @@ class DefaultFunctionExtractor(
             index != fnParams.lastIndex || configureLambdas.getTypeConfiguredByLambda(returnTypeClassifier) == null
         }.map { dataParameter(host, function, it, function.returnType.toKClass(), semanticsFromSignature, preIndex) }
 
+        val javaDeclaringClass = function.javaMethod!!.declaringClass
+
         DefaultDataTopLevelFunction(
-            function.javaMethod!!.declaringClass.`package`.name,
+            javaDeclaringClass.`package`.name,
+            javaDeclaringClass.name,
             function.name,
             params,
             semanticsFromSignature
@@ -202,7 +206,12 @@ class DefaultFunctionExtractor(
         preIndex: DataSchemaBuilder.PreIndex
     ): DataParameter {
         val paramSemantics = getParameterSemantics(functionSemantics, function, fnParam, returnClassifier, preIndex)
-        return DefaultDataParameter(fnParam.name, fnParam.parameterTypeToRefOrError(host), fnParam.isOptional, paramSemantics)
+
+        return if (fnParam.isVararg) {
+            DefaultVarargParameter(fnParam.name, fnParam.parameterTypeToRefOrError(host), fnParam.isOptional, paramSemantics)
+        } else {
+            DefaultDataParameter(fnParam.name, fnParam.parameterTypeToRefOrError(host), fnParam.isOptional, paramSemantics)
+        }
     }
 
     private

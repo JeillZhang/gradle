@@ -489,6 +489,206 @@
             ]
         },
         {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Class org.gradle.api.plugins.JavaPluginConvention",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Class has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Constructor org.gradle.api.plugins.JavaPluginConvention()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Constructor has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.disableAutoTargetJvm()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getAutoTargetJvmDisabled()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getDocsDir()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getDocsDirName()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getProject()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getSourceCompatibility()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getSourceSets()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getTargetCompatibility()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getTestReportDir()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getTestReportDirName()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getTestResultsDir()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.getTestResultsDirName()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.manifest()",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.manifest(groovy.lang.Closure)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.manifest(org.gradle.api.Action)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setDocsDirName(java.lang.String)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setSourceCompatibility(java.lang.Object)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setSourceCompatibility(org.gradle.api.JavaVersion)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setTargetCompatibility(java.lang.Object)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setTargetCompatibility(org.gradle.api.JavaVersion)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setTestReportDirName(java.lang.String)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.setTestResultsDirName(java.lang.String)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.JavaPluginConvention",
+            "member": "Method org.gradle.api.plugins.JavaPluginConvention.sourceSets(groovy.lang.Closure)",
+            "acceptation": "Removed deprecated feature",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
             "type": "org.gradle.api.plugins.ProjectReportsPluginConvention",
             "member": "Class org.gradle.api.plugins.ProjectReportsPluginConvention",
             "acceptation": "Remove deprecated API",
@@ -1019,7 +1219,7 @@
         {
             "type": "org.gradle.jvm.application.tasks.CreateStartScripts",
             "member": "Method org.gradle.jvm.application.tasks.CreateStartScripts.getMainClassName()",
-            "acceptation": "[ADD YOUR CUSTOM REASON HERE]",
+            "acceptation": "Removed deprecated method",
             "changes": [
                 "Method has been removed"
             ]
@@ -1027,7 +1227,7 @@
         {
             "type": "org.gradle.jvm.application.tasks.CreateStartScripts",
             "member": "Method org.gradle.jvm.application.tasks.CreateStartScripts.setMainClassName(java.lang.String)",
-            "acceptation": "[ADD YOUR CUSTOM REASON HERE]",
+            "acceptation": "Removed deprecated method",
             "changes": [
                 "Method has been removed"
             ]
@@ -1250,6 +1450,14 @@
             ]
         },
         {
+            "type": "org.gradle.kotlin.dsl.NamedDomainObjectContainerScope",
+            "member": "Method org.gradle.kotlin.dsl.NamedDomainObjectContainerScope.invoke(java.lang.String)",
+            "acceptation": "Removed deprecated method",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
             "type": "org.gradle.kotlin.dsl.PluginDependenciesSpecExtensionsKt",
             "member": "Class org.gradle.kotlin.dsl.PluginDependenciesSpecExtensionsKt",
             "acceptation": "Remove deprecated API",
@@ -1269,6 +1477,14 @@
             "type": "org.gradle.kotlin.dsl.PluginDependenciesSpecExtensionsKt",
             "member": "Method org.gradle.kotlin.dsl.PluginDependenciesSpecExtensionsKt.getGradle-enterprise(org.gradle.plugin.use.PluginDependenciesSpec)",
             "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.kotlin.dsl.TaskContainerScope",
+            "member": "Method org.gradle.kotlin.dsl.TaskContainerScope.invoke(java.lang.String)",
+            "acceptation": "Removed deprecated method",
             "changes": [
                 "Method has been removed"
             ]
@@ -1309,6 +1525,118 @@
             "type": "org.gradle.plugin.devel.GradlePluginDevelopmentExtension",
             "member": "Method org.gradle.plugin.devel.GradlePluginDevelopmentExtension.pluginSourceSet(org.gradle.api.tasks.SourceSet)",
             "acceptation": "Deprecated in 8.x",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Class org.gradle.plugins.ear.EarPluginConvention",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Class has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Constructor org.gradle.plugins.ear.EarPluginConvention()",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Constructor has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.appDirName(java.lang.String)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.deploymentDescriptor(groovy.lang.Closure)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.deploymentDescriptor(groovy.lang.Closure)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.deploymentDescriptor(org.gradle.api.Action)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.getAppDirName()",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.getDeploymentDescriptor()",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.getGenerateDeploymentDescriptor()",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.getLibDirName()",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.libDirName(java.lang.String)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.setAppDirName(java.lang.String)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.setDeploymentDescriptor(org.gradle.plugins.ear.descriptor.DeploymentDescriptor)",
+            "acceptation": "Remove deprecated API",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.plugins.ear.EarPluginConvention",
+            "member": "Method org.gradle.plugins.ear.EarPluginConvention.setLibDirName(java.lang.String)",
+            "acceptation": "Remove deprecated API",
             "changes": [
                 "Method has been removed"
             ]

@@ -29,7 +29,7 @@ pluginManagement {
 plugins {
     id("gradlebuild.build-environment")
     id("gradlebuild.configuration-cache-compatibility")
-    id("com.gradle.develocity").version("3.19.2") // Run `java build-logic-settings/UpdateDevelocityPluginVersion.java <new-version>` to update
+    id("com.gradle.develocity").version("4.0") // Run `java build-logic-settings/UpdateDevelocityPluginVersion.java <new-version>` to update
     id("io.github.gradle.gradle-enterprise-conventions-plugin").version("0.10.2")
     id("org.gradle.toolchains.foojay-resolver-convention").version("0.9.0")
 }
@@ -164,6 +164,7 @@ val core = platform("core") {
         subproject("hashing")
         subproject("persistent-cache")
         subproject("request-handler-worker")
+        subproject("scoped-persistent-cache")
         subproject("snapshots")
         subproject("worker-main")
         subproject("workers")

@@ -25,14 +25,13 @@ abstract class ExternalModulesExtension(isBundleGroovy4: Boolean) {
 
     val configurationCacheReportVersion = "1.25"
     val gradleIdeStarterVersion = "0.5"
-    val kotlinVersion = "2.0.21"
+    val kotlinVersion = "2.1.20"
 
     fun futureKotlin(module: String) = "org.jetbrains.kotlin:kotlin-$module:$kotlinVersion"
 
     val agp = "com.android.tools.build:gradle"
     val ansiControlSequenceUtil = "net.rubygrapefruit:ansi-control-sequence-util"
     val ant = "org.apache.ant:ant"
-    val antJunit = "org.apache.ant:ant-junit"
     val antLauncher = "org.apache.ant:ant-launcher"
     val asm = "org.ow2.asm:asm"
     val asmAnalysis = "org.ow2.asm:asm-analysis"
@@ -114,6 +113,7 @@ abstract class ExternalModulesExtension(isBundleGroovy4: Boolean) {
     val jspecify = "org.jspecify:jspecify"
     val julToSlf4j = "org.slf4j:jul-to-slf4j"
     val junit = "junit:junit"
+    val junitJupiter = "org.junit.jupiter:junit-jupiter"
     val junit5JupiterApi = "org.junit.jupiter:junit-jupiter-api"
     val junit5Vintage = "org.junit.vintage:junit-vintage-engine"
     val junitPlatform = "org.junit.platform:junit-platform-launcher"

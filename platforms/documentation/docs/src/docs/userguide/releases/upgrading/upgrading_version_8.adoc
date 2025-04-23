@@ -65,16 +65,16 @@ or better yet, upgrade to the latest version of the link:https://docs.gradle.com
 
 For Gradle 8.x, the minimum supported version was 3.0.
 
-==== Upgrade to Kotlin 2.1.20
+==== Upgrade to Kotlin 2.1.21-RC
 
-Gradle now embeds link:https://github.com/JetBrains/kotlin/releases/tag/v2.1.20[Kotlin 2.1.20], upgrading from the previously embedded version 2.0.21.
+Gradle now embeds link:https://github.com/JetBrains/kotlin/releases/tag/v2.1.21-RC[Kotlin 2.1.21-RC], upgrading from the previously embedded version 2.0.21.
 
 This upgrade includes several important changes:
 
 * Support for Kotlin language versions 1.4 and 1.5 has been removed.
 * Kotlin language version 1.7 is now deprecated.
 
-For full details and potential breaking changes, consult the link:https://github.com/JetBrains/kotlin/releases/tag/v2.1.20[Kotlin release notes].
+For full details and potential breaking changes, consult the link:https://github.com/JetBrains/kotlin/releases/tag/v2.1.21-RC[Kotlin release notes].
 
 ==== Kotlin DSL now uses the Kotlin language version 2.1
 
@@ -291,6 +291,14 @@ tasks.withType<KotlinCompile>().configureEach {
 Refer to Gradle’s link:compatibility.html#kotlin[compatibility matrix] for details on which Kotlin version is embedded in each Gradle release.
 
 NOTE: Plugins written using the Kotlin DSL and published with Gradle 7.x or 8.x remain compatible with Gradle 6.8 and newer.
+
+==== Stale outputs outside the build directory are no longer deleted
+
+In previous versions of Gradle, class files located outside the build directory were deleted when considered stale. This was a special case for class files registered as outputs of a source set.
+
+Because this setup is uncommon and forced Gradle to eagerly realize all compile related tasks in every build, the behavior has been removed in Gradle 9.0.
+
+Gradle will continue to clean up stale outputs inside the build directory as needed.
 
 ==== Scala plugins no longer create unresolvable configurations
 

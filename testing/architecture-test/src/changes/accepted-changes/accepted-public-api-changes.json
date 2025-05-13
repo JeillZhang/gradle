@@ -737,6 +737,14 @@
             ]
         },
         {
+            "type": "org.gradle.api.plugins.Convention",
+            "member": "Method org.gradle.api.plugins.Convention.getExtensionsAsDynamicObject()",
+            "acceptation": "Remove Convention interface",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
             "type": "org.gradle.api.plugins.HelpTasksPlugin",
             "member": "Field COMPONENTS_TASK",
             "acceptation": "This task is no longer associated with HelpTasksPlugin",
@@ -998,6 +1006,14 @@
             "acceptation": "Remove deprecated API",
             "changes": [
                 "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.plugins.WarPlugin",
+            "member": "Field WEB_APP_GROUP",
+            "acceptation": "Removed deprecated constant.",
+            "changes": [
+                "Field has been removed"
             ]
         },
         {
@@ -1572,6 +1588,14 @@
             "type": "org.gradle.api.tasks.javadoc.Javadoc",
             "member": "Method org.gradle.api.tasks.javadoc.Javadoc.setVerbose(boolean)",
             "acceptation": "Remove deprecated method",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.api.tasks.scala.ScalaDoc",
+            "member": "Method org.gradle.api.tasks.scala.ScalaDoc.getAntBuilder()",
+            "acceptation": "Removed deprecated accessor",
             "changes": [
                 "Method has been removed"
             ]
@@ -2830,14 +2854,6 @@
         {
             "type": "org.gradle.plugins.ear.EarPluginConvention",
             "member": "Method org.gradle.plugins.ear.EarPluginConvention.appDirName(java.lang.String)",
-            "acceptation": "Remove deprecated API",
-            "changes": [
-                "Method has been removed"
-            ]
-        },
-        {
-            "type": "org.gradle.plugins.ear.EarPluginConvention",
-            "member": "Method org.gradle.plugins.ear.EarPluginConvention.deploymentDescriptor(groovy.lang.Closure)",
             "acceptation": "Remove deprecated API",
             "changes": [
                 "Method has been removed"
@@ -4844,6 +4860,62 @@
             "type": "org.gradle.util.WrapUtil",
             "member": "Method org.gradle.util.WrapUtil.toSortedSet(java.util.Comparator,java.lang.Object[])",
             "acceptation": "Deprecated in 8.x",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Class org.gradle.workers.IsolationMode",
+            "acceptation": "Removed deprecated class",
+            "changes": [
+                "Class has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Field AUTO",
+            "acceptation": "Removed deprecated class",
+            "changes": [
+                "Field has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Field CLASSLOADER",
+            "acceptation": "Removed deprecated class",
+            "changes": [
+                "Field has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Field NONE",
+            "acceptation": "Removed deprecated class",
+            "changes": [
+                "Field has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Field PROCESS",
+            "acceptation": "Removed deprecated class",
+            "changes": [
+                "Field has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Method org.gradle.workers.IsolationMode.valueOf(java.lang.String)",
+            "acceptation": "Removed deprecated class",
+            "changes": [
+                "Method has been removed"
+            ]
+        },
+        {
+            "type": "org.gradle.workers.IsolationMode",
+            "member": "Method org.gradle.workers.IsolationMode.values()",
+            "acceptation": "Removed deprecated class",
             "changes": [
                 "Method has been removed"
             ]

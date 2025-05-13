@@ -244,13 +244,14 @@ GroovySourceDirectorySet groovySources = sourceSet.getExtensions().getByType(Gro
 groovySources.setSrcDirs(Arrays.asList("sources/groovy"));
 ----
 
-
 ==== Removal of select Groovy modules from the Gradle distribution
 
 Gradle 9.0 removes certain Groovy modules from its bundled distribution.
 They will no longer be available on the classpath or be available via `localGroovy`:
 
 - `groovy-test`
+- `groovy-console`
+- `groovy-sql`
 
 ==== Removal of `kotlinDslPluginOptions.jvmTarget`
 
@@ -333,10 +334,10 @@ This property was deprecated in Gradle 8.0 and was replaced with the `destinatio
 
 The following helper methods for launching external processes were <<#deprecated_project_exec,deprecated in Gradle 8.11>> and have now been removed in Gradle 9.0:
 
-* `org.gradle.apiProject#exec(Closure)`
-* `org.gradle.apiProject#exec(Action)`
-* `org.gradle.apiProject#javaexec(Closure)`
-* `org.gradle.apiProject#javaexec(Action)`
+* `org.gradle.api.Project#exec(Closure)`
+* `org.gradle.api.Project#exec(Action)`
+* `org.gradle.api.Project#javaexec(Closure)`
+* `org.gradle.api.Project#javaexec(Action)`
 * `org.gradle.api.Script#exec(Closure)`
 * `org.gradle.api.Script#exec(Action)`
 * `org.gradle.api.Script#javaexec(Closure)`
@@ -2127,7 +2128,7 @@ The `ArtifactIdentifier` class has been deprecated for removal in Gradle 9.0.
 [[dependency_mutate_dependency_collector_after_finalize]]
 ==== Deprecate mutating `DependencyCollector` dependencies after observation
 
-Starting in Gradle 9.0, mutating dependencies sourced from a link:{javadocPath}/org/gradle/api/artifacts/dsl/DependencyCollector.html[DependencyCollector], after those dependencies have been observed will result in an error.
+Starting in Gradle 10.0, mutating dependencies sourced from a link:{javadocPath}/org/gradle/api/artifacts/dsl/DependencyCollector.html[DependencyCollector], after those dependencies have been observed will result in an error.
 The `DependencyCollector` interface is used to declare dependencies within the test suites DSL.
 
 Consider the following example where a test suite's dependency is mutated after it is observed:

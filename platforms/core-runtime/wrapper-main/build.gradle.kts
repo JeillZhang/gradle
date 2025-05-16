@@ -27,13 +27,12 @@ plugins {
 description = "Entry point of the Gradle wrapper command"
 
 gradleModule {
-    usedForStartup = true
-    usesFutureStdlib = true
-    usesIncompatibleDependencies = true // For test dependencies
+    targetRuntimes {
+        usedInWrapper = true
+    }
 }
 
 dependencies {
-    implementation(projects.buildProcessStartup)
     implementation(projects.cli)
     implementation(projects.wrapperShared)
 

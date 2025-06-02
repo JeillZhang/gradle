@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.gradle.api.artifacts.component;
+
+import org.gradle.api.Incubating;
 
 /**
- * Attributes specific to the Java ecosystem.
+ * An opaque identifier for a component at the root of a dependency graph.
+ * <p>
+ * The root component owns the root variant, which itself contains all
+ * first-level declared dependencies to be resolved.
+ *
+ * @since 9.0.0
  */
-@NullMarked
-package org.gradle.api.attributes.java;
-
-import org.jspecify.annotations.NullMarked;
+@Incubating
+public interface RootComponentIdentifier extends ComponentIdentifier {
+}

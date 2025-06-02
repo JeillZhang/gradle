@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
+package org.gradle.api.internal.artifacts.ivyservice.moduleconverter;
+
+import org.gradle.internal.component.local.model.LocalComponentGraphResolveState;
+
 /**
- * The top-level package for the Gradle build system.
+ * Provides component instances intended to sit at the root of a dependency graph.
  */
-@org.jspecify.annotations.NullMarked
-package org.gradle;
+public interface RootComponentProvider {
+
+    /**
+     * Create the root component that is intended to hold the root variant of a dependency graph.
+     *
+     * @param detached if the root variant is detached from the owner, and therefore should live
+     *      within an adhoc root component.
+     */
+    LocalComponentGraphResolveState getRootComponent(boolean detached);
+
+}

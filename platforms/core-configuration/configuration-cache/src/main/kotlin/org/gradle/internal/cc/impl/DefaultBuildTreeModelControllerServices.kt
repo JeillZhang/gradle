@@ -242,6 +242,7 @@ class DefaultBuildTreeModelControllerServices : BuildTreeModelControllerServices
 
         // This was originally only for the configuration cache, but now used for configuration cache and problems reporting
         registration.add(ProblemFactory::class.java, DefaultProblemFactory::class.java)
+        registration.add(DefaultDeferredRootBuildGradle::class.java)
 
         registration.add(ConfigurationCacheProblemsListener::class.java, DefaultConfigurationCacheProblemsListener::class.java)
         // Set up CC problem reporting pipeline and promo, based on the build configuration
@@ -249,9 +250,9 @@ class DefaultBuildTreeModelControllerServices : BuildTreeModelControllerServices
             // Collect and report problems. Don't suggest enabling CC if it is on, even if implicitly (e.g. enabled by isolated projects).
             // Most likely, the user who tries IP is already aware of CC and nudging will be just noise.
             modelParameters.isConfigurationCache -> registration.add(ConfigurationCacheProblems::class.java)
-            // Allow nudging to enable CC if it is off and there is no explicit decision.
-            !requirements.startParameter.configurationCache.isExplicit -> registration.add(ConfigurationCachePromoHandler::class.java)
-            // Do not nudge if CC is explicitly disabled.
+            // Allow nudging to enable CC if it is off and there is no explicit decision. CC doesn't work for model building so do not nudge there.
+            !requirements.startParameter.configurationCache.isExplicit && !requirements.isCreatesModel -> registration.add(ConfigurationCachePromoHandler::class.java)
+            // Do not nudge if CC is explicitly disabled or if models are requested.
             else -> registration.add(IgnoringProblemsListener::class.java, IgnoringProblemsListener)
         }
 
@@ -266,7 +267,6 @@ class DefaultBuildTreeModelControllerServices : BuildTreeModelControllerServices
             registration.add(ConfigurationCacheFingerprintController::class.java)
             registration.addProvider(ConfigurationCacheBuildTreeProvider())
             registration.add(ConfigurationCacheBuildTreeModelSideEffectExecutor::class.java)
-            registration.add(DefaultDeferredRootBuildGradle::class.java)
             registration.add(ConfigurationCacheInputsListener::class.java, InstrumentedInputAccessListener::class.java)
         } else {
             registration.add(InjectedClasspathInstrumentationStrategy::class.java, VintageInjectedClasspathInstrumentationStrategy::class.java)

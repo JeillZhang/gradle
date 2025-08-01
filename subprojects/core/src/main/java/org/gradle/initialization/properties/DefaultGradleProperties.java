@@ -22,11 +22,11 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
-public class ResolvedGradleProperties implements GradleProperties {
+public class DefaultGradleProperties implements GradleProperties {
 
     private final ImmutableMap<String, String> properties;
 
-    public ResolvedGradleProperties(Map<String, String> properties) {
+    public DefaultGradleProperties(Map<String, String> properties) {
         this.properties = ImmutableMap.copyOf(properties);
     }
 
@@ -36,7 +36,19 @@ public class ResolvedGradleProperties implements GradleProperties {
     }
 
     @Override
+    public @Nullable Object findUnsafe(String propertyName) {
+        return properties.get(propertyName);
+    }
+
+    @Override
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    @Override
+    public Map<String, String> getPropertiesWithPrefix(String prefix) {
+        return properties.entrySet().stream()
+            .filter(entry -> entry.getKey().startsWith(prefix))
+            .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

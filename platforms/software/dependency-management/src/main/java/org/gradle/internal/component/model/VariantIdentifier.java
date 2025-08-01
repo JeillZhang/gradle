@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.gradle.internal.component.model;
 
-package org.gradle.initialization.properties;
+import org.gradle.api.artifacts.component.ComponentIdentifier;
 
-import org.gradle.internal.service.scopes.Scope;
-import org.gradle.internal.service.scopes.ServiceScope;
+/**
+ * An opaque immutable identifier for a variant of a component.
+ */
+public interface VariantIdentifier {
 
-import java.util.Map;
+    /**
+     * Get the identity of the component that owns this variant.
+     */
+    ComponentIdentifier getComponentId();
 
-@ServiceScope(Scope.BuildTree.class)
-public interface ProjectPropertiesLoader {
+    /**
+     * Returns a human-readable display name for this identifier.
+     */
+    String getDisplayName();
 
-    Map<String, String> loadProjectProperties();
 }

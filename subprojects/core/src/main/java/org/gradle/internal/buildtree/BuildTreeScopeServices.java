@@ -50,9 +50,8 @@ import org.gradle.execution.selection.DefaultBuildTaskSelector;
 import org.gradle.initialization.BuildOptionBuildOperationProgressEventsEmitter;
 import org.gradle.initialization.DefaultGradlePropertiesController;
 import org.gradle.initialization.Environment;
-import org.gradle.initialization.EnvironmentChangeTracker;
-import org.gradle.initialization.GradlePropertiesListener;
 import org.gradle.initialization.GradlePropertiesController;
+import org.gradle.api.internal.properties.GradlePropertiesListener;
 import org.gradle.initialization.exception.DefaultExceptionAnalyser;
 import org.gradle.initialization.exception.ExceptionCollector;
 import org.gradle.initialization.exception.MultipleBuildFailuresExceptionAnalyser;
@@ -73,6 +72,7 @@ import org.gradle.internal.event.ScopedListenerManager;
 import org.gradle.internal.exception.ExceptionAnalyser;
 import org.gradle.internal.id.ConfigurationCacheableIdFactory;
 import org.gradle.internal.instantiation.InstantiatorFactory;
+import org.gradle.internal.instantiation.managed.ManagedObjectRegistry;
 import org.gradle.internal.instrumentation.reporting.DefaultMethodInterceptionReportCollector;
 import org.gradle.internal.instrumentation.reporting.ErrorReportingMethodInterceptionReportCollector;
 import org.gradle.internal.instrumentation.reporting.MethodInterceptionReportCollector;
@@ -125,6 +125,11 @@ public class BuildTreeScopeServices implements ServiceRegistrationProvider {
         registration.add(TaskIdentityFactory.class);
         registration.add(BuildLogicBuildQueue.class, DefaultBuildLogicBuildQueue.class);
         modelServices.applyServicesTo(registration);
+    }
+
+    @Provides
+    ManagedObjectRegistry decorateManagedObjectRegistry(ManagedObjectRegistry parent) {
+        return parent.createChild();
     }
 
     @Provides
@@ -196,11 +201,8 @@ public class BuildTreeScopeServices implements ServiceRegistrationProvider {
     }
 
     @Provides
-    protected SystemPropertiesInstaller createSystemPropertiesInstaller(
-        EnvironmentChangeTracker environmentChangeTracker,
-        StartParameterInternal startParameter
-    ) {
-        return new DefaultSystemPropertiesInstaller(environmentChangeTracker, startParameter);
+    protected SystemPropertiesInstaller createSystemPropertiesInstaller(StartParameterInternal startParameter) {
+        return new DefaultSystemPropertiesInstaller(startParameter);
     }
 
     @Provides

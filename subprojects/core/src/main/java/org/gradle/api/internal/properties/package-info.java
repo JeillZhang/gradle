@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Internal API for loading and accessing {@link org.gradle.api.internal.properties.GradleProperties properties}
+ * from different {@link org.gradle.api.internal.properties.GradlePropertyScope scopes}.
+ * <p>
+ * Entry point is {@link org.gradle.api.internal.properties.GradlePropertiesController}.
+ * </p>
+ */
+@NullMarked
+package org.gradle.api.internal.properties;
 
-package org.gradle.language
-
-import org.gradle.integtests.fixtures.AbstractIntegrationSpec
-
-
-class NativeBasePluginIntegrationTest extends AbstractIntegrationSpec {
-    def "assemble does nothing when no other plugins applied"() {
-        given:
-        buildFile << """
-            apply plugin: NativeBasePlugin
-"""
-
-        when:
-        run "assemble"
-
-        then:
-        result.assertTasksScheduled(":assemble")
-    }
-}
+import org.jspecify.annotations.NullMarked;

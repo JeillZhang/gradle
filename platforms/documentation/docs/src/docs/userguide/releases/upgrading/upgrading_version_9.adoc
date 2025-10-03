@@ -36,6 +36,18 @@ The previous step will help you identify potential problems by issuing deprecati
 . Run `gradle wrapper --gradle-version {gradleVersion}` to update the project to {gradleVersion}.
 . Try to run the project and debug any errors using the <<troubleshooting.adoc#troubleshooting, Troubleshooting Guide>>.
 
+[[changes_9.3]]
+== Upgrading from 9.2.0 and earlier
+
+=== Deprecations
+
+[[deprecated_wrapper_get_available_distribution_types]]
+==== Deprecated `Wrapper.getAvailableDistributionTypes()` method
+
+The method on the link:{javadocPath}/org/gradle/api/tasks/wrapper/Wrapper.html[Wrapper] task has been deprecated and will be removed in Gradle 10.
+
+Use link:{javadocPath}/org/gradle/api/tasks/wrapper/Wrapper.DistributionType.html#values()[`Wrapper.DistributionType.values()`] to obtain the available distribution types instead.
+
 [[changes_9.2]]
 == Upgrading from 9.1.0 and earlier
 
@@ -50,11 +62,11 @@ The embedded Kotlin has been upgraded from 2.2.0 to link:https://github.com/JetB
 The incubating `ObjectFactory#dependencyCollector()` method has been removed.
 You can still create `DependencyCollectors` within Gradle <<properties_providers.adoc#managed_types, managed types>>.
 
-==== Consumable configurations are now initialized lazily
+==== Consumable configurations in bundled plugins are now initialized lazily
 
 Consumable configurations created by bundled Gradle plugins are now initialized only when needed.
-Configure actions on these configurations will no longer run at configuration time by default.
-They will only execute if the configuration is published, consumed as a variant, or otherwise realized by build logic.
+`Configure` actions on these configurations no longer run at configuration time by default.
+They only execute if the configuration is published, consumed as a variant, or otherwise realized by build logic.
 
 For example:
 
@@ -70,27 +82,9 @@ configurations.named("apiElements").configure {
 }
 ----
 
-With this change, the `Configuring apiElements` line is no longer printed during configuration time unless `apiElements` is realized.
+With this change, the `Configuring apiElements` line is no longer printed during configuration time unless `apiElements` is actually realized.
 
-To take advantage of this laziness, avoid APIs that eagerly realize configurations:
-
-.build.gradle.kts
-[source,kotlin]
-----
-// Instead of
-configurations.all {} // Eagerly realizes all configurations
-
-// Use
-configurations.configureEach {} // Only called for realized configurations
-
-// Instead of
-configurations.getByName("name").doSomething() // Eagerly realizes the "name" configuration
-
-// Use
-configurations.named("name").configure {
-    doSomething() // Only called if "name" configuration is realized
-}
-----
+See <<declaring_configurations.adoc#declaring-dependency-configurations,Declaring Configurations>> for more guidance.
 
 === Deprecations
 

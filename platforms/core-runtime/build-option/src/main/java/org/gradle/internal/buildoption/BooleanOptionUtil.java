@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,15 @@
 
 package org.gradle.internal.buildoption;
 
-import org.gradle.internal.service.scopes.Scope;
-import org.gradle.internal.service.scopes.ServiceScope;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A service that determines the value for an {@link InternalOption}.
- */
-@ServiceScope(Scope.BuildTree.class)
-public interface InternalOptions {
+class BooleanOptionUtil {
+
     /**
-     * Lookup the value for an {@link InternalOption}.
+     * Returns the same value as {@link Boolean#parseBoolean(String)},
+     * except that the string is additionally trimmed before parsing.
      */
-    <T extends @Nullable Object> Option.Value<T> getOption(InternalOption<T> option);
+    static boolean isTrue(@Nullable String value) {
+        return value != null && value.trim().equalsIgnoreCase("true");
+    }
 }

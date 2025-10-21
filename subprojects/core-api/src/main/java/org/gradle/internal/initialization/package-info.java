@@ -14,22 +14,5 @@
  * limitations under the License.
  */
 
-package org.gradle.tooling.internal.protocol;
-
-
-import org.gradle.api.Action;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
-import java.util.Collection;
-
-/**
- * A single item result of a {@link org.gradle.tooling.BuildController#fetch(Collection, Class, Class, Action) fetch}  operation.
- */
-@NullMarked
-public interface InternalFetchModelResult<M> extends InternalProtocolInterface {
-    @Nullable
-    M getModel();
-
-    Collection<InternalFailure> getFailures();
-}
+@org.jspecify.annotations.NullMarked
+package org.gradle.internal.initialization;

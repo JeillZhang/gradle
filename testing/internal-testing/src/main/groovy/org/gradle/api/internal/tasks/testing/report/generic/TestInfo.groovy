@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package org.gradle.composite;
+package org.gradle.api.internal.tasks.testing.report.generic
 
-import org.gradle.internal.problems.failure.Failure;
-import org.gradle.internal.service.scopes.Scope;
-import org.gradle.internal.service.scopes.ServiceScope;
-import org.jspecify.annotations.NullMarked;
+import groovy.transform.Immutable
 
-import java.util.Collection;
-
-@ServiceScope(Scope.BuildTree.class)
-@NullMarked
-public interface ResilientIssuesRecorder {
-
-    void recordResilientIssue(Throwable throwable);
-
-    void recordResilientIssue(Failure failure);
-
-    Collection<Failure> getFailures();
-
-    void clear();
+@Immutable
+class TestInfo {
+    String name
+    String displayName
 }

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.api.internal.plugins;
+@NullMarked
+package org.gradle.api.plugins.jvm.internal;
 
-public interface DslBindingBuilderInternal<T extends Definition<V>, V extends BuildModel> extends DslBindingBuilder<T, V> {
-
-    ProjectFeatureBinding<T, V> build();
-}
+import org.jspecify.annotations.NullMarked;

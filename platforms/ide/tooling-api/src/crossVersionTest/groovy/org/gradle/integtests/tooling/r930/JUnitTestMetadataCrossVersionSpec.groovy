@@ -25,7 +25,7 @@ import org.gradle.tooling.ProjectConnection
 import org.gradle.tooling.events.OperationType
 
 @ToolingApiVersion(">=8.13")
-@TargetGradleVersion(">=9.3.0")
+@TargetGradleVersion(">=9.4.0")
 class JUnitTestMetadataCrossVersionSpec extends ToolingApiSpecification implements TestEventsFixture {
     ProgressEvents events = ProgressEvents.create()
 

@@ -42,6 +42,18 @@ For Java, Groovy, Kotlin, and Android compatibility, see the [full compatibility
 
 <!-- Do not add breaking changes or deprecations here! Add them to the upgrade guide instead. -->
 
+### Problems HTML report refinements
+
+The incubating Problems HTML report has been refined to provide a more useful user experience.
+
+The summary clearly display the number of problems without location or skipped for performance reasons.
+Each tab starts with collapsed trees to show a clear view of the root nodes on load.
+Locations and solutions nodes are expanded by default, reducing the number of clicks necessary to see useful information.
+Everything is sorted alphabetically and by location.
+Problem details are displayed with a monospaced font to preserve the alignment of multi-line messages.
+Duplicate information is reduced across the board for a better readability.
+The size of the report file is reduced.
+
 ### Daemon logging improvements
 
 Daemon logs older than 14 days are now automatically cleaned up when the daemon shuts down, eliminating the need for manual cleanup.
@@ -145,6 +157,7 @@ See the User Manual section on the "[Feature Lifecycle](userguide/feature_lifecy
 
 The following are the features that have been promoted in this Gradle release.
 
+* [`getSettingsDirectory()`](javadoc/org/gradle/api/file/ProjectLayout.html#getSettingsDirectory()) in `ProjectLayout`
 <!--
 ### Example promoted
 -->

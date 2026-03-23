@@ -30,7 +30,6 @@ apply(from = "gradle/shared-with-buildSrc/mirrors.settings.gradle.kts")
 // Gradle implementation projects
 unassigned {
     subproject("core")
-    subproject("build-events")
     subproject("composite-builds")
     subproject("core-api")
 }
@@ -58,6 +57,7 @@ val core = platform("core") {
         subproject("collections")
         subproject("concurrent")
         subproject("daemon-main")
+        subproject("daemon-messaging")
         subproject("daemon-protocol")
         subproject("daemon-services")
         subproject("daemon-server")
@@ -84,6 +84,7 @@ val core = platform("core") {
         subproject("native")
         subproject("process-memory-services")
         subproject("process-services")
+        subproject("process-services-base")
         subproject("process-services-api")
         subproject("report-rendering")
         subproject("serialization")

@@ -175,13 +175,6 @@
     "crossVersionTests": false
   },
   {
-    "name": "build-events",
-    "path": "subprojects/build-events",
-    "unitTests": true,
-    "functionalTests": false,
-    "crossVersionTests": false
-  },
-  {
     "name": "build-init",
     "path": "platforms/software/build-init",
     "unitTests": true,
@@ -395,6 +388,13 @@
     "name": "daemon-main",
     "path": "platforms/core-runtime/daemon-main",
     "unitTests": false,
+    "functionalTests": false,
+    "crossVersionTests": false
+  },
+  {
+    "name": "daemon-messaging",
+    "path": "platforms/core-runtime/daemon-messaging",
+    "unitTests": true,
     "functionalTests": false,
     "crossVersionTests": false
   },
@@ -1263,6 +1263,13 @@
     "name": "process-services-api",
     "path": "platforms/core-runtime/process-services-api",
     "unitTests": false,
+    "functionalTests": false,
+    "crossVersionTests": false
+  },
+  {
+    "name": "process-services-base",
+    "path": "platforms/core-runtime/process-services-base",
+    "unitTests": true,
     "functionalTests": false,
     "crossVersionTests": false
   },

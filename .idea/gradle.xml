@@ -175,6 +175,7 @@
             <option value="$PROJECT_DIR$/platforms/core-runtime/concurrent" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/daemon-logging" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/daemon-main" />
+            <option value="$PROJECT_DIR$/platforms/core-runtime/daemon-messaging" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/daemon-protocol" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/daemon-server" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/daemon-services" />
@@ -200,6 +201,7 @@
             <option value="$PROJECT_DIR$/platforms/core-runtime/process-memory-services" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/process-services" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/process-services-api" />
+            <option value="$PROJECT_DIR$/platforms/core-runtime/process-services-base" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/report-rendering" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/serialization" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/service-lookup" />

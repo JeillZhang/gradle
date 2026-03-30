@@ -32,8 +32,6 @@ import org.gradle.api.internal.attributes.AttributeContainerInternal;
 import org.gradle.api.internal.attributes.AttributeMergingException;
 import org.gradle.api.internal.attributes.AttributesFactory;
 import org.gradle.api.internal.attributes.ImmutableAttributes;
-import org.gradle.internal.component.model.ComponentGraphSpecificResolveState;
-import org.gradle.internal.component.model.ComponentIdGenerator;
 import org.gradle.internal.component.model.DependencyMetadata;
 import org.gradle.internal.component.model.ForcingDependencyMetadata;
 import org.gradle.internal.deprecation.DeprecationLogger;
@@ -61,7 +59,7 @@ public class ModuleResolveState implements CandidateModule {
     private static final int MAX_SELECTION_CHANGE = 1000;
 
     private final ComponentMetaDataResolver metaDataResolver;
-    private final ComponentIdGenerator idGenerator;
+    private final ResolveState resolveState;
     private final ModuleIdentifier id;
     private final List<EdgeState> unattachedEdges = new LinkedList<>();
     private final Map<ModuleVersionIdentifier, ComponentState> versions = new LinkedHashMap<>();
@@ -78,14 +76,14 @@ public class ModuleResolveState implements CandidateModule {
     private ImmutableAttributes mergedConstraintAttributes = ImmutableAttributes.EMPTY;
 
     private @Nullable AttributeMergingException attributeMergingError;
-    private VirtualPlatformState platformState;
+    private @Nullable VirtualPlatformState platformState;
     private boolean overriddenSelection;
     private Set<VirtualPlatformState> platformOwners;
     private boolean replaced = false;
     private int selectionChangedCounter;
 
     ModuleResolveState(
-        ComponentIdGenerator idGenerator,
+        ResolveState resolveState,
         ModuleIdentifier id,
         ComponentMetaDataResolver metaDataResolver,
         AttributesFactory attributesFactory,
@@ -96,7 +94,7 @@ public class ModuleResolveState implements CandidateModule {
         boolean rootModule,
         ConflictResolution conflictResolution
     ) {
-        this.idGenerator = idGenerator;
+        this.resolveState = resolveState;
         this.id = id;
         this.metaDataResolver = metaDataResolver;
         this.attributesFactory = attributesFactory;
@@ -108,6 +106,10 @@ public class ModuleResolveState implements CandidateModule {
         this.selectorStateResolver = selectorStateResolver;
         this.selectors = new ModuleSelectors<>(versionComparator, versionParser);
         this.conflictResolution = conflictResolution;
+    }
+
+    ResolveState getResolveState() {
+        return resolveState;
     }
 
     void setSelectorStateResolver(SelectorStateResolver<ComponentState> selectorStateResolver) {
@@ -269,7 +271,7 @@ public class ModuleResolveState implements CandidateModule {
     public ComponentState getVersion(ModuleVersionIdentifier id, ComponentIdentifier componentIdentifier) {
         assert id.getModule().equals(this.id);
         ComponentState componentState = versions.computeIfAbsent(id, k ->
-            new ComponentState(idGenerator.nextGraphNodeId(), this, id, componentIdentifier, metaDataResolver)
+            new ComponentState(resolveState.getIdGenerator().nextGraphNodeId(), this, id, componentIdentifier, metaDataResolver)
         );
 
         // Starting in Gradle 10, the root component's module identity will no longer
@@ -470,15 +472,6 @@ public class ModuleResolveState implements CandidateModule {
         Version newVersion = versionParser.transform(newSelected.getVersion());
         Version currentVersion = versionParser.transform(selected.getVersion());
         return !newSelectedIsProject && versionComparator.compare(newVersion, currentVersion) <= 0;
-    }
-
-    void maybeCreateVirtualMetadata(ResolveState resolveState) {
-        for (ComponentState componentState : versions.values()) {
-            if (componentState.getMetadataOrNull() == null) {
-                // TODO LJA Using the root as the NodeState here is a bit of a cheat, investigate if we can track the proper NodeState
-                componentState.setState(LenientPlatformGraphResolveState.of(idGenerator, (ModuleComponentIdentifier) componentState.getComponentId(), componentState.getId(), platformState, resolveState.getRoot(), resolveState), ComponentGraphSpecificResolveState.EMPTY_STATE);
-            }
-        }
     }
 
     @Nullable

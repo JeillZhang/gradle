@@ -35,6 +35,7 @@ import org.gradle.internal.Pair;
 import org.gradle.internal.component.model.ComponentGraphResolveMetadata;
 import org.gradle.internal.component.model.ComponentGraphResolveState;
 import org.gradle.internal.component.model.ComponentGraphSpecificResolveState;
+import org.gradle.internal.component.model.ComponentIdGenerator;
 import org.gradle.internal.component.model.ComponentOverrideMetadata;
 import org.gradle.internal.component.model.DefaultComponentOverrideMetadata;
 import org.gradle.internal.resolve.ModuleVersionResolveException;
@@ -69,7 +70,7 @@ public class ComponentState implements ComponentResolutionState, DependencyGraph
     private volatile ComponentGraphSpecificResolveState graphResolveState;
 
     private ComponentSelectionState state = ComponentSelectionState.Selectable;
-    private ModuleVersionResolveException metadataResolveFailure;
+    private @Nullable ModuleVersionResolveException metadataResolveFailure;
     private ModuleSelectors<SelectorState> selectors;
     private DependencyGraphBuilder.VisitState visitState = DependencyGraphBuilder.VisitState.NotSeen;
 
@@ -194,6 +195,14 @@ public class ComponentState implements ComponentResolutionState, DependencyGraph
             return;
         }
 
+        if (module.isVirtualPlatform()) {
+            // Modules have registered as participants of this platform via belongsTo.
+            // This means the platform is virtual. Resolve with synthetic virtual platform
+            // metadata without attempting a real download.
+            resolveAsVirtualPlatform();
+            return;
+        }
+
         ComponentOverrideMetadata componentOverrideMetadata;
         if (selectors != null && selectors.size() > 0) {
             // Taking the first selector here to determine the 'changing' status is our best bet to get the selector that will most likely be chosen in the end.
@@ -204,9 +213,7 @@ public class ComponentState implements ComponentResolutionState, DependencyGraph
         } else {
             componentOverrideMetadata = DefaultComponentOverrideMetadata.EMPTY;
         }
-        if (tryResolveVirtualPlatform()) {
-            return;
-        }
+
         DefaultBuildableComponentResolveResult result = new DefaultBuildableComponentResolveResult();
         resolver.resolve(componentIdentifier, componentOverrideMetadata, result);
 
@@ -218,22 +225,22 @@ public class ComponentState implements ComponentResolutionState, DependencyGraph
         graphResolveState = result.getGraphState();
     }
 
-    @SuppressWarnings("ReferenceEquality") //TODO: evaluate errorprone suppression (https://github.com/gradle/gradle/issues/35864)
-    private boolean tryResolveVirtualPlatform() {
-        if (module.isVirtualPlatform()) {
-            for (ComponentState version : module.getAllVersions()) {
-                if (version != this) {
-                    ComponentGraphResolveState versionState = version.getResolveStateOrNull();
-                    if (versionState instanceof LenientPlatformGraphResolveState) {
-                        LenientPlatformGraphResolveState lenientState = (LenientPlatformGraphResolveState) versionState;
-                        ComponentGraphResolveState withIds = lenientState.copyWithIds((ModuleComponentIdentifier) componentIdentifier, id);
-                        setState(withIds, ComponentGraphSpecificResolveState.EMPTY_STATE);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    /**
+     * Create a new virtual platform state and resolve this component using that state.
+     */
+    void resolveAsVirtualPlatform() {
+        ResolveState resolveState = module.getResolveState();
+        ComponentIdGenerator idGenerator = resolveState.getIdGenerator();
+        LenientPlatformResolveMetadata metadata = new LenientPlatformResolveMetadata((ModuleComponentIdentifier) componentIdentifier, id);
+        LenientPlatformGraphResolveState virtualPlatformState = new LenientPlatformGraphResolveState(
+            idGenerator.nextComponentId(),
+            idGenerator.nextVariantId(),
+            metadata,
+            module.getPlatformState(),
+            resolveState
+        );
+
+        setState(virtualPlatformState, ComponentGraphSpecificResolveState.EMPTY_STATE);
     }
 
     public void setState(ComponentGraphResolveState state, ComponentGraphSpecificResolveState graphState) {

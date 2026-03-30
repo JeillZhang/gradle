@@ -22,13 +22,11 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.StringUtils;
 import org.gradle.api.artifacts.ModuleIdentifier;
-import org.gradle.api.artifacts.ModuleVersionIdentifier;
 import org.gradle.api.artifacts.component.ComponentSelector;
 import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import org.gradle.api.artifacts.component.ModuleComponentSelector;
 import org.gradle.api.capabilities.Capability;
 import org.gradle.api.internal.artifacts.ComponentSelectorConverter;
-import org.gradle.api.internal.artifacts.DefaultModuleVersionIdentifier;
 import org.gradle.api.internal.artifacts.ivyservice.dependencysubstitution.SubstitutionResult;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.excludes.ModuleExclusions;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.excludes.specs.ExcludeSpec;
@@ -45,7 +43,6 @@ import org.gradle.internal.component.external.model.VirtualComponentIdentifier;
 import org.gradle.internal.component.local.model.LocalFileDependencyMetadata;
 import org.gradle.internal.component.local.model.LocalVariantGraphResolveState;
 import org.gradle.internal.component.model.ComponentGraphResolveState;
-import org.gradle.internal.component.model.ComponentGraphSpecificResolveState;
 import org.gradle.internal.component.model.DelegatingDependencyMetadata;
 import org.gradle.internal.component.model.DependencyMetadata;
 import org.gradle.internal.component.model.IvyArtifactName;
@@ -577,6 +574,7 @@ public class NodeState implements DependencyGraphNode {
 
     /**
      * If a component declares that it belongs to a platform, we add an edge to the platform.
+     * Whether the platform is real or virtual is determined later during component resolution.
      *
      * @param resolutionFilter The excludes inherited from all incoming edges
      * @param ancestorsStrictVersions The strict versions inherited from all incoming edges
@@ -586,17 +584,17 @@ public class NodeState implements DependencyGraphNode {
         List<? extends VirtualComponentIdentifier> owners = component.getMetadata().getPlatformOwners();
         if (!owners.isEmpty()) {
             for (VirtualComponentIdentifier owner : owners) {
-                if (owner instanceof ModuleComponentIdentifier) {
-                    ModuleComponentIdentifier platformId = (ModuleComponentIdentifier) owner;
-
-                    // There are 2 possibilities here:
-                    // 1. the "platform" referenced is a real module, in which case we directly add it to the graph
-                    // 2. the "platform" is a virtual, constructed thing, in which case we add virtual edges to the graph
-                    resolvePlatform(platformId);
+                if (owner instanceof ModuleComponentIdentifier platformId) {
+                    // Register this module as a participant of the owning virtual platform.
+                    // If the platform turns out to be real (published), this is harmless.
+                    // If the platform is virtual, this enables the platform component to
+                    // be resolved as a virtual platform later during metadata resolution.
+                    ModuleResolveState platformModule = resolveState.getModule(platformId.getModuleIdentifier());
+                    platformModule.getPlatformState().participatingModule(component.getModule());
 
                     boolean forced = hasStrongOpinion();
                     final ModuleComponentSelector selector = DefaultModuleComponentSelector.newSelector(platformId.getModuleIdentifier(), platformId.getVersion());
-                    DependencyMetadata dependencyMetadata = new LenientPlatformDependencyMetadata(resolveState, this, selector, platformId, platformId, forced, true, false);
+                    DependencyMetadata dependencyMetadata = new LenientPlatformDependencyMetadata(selector, platformId, forced, false);
                     EdgeState virtualPlatformEdge = createEdge(dependencyMetadata);
 
                     registerOutgoingEdge(
@@ -605,32 +603,10 @@ public class NodeState implements DependencyGraphNode {
                         discoveredEdges,
                         virtualPlatformEdge
                     );
+                } else {
+                    throw new IllegalStateException("Expected platform ID to be a module identifier: " + owner);
                 }
             }
-        }
-    }
-
-    /**
-     * Resolve the given platform, creating a lenient platform if the platform does not exist.
-     */
-    private void resolvePlatform(ModuleComponentIdentifier componentId) {
-        ModuleVersionIdentifier toModuleVersionId = DefaultModuleVersionIdentifier.newId(componentId.getModuleIdentifier(), componentId.getVersion());
-        ComponentState componentState = resolveState.getModule(componentId.getModuleIdentifier()).getVersion(toModuleVersionId, componentId);
-        // We need to check if the target version exists. For this, we have to try to get metadata for the aligned version.
-        // If it's there, it means we can align, otherwise, we must NOT add the edge, or resolution would fail
-        ComponentGraphResolveState resolvedComponent = componentState.getResolveStateOrNull();
-
-        VirtualPlatformState virtualPlatformState = null;
-        if (resolvedComponent == null || resolvedComponent instanceof LenientPlatformGraphResolveState) {
-            virtualPlatformState = componentState.getModule().getPlatformState();
-            virtualPlatformState.participatingModule(component.getModule());
-        }
-        if (resolvedComponent == null) {
-            // the platform doesn't exist, so we're building a lenient one
-            ComponentGraphResolveState newLenientPlatform = LenientPlatformGraphResolveState.of(resolveState.getIdGenerator(), componentId, toModuleVersionId, virtualPlatformState, this, resolveState);
-            componentState.setState(newLenientPlatform, ComponentGraphSpecificResolveState.EMPTY_STATE);
-            // And now let's make sure we do not have another version of that virtual platform missing its metadata
-            componentState.getModule().maybeCreateVirtualMetadata(resolveState);
         }
     }
 

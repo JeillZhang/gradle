@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import org.gradle.plugins.ide.idea.model.IdeaModel
+import gradlebuild.integrationtests.configureTestSourceSetInIde
 
 /**
  * Test Fixtures Plugin.
@@ -83,13 +83,4 @@ javaComponent.withVariantsFromConfiguration(testFixturesApiElements) {
     skip()
 }
 
-plugins.withType<IdeaPlugin> {
-    configure<IdeaModel> {
-        module {
-            val testFixtures = sourceSets.testFixtures.get()
-            testSources.from(testFixtures.java.srcDirs)
-            testSources.from(testFixtures.groovy.srcDirs)
-            testResources.from(testFixtures.resources.srcDirs)
-        }
-    }
-}
+configureTestSourceSetInIde(sourceSets.testFixtures.get())

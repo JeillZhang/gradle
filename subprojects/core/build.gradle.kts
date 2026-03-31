@@ -1,3 +1,5 @@
+import gradlebuild.integrationtests.configureTestSourceSetInIde
+
 plugins {
     id("gradlebuild.distribution.api-java")
     id("gradlebuild.cross-version-tests")
@@ -15,6 +17,9 @@ val testInterceptors = sourceSets.create("testInterceptors") {
     compileClasspath += sourceSets.main.get().output
     runtimeClasspath += sourceSets.main.get().output
 }
+
+configureTestSourceSetInIde(testInterceptors)
+
 sourceSets.test {
     compileClasspath += testInterceptors.output
     runtimeClasspath += testInterceptors.output

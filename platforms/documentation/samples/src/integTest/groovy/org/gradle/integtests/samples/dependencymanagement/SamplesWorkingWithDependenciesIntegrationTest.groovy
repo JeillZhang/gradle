@@ -18,7 +18,6 @@ package org.gradle.integtests.samples.dependencymanagement
 
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.Sample
-import org.gradle.integtests.fixtures.ToBeFixedForConfigurationCache
 import org.gradle.integtests.fixtures.UsesSample
 import org.junit.Rule
 
@@ -71,7 +70,6 @@ commons-codec:commons-codec:1.7""")
     }
 
     @UsesSample("dependencyManagement/workingWithDependencies-walkGraph")
-    @ToBeFixedForConfigurationCache(because = "broken file collection")
     def "can walk the dependency graph of a configuration with #dsl dsl"() {
         executer.inDirectory(sample.dir.file(dsl))
 

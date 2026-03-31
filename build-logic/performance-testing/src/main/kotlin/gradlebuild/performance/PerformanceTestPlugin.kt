@@ -37,6 +37,7 @@ import gradlebuild.basics.releasedVersionsFile
 import gradlebuild.basics.repoRoot
 import gradlebuild.basics.toolchainInstallationPaths
 import gradlebuild.integrationtests.addDependenciesAndConfigurations
+import gradlebuild.integrationtests.configureTestSourceSetInIde
 import gradlebuild.integrationtests.ide.AndroidStudioProvisioningExtension
 import gradlebuild.integrationtests.ide.AndroidStudioProvisioningPlugin
 import gradlebuild.integrationtests.ide.DEFAULT_ANDROID_STUDIO_VERSION
@@ -55,12 +56,12 @@ import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.internal.tasks.testing.filter.DefaultTestFilter
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.ClasspathNormalizer
 import org.gradle.api.tasks.Delete
-import org.gradle.api.tasks.GroovySourceDirectorySet
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -69,10 +70,6 @@ import org.gradle.api.tasks.bundling.Zip
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.internal.LocationListInstallationSupplier.JAVA_INSTALLATIONS_PATHS_PROPERTY
 import org.gradle.kotlin.dsl.*
-import org.gradle.plugins.ide.eclipse.EclipsePlugin
-import org.gradle.plugins.ide.eclipse.model.EclipseModel
-import org.gradle.plugins.ide.idea.IdeaPlugin
-import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.gradle.process.CommandLineArgumentProvider
 import org.w3c.dom.Document
 import java.io.File
@@ -97,6 +94,7 @@ object Config {
 class PerformanceTestPlugin : Plugin<Project> {
     override fun apply(project: Project): Unit = project.run {
         val performanceTestSourceSet = createPerformanceTestSourceSet()
+        configureTestSourceSetInIde(performanceTestSourceSet)
         addPerformanceTestConfigurationAndDependencies()
         configureGeneratorTasks()
         configureAndroidStudioProvisioning()
@@ -105,7 +103,6 @@ class PerformanceTestPlugin : Plugin<Project> {
 
         createAndWireCommitDistributionTask(performanceTestExtension)
         createAdditionalTasks(performanceTestSourceSet)
-        configureIdePlugins(performanceTestSourceSet)
 
         the<JvmCompileExtension>().apply {
             addCompilationFrom(performanceTestSourceSet)
@@ -151,12 +148,13 @@ class PerformanceTestPlugin : Plugin<Project> {
     fun Project.addPerformanceTestConfigurationAndDependencies() {
         addDependenciesAndConfigurations("performance")
 
+        val testLibs = project.the<VersionCatalogsExtension>().named("testLibs")
         val junit by configurations.creating
         dependencies {
             if (project.name != "enterprise-plugin-performance") {
                 "performanceTestImplementation"(project(":internal-performance-testing"))
             }
-            junit("junit:junit:4.13")
+            junit(testLibs.findLibrary("junit").get())
         }
     }
 
@@ -287,31 +285,6 @@ class PerformanceTestPlugin : Plugin<Project> {
             }
         }
         return performanceTestReport
-    }
-
-    private
-    fun Project.configureIdePlugins(performanceTestSourceSet: SourceSet) {
-        val performanceTestCompileClasspath by configurations
-        val performanceTestRuntimeClasspath by configurations
-        plugins.withType<EclipsePlugin> {
-            configure<EclipseModel> {
-                classpath {
-                    plusConfigurations.apply {
-                        add(performanceTestCompileClasspath)
-                        add(performanceTestRuntimeClasspath)
-                    }
-                }
-            }
-        }
-
-        plugins.withType<IdeaPlugin> {
-            configure<IdeaModel> {
-                module {
-                    testSources.from(performanceTestSourceSet.java.srcDirs, performanceTestSourceSet.the<GroovySourceDirectorySet>().srcDirs)
-                    testResources.from(performanceTestSourceSet.resources.srcDirs)
-                }
-            }
-        }
     }
 
     private

@@ -4,6 +4,7 @@ import gradlebuild.basics.buildCommitId
 import gradlebuild.basics.flakyTestStrategy
 import gradlebuild.integrationtests.addDependenciesAndConfigurations
 import gradlebuild.integrationtests.androidhomewarmup.SdkVersion
+import gradlebuild.integrationtests.configureTestSourceSetInIde
 import gradlebuild.integrationtests.tasks.SmokeTest
 import gradlebuild.performance.generator.tasks.RemoteProject
 
@@ -16,6 +17,8 @@ val smokeTestSourceSet = sourceSets.create("smokeTest") {
     compileClasspath += sourceSets.main.get().output
     runtimeClasspath += sourceSets.main.get().output
 }
+
+configureTestSourceSetInIde(smokeTestSourceSet)
 
 jvmCompile {
     addCompilationFrom(smokeTestSourceSet)
@@ -186,17 +189,6 @@ tasks {
         systemProperty("org.gradle.integtest.executer", "configCache")
 
         dependsOn("androidHomeWarmup")
-    }
-}
-
-plugins.withType<IdeaPlugin>().configureEach {
-    val smokeTestCompileClasspath: Configuration by configurations
-    val smokeTestRuntimeClasspath: Configuration by configurations
-    model.module {
-        testSources.from(smokeTestSourceSet.java.srcDirs, smokeTestSourceSet.groovy.srcDirs)
-        testResources.from(smokeTestSourceSet.resources.srcDirs)
-        scopes["TEST"]!!["plus"]!!.add(smokeTestCompileClasspath)
-        scopes["TEST"]!!["plus"]!!.add(smokeTestRuntimeClasspath)
     }
 }
 

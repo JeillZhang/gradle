@@ -3,12 +3,13 @@ import gradlebuild.basics.repoRoot
 import gradlebuild.basics.runBrokenForConfigurationCacheDocsTests
 import gradlebuild.basics.util.getSingleFileProvider
 import gradlebuild.integrationtests.androidhomewarmup.SdkVersion
+import gradlebuild.integrationtests.configureTestSourceSetInIde
 import gradlebuild.integrationtests.model.GradleDistribution
+import java.io.FileFilter
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.gradle.docs.internal.tasks.CheckLinks
 import org.gradle.docs.samples.internal.tasks.InstallSample
 import org.gradle.internal.os.OperatingSystem
-import java.io.FileFilter
 
 plugins {
     id("java-library") // Needed for the dependency-analysis plugin. However, we should not need this. This is not a real library.
@@ -19,6 +20,8 @@ plugins {
     id("org.gradle.samples")
     id("gradlebuild.android-home-warmup")
 }
+
+configureTestSourceSetInIde(sourceSets.docsTest.get())
 
 androidHomeWarmup {
     rootProjectDir = project.layout.projectDirectory.dir("../../..")

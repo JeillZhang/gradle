@@ -1,6 +1,7 @@
 import gradlebuild.basics.BuildEnvironment
 import gradlebuild.basics.buildCommitId
 import gradlebuild.integrationtests.addDependenciesAndConfigurations
+import gradlebuild.integrationtests.configureTestSourceSetInIde
 import gradlebuild.integrationtests.tasks.SmokeIdeTest
 import gradlebuild.performance.generator.tasks.RemoteProject
 
@@ -14,6 +15,8 @@ val smokeIdeTestSourceSet = sourceSets.create("smokeIdeTest") {
     compileClasspath += sourceSets.main.get().output
     runtimeClasspath += sourceSets.main.get().output
 }
+
+configureTestSourceSetInIde(smokeIdeTestSourceSet)
 
 jvmCompile {
     addCompilationFrom(smokeIdeTestSourceSet)
@@ -33,15 +36,6 @@ val ideStarter by configurations.creating {
     isCanBeConsumed = false
 }
 val ideStarterBuildDir = layout.buildDirectory.dir("ideStarter")
-
-plugins.withType<IdeaPlugin> {
-    with(model) {
-        module {
-            testSources.from(smokeIdeTestSourceSet.java.srcDirs, smokeIdeTestSourceSet.groovy.srcDirs)
-            testResources.from(smokeIdeTestSourceSet.resources.srcDirs)
-        }
-    }
-}
 
 abstract class IdeStarterPathProvider : CommandLineArgumentProvider {
     @get: InputDirectory

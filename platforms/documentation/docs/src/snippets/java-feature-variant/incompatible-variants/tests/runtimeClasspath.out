@@ -1,12 +1,42 @@
 
 > Task :consumer:dependencyInsight
-project :producer FAILED
+project :producer
+  Variant runtimeElements:
+    | Attribute Name                 | Provided     | Requested    |
+    |--------------------------------|--------------|--------------|
+    | org.gradle.category            | library      | library      |
+    | org.gradle.dependency.bundling | external     | external     |
+    | org.gradle.jvm.version         | 11           | 11           |
+    | org.gradle.libraryelements     | jar          | jar          |
+    | org.gradle.usage               | java-runtime | java-runtime |
+    | org.gradle.jvm.environment     |              | standard-jvm |
+  Variant mysqlSupportRuntimeElements:
+    | Attribute Name                 | Provided     | Requested    |
+    |--------------------------------|--------------|--------------|
+    | org.gradle.category            | library      | library      |
+    | org.gradle.dependency.bundling | external     | external     |
+    | org.gradle.jvm.version         | 11           | 11           |
+    | org.gradle.libraryelements     | jar          | jar          |
+    | org.gradle.usage               | java-runtime | java-runtime |
+    | org.gradle.jvm.environment     |              | standard-jvm |
+  Variant postgresSupportRuntimeElements:
+    | Attribute Name                 | Provided     | Requested    |
+    |--------------------------------|--------------|--------------|
+    | org.gradle.category            | library      | library      |
+    | org.gradle.dependency.bundling | external     | external     |
+    | org.gradle.jvm.version         | 11           | 11           |
+    | org.gradle.libraryelements     | jar          | jar          |
+    | org.gradle.usage               | java-runtime | java-runtime |
+    | org.gradle.jvm.environment     |              | standard-jvm |
    Failures:
       - Could not resolve project :producer.
           - Module 'org.gradle.demo:producer' has been rejected:
-               Cannot select module with conflict on capability 'org.gradle.demo:producer-db-support:1.0' also provided by ['project :producer' (mysqlSupportRuntimeElements), 'project :producer' (postgresSupportRuntimeElements)]
+               Cannot select module with conflict on capability 'org.gradle.demo:producer-db-support:1.0' also provided by ['project :producer' (postgresSupportRuntimeElements)]
+      - Could not resolve project :producer.
+          - Module 'org.gradle.demo:producer' has been rejected:
+               Cannot select module with conflict on capability 'org.gradle.demo:producer-db-support:1.0' also provided by ['project :producer' (mysqlSupportRuntimeElements)]
 
-project :producer FAILED
+project :producer
 \--- runtimeClasspath
 
 project :producer FAILED

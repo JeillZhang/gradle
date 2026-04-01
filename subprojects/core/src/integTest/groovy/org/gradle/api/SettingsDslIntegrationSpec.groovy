@@ -36,10 +36,13 @@ class SettingsDslIntegrationSpec extends AbstractIntegrationSpec {
     def "can dynamically access properties"() {
 
         given:
-        file("gradle.properties") << "someProjectProperty=true"
+        propertiesFile << "someProjectProperty=true"
         settingsFile << """
-            if (properties.someProjectProperty == 'true') {
-                println('signal')
+            if (getProperty('someProjectProperty') == 'true') {
+                println('getProperty worked')
+            }
+            if (someProjectProperty == 'true') {
+                println('dynamic property access worked')
             }
         """
 
@@ -47,7 +50,8 @@ class SettingsDslIntegrationSpec extends AbstractIntegrationSpec {
         succeeds('help')
 
         then:
-        outputContains('signal')
+        outputContains('etProperty worked')
+        outputContains('dynamic property access worked')
     }
 
     def "Can type-safely use ExtensionAware with the Groovy DSL"() {

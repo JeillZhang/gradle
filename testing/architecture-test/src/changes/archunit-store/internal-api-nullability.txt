@@ -1890,7 +1890,6 @@ Class <org.gradle.internal.resources.DefaultResourceLockCoordinationService> is 
 Class <org.gradle.internal.resources.ExclusiveAccessResourceLock> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (ExclusiveAccessResourceLock.java:0)
 Class <org.gradle.internal.resources.LeaseHolder> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (LeaseHolder.java:0)
 Class <org.gradle.internal.resources.LockCache> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (LockCache.java:0)
-Class <org.gradle.internal.resources.ProjectLeaseRegistry> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (ProjectLeaseRegistry.java:0)
 Class <org.gradle.internal.resources.ProjectLock> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (ProjectLock.java:0)
 Class <org.gradle.internal.resources.ProjectLockRegistry> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (ProjectLockRegistry.java:0)
 Class <org.gradle.internal.resources.ResourceLock> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (ResourceLock.java:0)

@@ -220,7 +220,6 @@ public class GradleBuildExperimentRunner extends AbstractBuildExperimentRunner {
             .add(jvmOptsFromGradleProperties)
             .addAll(invocationSpec.getJvmArguments())
             .build();
-        boolean isBuildOperationsTrace = false;
         return new GradleScenarioDefinition(
             OutputDirSelectorUtil.fileSafeNameFor(experimentSpec.getDisplayName()),
             experimentSpec.getDisplayName(),
@@ -238,7 +237,7 @@ public class GradleBuildExperimentRunner extends AbstractBuildExperimentRunner {
             invocationSettings.getOutputDir(),
             actualJvmArgs,
             invocationSettings.getBuildOperationMeasurements(),
-            isBuildOperationsTrace
+            invocationSettings.isBuildOperationsTrace()
         );
     }
 

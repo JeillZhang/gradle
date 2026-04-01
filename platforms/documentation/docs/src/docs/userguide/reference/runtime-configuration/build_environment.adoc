@@ -185,6 +185,30 @@ $ export ORG_GRADLE_PROJECT_myProperty='Hi, world'
 +
 This is typically the preferred method for supplying project properties, especially secrets, to unattended builds like those running on CI servers.
 
+=== Accessing a project property
+
+The recommended way to access a project property is through the <<lazy_configuration.adoc#lazy_properties,Provider API>>:
+
+[source,kotlin]
+----
+val myProperty: Provider<String> = providers.gradleProperty("myProperty")
+----
+
+The returned `Provider` is lazy and compatible with the <<configuration_cache_requirements.adoc#config_cache:requirements:reading_sys_props_and_env_vars,Configuration Cache>>.
+The provider resolves the property from the build-level sources listed above: command-line `-P` arguments, `org.gradle.project.pass:[*]` system properties, `ORG_GRADLE_PROJECT_pass:[*]` environment variables, and `gradle.properties` files in the Gradle User Home, build root, and Gradle installation directories.
+
+[NOTE]
+====
+`providers.gradleProperty()` does not include properties from `gradle.properties` files in subproject directories, nor extra properties or other properties set dynamically on individual `Project` instances.
+To access those, use `project.findProperty("name")` or extra properties directly.
+====
+
+For other ways to access properties, see the following methods on the link:{groovyDslPath}/org.gradle.api.Project.html[Project] object:
+
+- `findProperty("name")` — returns the value or `null`, checking dynamically configured containers, like extra properties, and parent projects as well.
+- `property("name")` — returns the value or throws if the property is missing
+- `hasProperty("name")` — checks if the property exists
+
 It is possible to change the behavior of a task based on project properties specified at invocation time.
 Suppose you’d like to ensure release builds are only triggered by CI.
 A simple way to handle this is through an `isCI` project property:

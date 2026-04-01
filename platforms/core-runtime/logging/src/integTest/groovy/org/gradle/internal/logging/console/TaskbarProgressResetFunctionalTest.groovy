@@ -19,11 +19,11 @@ package org.gradle.internal.logging.console
 import org.gradle.api.logging.configuration.ConsoleOutput
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.test.fixtures.ConcurrentTestUtil
-import org.gradle.test.fixtures.Flaky
 import org.gradle.test.preconditions.IntegTestPreconditions
 import org.gradle.test.preconditions.UnitTestPreconditions
 import org.gradle.test.precondition.Requires
 import spock.lang.Issue
+import spock.lang.Ignore
 
 /**
  * Verifies that the OSC 9;4;0 taskbar progress reset sequence is emitted when a build ends,
@@ -49,7 +49,7 @@ class TaskbarProgressResetFunctionalTest extends AbstractIntegrationSpec {
             .withConsole(ConsoleOutput.Rich)
     }
 
-    @Flaky(because = "https://github.com/gradle/gradle-private/issues/5153")
+    @Ignore('https://github.com/gradle/gradle-private/issues/5153')
     @Requires(value = [UnitTestPreconditions.Unix, IntegTestPreconditions.NotEmbeddedExecutor],
         reason = "sends SIGINT to a forked process works only on Unix and with a separate process")
     def "sends OSC 9;4;0 reset sequence when build receives SIGINT"() {

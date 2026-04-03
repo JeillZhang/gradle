@@ -105,10 +105,24 @@
     "crossVersionTests": false
   },
   {
+    "name": "build-cache-api",
+    "path": "platforms/core-execution/build-cache-api",
+    "unitTests": false,
+    "functionalTests": false,
+    "crossVersionTests": false
+  },
+  {
     "name": "build-cache-base",
     "path": "platforms/core-execution/build-cache-base",
     "unitTests": true,
     "functionalTests": false,
+    "crossVersionTests": false
+  },
+  {
+    "name": "build-cache-core",
+    "path": "platforms/core-execution/build-cache-core",
+    "unitTests": true,
+    "functionalTests": true,
     "crossVersionTests": false
   },
   {

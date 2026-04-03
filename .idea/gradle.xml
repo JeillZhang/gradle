@@ -138,7 +138,9 @@
             <option value="$PROJECT_DIR$/platforms/core-configuration/stdlib-kotlin-extensions" />
             <option value="$PROJECT_DIR$/platforms/core-configuration/stdlib-serialization-codecs" />
             <option value="$PROJECT_DIR$/platforms/core-execution/build-cache" />
+            <option value="$PROJECT_DIR$/platforms/core-execution/build-cache-api" />
             <option value="$PROJECT_DIR$/platforms/core-execution/build-cache-base" />
+            <option value="$PROJECT_DIR$/platforms/core-execution/build-cache-core" />
             <option value="$PROJECT_DIR$/platforms/core-execution/build-cache-example-client" />
             <option value="$PROJECT_DIR$/platforms/core-execution/build-cache-http" />
             <option value="$PROJECT_DIR$/platforms/core-execution/build-cache-local" />

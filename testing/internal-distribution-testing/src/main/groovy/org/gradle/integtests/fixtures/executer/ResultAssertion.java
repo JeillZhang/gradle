@@ -38,6 +38,12 @@ import static org.gradle.integtests.fixtures.executer.OutputScrapingExecutionRes
  * TODO: This class could probably use a better name, maybe something like GradleDeprecationVerifier
  */
 public class ResultAssertion implements Action<ExecutionResult> {
+    // Remove thsi after https://github.com/gradle/dv/issues/63627 is fixed
+    private static final Pattern KNOWN_DEVELOCITY_BUILD_SCAN_FAILURE = Pattern.compile(
+        "(?ms)^A build scan cannot be produced as an error occurred gathering build data\\.\\R"
+            + ".*?^----------\\R.*?^----------\\R?"
+    );
+
     private final List<ExpectedDeprecationWarning> expectedDeprecationWarnings;
     private final List<ExpectedDeprecationWarning> maybeExpectedDeprecationWarnings;
 
@@ -118,6 +124,7 @@ public class ResultAssertion implements Action<ExecutionResult> {
     }
 
     private void validate(String output, String displayName) {
+        output = KNOWN_DEVELOCITY_BUILD_SCAN_FAILURE.matcher(output).replaceAll("");
         List<String> lines = getLines(output);
         int i = 0;
         boolean insideVariantDescriptionBlock = false;

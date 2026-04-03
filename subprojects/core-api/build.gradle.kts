@@ -9,7 +9,7 @@ dependencies {
 
     api(projects.antApi)
     api(projects.baseServices)
-    api(projects.buildCacheSpi)
+    api(projects.buildCacheApi)
     api(projects.credentialsApi)
     api(projects.declarativeDslApi)
     api(projects.files)
@@ -26,7 +26,6 @@ dependencies {
     api(libs.guava)
     api(libs.inject)
 
-    implementation(projects.io)
     implementation(projects.baseServicesGroovy)
     implementation(projects.logging)
 

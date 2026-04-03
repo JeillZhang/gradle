@@ -149,7 +149,9 @@ val core = platform("core") {
     // Core Execution Module
     module("core-execution") {
         subproject("build-cache")
+        subproject("build-cache-api")
         subproject("build-cache-base")
+        subproject("build-cache-core")
         subproject("build-cache-example-client")
         subproject("build-cache-http")
         subproject("build-cache-local")

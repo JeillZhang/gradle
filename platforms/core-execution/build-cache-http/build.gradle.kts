@@ -12,12 +12,13 @@ dependencies {
     api(libs.jspecify)
 
     api(projects.baseServices)
+    api(projects.buildCacheApi)
     api(projects.buildCacheSpi)
     api(projects.coreApi)
     api(projects.credentialsApi)
     api(projects.resourcesHttp)
 
-    implementation(projects.core)
+    implementation(projects.buildCacheCore)
     implementation(projects.logging)
     implementation(projects.resources)
 

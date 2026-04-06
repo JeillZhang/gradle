@@ -16,7 +16,9 @@
 
 package org.gradle.internal.cc.impl
 
+import org.gradle.api.internal.project.DefaultCrossBuildModelAccess
 import org.gradle.api.internal.GradleInternal
+import org.gradle.api.internal.project.CrossBuildModelAccess
 import org.gradle.api.internal.project.CrossProjectModelAccess
 import org.gradle.api.internal.project.DefaultCrossProjectModelAccess
 import org.gradle.api.internal.project.DefaultDynamicLookupRoutine
@@ -37,6 +39,7 @@ import org.gradle.initialization.SettingsPreparer
 import org.gradle.initialization.TaskExecutionPreparer
 import org.gradle.initialization.VintageBuildModelController
 import org.gradle.internal.build.BuildModelController
+import org.gradle.internal.buildoption.InternalOptions
 import org.gradle.internal.buildtree.BuildModelParameters
 import org.gradle.internal.cc.base.services.ProjectRefResolver
 import org.gradle.internal.cc.impl.fingerprint.ConfigurationCacheFingerprintController
@@ -104,6 +107,16 @@ internal object BuildModelControllerServices : ServiceRegistrationProvider {
 
     private
     class ConfigurationCacheIsolatedProjectsProvider : ServiceRegistrationProvider {
+
+        @Provides
+        fun createCrossBuildModelAccess(
+            problems: ProblemsListener,
+            problemFactory: ProblemFactory,
+            internalOptions: InternalOptions
+        ): CrossBuildModelAccess {
+            return ProblemReportingCrossBuildModelAccess(problems, problemFactory, internalOptions)
+        }
+
         @Provides
         fun createCrossProjectModelAccess(
             projectRegistry: ProjectRegistry,
@@ -151,6 +164,12 @@ internal object BuildModelControllerServices : ServiceRegistrationProvider {
 
     private
     class VintageIsolatedProjectsProvider : ServiceRegistrationProvider {
+
+        @Provides
+        fun createCrossBuildModelAccess(): CrossBuildModelAccess {
+            return DefaultCrossBuildModelAccess()
+        }
+
         @Provides
         fun createCrossProjectModelAccess(
             projectRegistry: ProjectRegistry,

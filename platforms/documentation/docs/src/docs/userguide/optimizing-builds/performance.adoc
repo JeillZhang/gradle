@@ -402,7 +402,7 @@ Each group of users requires a subset of tasks—convert that subset into a Grad
 Gradle provides several features to create efficient workflows:
 
 - **Assign tasks to appropriate** link:{groovyDslPath}/org.gradle.api.Project.html#org.gradle.api.Project:group[groups].
-- **Create aggregate tasks**—tasks with no action that depend on other tasks (e.g., `assemble`).
+- **Create <<more_about_tasks.adoc#sec:task_categories,lifecycle tasks>>**—tasks with no action that depend on other tasks (e.g., `assemble`).
 - **Defer configuration** using `gradle.taskGraph.whenReady()` to execute verification only when necessary.
 
 [[increase_heap_size]]

@@ -584,3 +584,9 @@ Can be used to specify a default Gradle repository URL in `org.gradle.plugins.id
 +
 Useful override to specify an internally hosted repository if your company uses a firewall/proxy.
 
+`NO_COLOR`::
+When present and non-empty, disables color output while preserving other styling (bold, underline) and rich features (progress bars, animations).
++
+Follows the link:https://no-color.org/[no-color.org] convention.
+See <<command_line_interface.adoc#sec:command_line_customizing_log_format,Customizing log format>> for more options.
+

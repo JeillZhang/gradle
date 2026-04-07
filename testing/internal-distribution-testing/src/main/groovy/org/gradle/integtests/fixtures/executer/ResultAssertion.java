@@ -40,8 +40,8 @@ import static org.gradle.integtests.fixtures.executer.OutputScrapingExecutionRes
 public class ResultAssertion implements Action<ExecutionResult> {
     // Remove thsi after https://github.com/gradle/dv/issues/63627 is fixed
     private static final Pattern KNOWN_DEVELOCITY_BUILD_SCAN_FAILURE = Pattern.compile(
-        "(?ms)^A build scan cannot be produced as an error occurred gathering build data\\.\\R"
-            + ".*?^----------\\R.*?^----------\\R?"
+        "(?ms)^A build scan cannot be produced as an error occurred gathering build data\\.\\h*\\R"
+            + ".*?^----------\\h*\\R.*?^----------\\h*\\R?"
     );
 
     private final List<ExpectedDeprecationWarning> expectedDeprecationWarnings;

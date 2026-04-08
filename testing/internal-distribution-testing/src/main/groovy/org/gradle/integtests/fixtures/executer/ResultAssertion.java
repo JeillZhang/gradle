@@ -38,10 +38,16 @@ import static org.gradle.integtests.fixtures.executer.OutputScrapingExecutionRes
  * TODO: This class could probably use a better name, maybe something like GradleDeprecationVerifier
  */
 public class ResultAssertion implements Action<ExecutionResult> {
-    // Remove thsi after https://github.com/gradle/dv/issues/63627 is fixed
+    // Remove this after https://github.com/gradle/dv/issues/63627 is fixed
     private static final Pattern KNOWN_DEVELOCITY_BUILD_SCAN_FAILURE = Pattern.compile(
         "(?ms)^A build scan cannot be produced as an error occurred gathering build data\\.\\h*\\R"
             + ".*?^----------\\h*\\R.*?^----------\\h*\\R?"
+    );
+    // Remove this after the Develocity plugin stops emitting this internal progress-notification failure.
+    private static final Pattern KNOWN_DEVELOCITY_PROGRESS_NOTIFICATION_FAILURE = Pattern.compile(
+        "(?ms)^Internal error in Develocity Gradle plugin: progress notification .*?\\h*\\R"
+            + "^com\\.gradle\\.develocity\\.DevelocityException: Internal error in Develocity Gradle plugin: progress notification .*?\\h*\\R"
+            + ".*?^\\h*\\.\\.\\. \\d+ more\\h*\\R?"
     );
 
     private final List<ExpectedDeprecationWarning> expectedDeprecationWarnings;
@@ -125,6 +131,7 @@ public class ResultAssertion implements Action<ExecutionResult> {
 
     private void validate(String output, String displayName) {
         output = KNOWN_DEVELOCITY_BUILD_SCAN_FAILURE.matcher(output).replaceAll("");
+        output = KNOWN_DEVELOCITY_PROGRESS_NOTIFICATION_FAILURE.matcher(output).replaceAll("");
         List<String> lines = getLines(output);
         int i = 0;
         boolean insideVariantDescriptionBlock = false;

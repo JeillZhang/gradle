@@ -34,7 +34,7 @@ Example: `someTask.dependsOn(":some-other-project:someOtherTask")`
 For example, building `project-a:project-b:someTask` causes configuration of `project-b`.
 
 [[sec:configuration_on_demand]]
-== Enable `configuration-on-demand`
+== Enable `configure-on-demand`
 
 You can enable configuration-on-demand using the `--configure-on-demand` flag or adding `org.gradle.configureondemand=true` to the `gradle.properties` file.
 

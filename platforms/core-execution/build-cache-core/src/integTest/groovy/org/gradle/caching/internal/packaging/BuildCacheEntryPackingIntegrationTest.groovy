@@ -19,7 +19,7 @@ package org.gradle.caching.internal.packaging
 import org.gradle.integtests.fixtures.DirectoryBuildCacheFixture
 import org.gradle.integtests.fixtures.daemon.DaemonIntegrationSpec
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 import spock.lang.Issue
 
 class BuildCacheEntryPackingIntegrationTest extends DaemonIntegrationSpec implements DirectoryBuildCacheFixture {
@@ -40,7 +40,7 @@ class BuildCacheEntryPackingIntegrationTest extends DaemonIntegrationSpec implem
     ]
 
     @Issue("https://github.com/gradle/gradle/issues/9877")
-    @Requires(value = IntegTestPreconditions.NotEmbeddedExecutor, reason = "requires daemon because of explicit encoding")
+    @Requires(value = TestExecutionPreconditions.NotEmbeddedExecutor, reason = "requires daemon because of explicit encoding")
     def "can store and load files having non-ascii characters in file name when default file encoding is set to #fileEncoding"() {
         def fileName = NON_ASCII_NAME + ".txt"
         def outputFile = file("dir", fileName)
@@ -83,7 +83,7 @@ class BuildCacheEntryPackingIntegrationTest extends DaemonIntegrationSpec implem
         fileEncoding << DEFAULT_ENCODINGS
     }
 
-    @Requires(value = IntegTestPreconditions.NotEmbeddedExecutor, reason = "requires daemon because of explicit encoding")
+    @Requires(value = TestExecutionPreconditions.NotEmbeddedExecutor, reason = "requires daemon because of explicit encoding")
     def "can store and load files having non-ascii characters in property name when default file encoding is set to #fileEncoding"() {
         def outputFile = file("output.txt")
 

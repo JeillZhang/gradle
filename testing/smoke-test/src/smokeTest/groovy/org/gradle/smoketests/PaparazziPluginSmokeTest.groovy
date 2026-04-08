@@ -19,9 +19,10 @@ package org.gradle.smoketests
 import org.gradle.integtests.fixtures.android.AndroidHome
 import org.gradle.util.GradleVersion
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.JdkVersionTestPreconditions
 
-@Requires(UnitTestPreconditions.Jdk21OrLater)
+
+@Requires(JdkVersionTestPreconditions.Jdk21OrLater)
 class PaparazziPluginSmokeTest extends AbstractSmokeTest implements RunnerFactory {
 
     def setup() {

@@ -22,7 +22,8 @@ import org.gradle.buildinit.plugins.fixtures.ScriptDslFixture
 import org.gradle.integtests.fixtures.ToBeFixedForIsolatedProjects
 import org.gradle.test.fixtures.file.LeaksFileHandles
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.JdkVersionTestPreconditions
+
 import spock.lang.Issue
 
 import static org.gradle.buildinit.plugins.internal.modifiers.BuildInitDsl.KOTLIN
@@ -53,7 +54,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         dslFixtureFor(KOTLIN).assertGradleFilesGenerated()
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "creates sample source if no source present with #scriptDsl build scripts"() {
         when:
         run('init', '--type', 'kotlin-application', '--dsl', scriptDsl.id, '--java-version', JavaVersion.current().majorVersion)
@@ -81,7 +82,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "creates build using test suites with #scriptDsl build scripts when using --incubating"() {
         def dslFixture = dslFixtureFor(scriptDsl)
 
@@ -112,7 +113,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "creates with gradle.properties when using #scriptDsl build scripts with --incubating"() {
         when:
         run('init', '--type', 'kotlin-application', '--dsl', scriptDsl.id, '--incubating', '--java-version', JavaVersion.current().majorVersion)
@@ -140,7 +141,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "creates sample source with package and #scriptDsl build scripts"() {
         when:
         run('init', '--type', 'kotlin-application', '--package', 'my.app', '--dsl', scriptDsl.id, '--java-version', JavaVersion.current().majorVersion)
@@ -168,7 +169,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "init task action is skipped when kotlin sources detected with #scriptDsl build scripts"() {
         setup:
         subprojectDir.file("src/main/kotlin/org/acme/SampleMain.kt") << """
@@ -204,7 +205,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     @ToBeFixedForIsolatedProjects(skip = FLAKY, because = "KGP modifies service parameter properties concurrently")
     def "initializes Kotlin application with JUnit Jupiter test framework with --split-project"() {
         when:
@@ -223,7 +224,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
         assertTestPassed("org.example.app.MessageUtilsTest", "testGetMessage")
     }
 
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "initializes Kotlin application with JUnit Jupiter test framework with --no-split-project"() {
         when:
         run('init', '--type', 'kotlin-application', '--test-framework', 'junit-jupiter', "--no-split-project", '--java-version', JavaVersion.current().majorVersion)
@@ -242,7 +243,7 @@ class KotlinApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegra
     }
 
     @Issue("https://github.com/gradle/gradle/issues/17137")
-    @Requires(value = UnitTestPreconditions.KotlinSupportedJdk.class)
+    @Requires(value = JdkVersionTestPreconditions.KotlinSupportedJdk.class)
     def "does not contain junit specific kotlin test dependencies"() {
         when:
         run ('init', '--type', 'kotlin-application', '--java-version', JavaVersion.current().majorVersion)

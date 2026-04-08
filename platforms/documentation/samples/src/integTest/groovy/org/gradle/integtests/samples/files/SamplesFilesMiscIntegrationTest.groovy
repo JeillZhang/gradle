@@ -20,7 +20,7 @@ import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.Sample
 import org.gradle.integtests.fixtures.UsesSample
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 import org.junit.Rule
 
 class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
@@ -71,7 +71,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
     }
 
     @UsesSample("files/misc")
-    @Requires(IntegTestPreconditions.IsConfigCached)
+    @Requires(TestExecutionPreconditions.IsConfigCached)
     def "can move a directory with #dsl dsl with configuration cache"() {
         given:
         def dslDir = sample.dir.file(dsl)

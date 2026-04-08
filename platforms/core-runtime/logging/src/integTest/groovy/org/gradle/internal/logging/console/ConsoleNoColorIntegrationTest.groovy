@@ -19,9 +19,9 @@ package org.gradle.internal.logging.console
 import org.gradle.api.logging.configuration.ConsoleOutput
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 
-@Requires(IntegTestPreconditions.NotEmbeddedExecutor.class)
+@Requires(TestExecutionPreconditions.NotEmbeddedExecutor.class)
 class ConsoleNoColorIntegrationTest extends AbstractIntegrationSpec {
 
     private static final ANSI_BOLD = '\u001B[1m'

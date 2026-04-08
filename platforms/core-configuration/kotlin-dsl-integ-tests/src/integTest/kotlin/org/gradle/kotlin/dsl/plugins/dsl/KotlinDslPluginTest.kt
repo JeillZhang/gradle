@@ -26,7 +26,7 @@ import org.gradle.kotlin.dsl.fixtures.normalisedPath
 import org.gradle.kotlin.dsl.support.expectedKotlinDslPluginsVersion
 import org.gradle.test.fixtures.file.LeaksFileHandles
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
@@ -83,7 +83,7 @@ class KotlinDslPluginTest : AbstractKotlinIntegrationTest() {
 
     @Test
     @Requires(
-        IntegTestPreconditions.NotEmbeddedExecutor::class,
+        TestExecutionPreconditions.NotEmbeddedExecutor::class,
         reason = "Requires a Gradle distribution on the test-under-test classpath, but gradleApi() does not offer the full distribution"
     )
     fun `gradle kotlin dsl api is available for test implementation`() {
@@ -152,7 +152,7 @@ class KotlinDslPluginTest : AbstractKotlinIntegrationTest() {
 
     @Test
     @Requires(
-        IntegTestPreconditions.NotEmbeddedExecutor::class,
+        TestExecutionPreconditions.NotEmbeddedExecutor::class,
         reason = "requires a full distribution to run tests with test kit"
     )
     fun `gradle kotlin dsl api is available in test-kit injected plugin classpath`() {

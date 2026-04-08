@@ -22,12 +22,12 @@ import org.gradle.integtests.fixtures.executer.ExecutionResult
 import org.gradle.integtests.fixtures.executer.GradleContextualExecuter
 import org.gradle.test.fixtures.file.LeaksFileHandles
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 import org.gradle.util.internal.TextUtil
 import org.junit.Rule
 
 @LeaksFileHandles
-@Requires(value = IntegTestPreconditions.NotEmbeddedExecutor, reason = "These test run independent applications that connect to a Gradle distribution through the Tooling API")
+@Requires(value = TestExecutionPreconditions.NotEmbeddedExecutor, reason = "These test run independent applications that connect to a Gradle distribution through the Tooling API")
 class SamplesToolingApiIntegrationTest extends AbstractIntegrationSpec {
 
     @Rule

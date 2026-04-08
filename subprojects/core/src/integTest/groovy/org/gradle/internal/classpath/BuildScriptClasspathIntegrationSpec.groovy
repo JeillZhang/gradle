@@ -27,7 +27,8 @@ import org.gradle.test.fixtures.file.TestFile
 import org.gradle.test.fixtures.server.http.HttpServer
 import org.gradle.test.fixtures.server.http.MavenHttpRepository
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
+import org.gradle.test.preconditions.InstalledJdkTestPreconditions
 import org.junit.Rule
 import spock.lang.Issue
 import spock.lang.Unroll
@@ -161,7 +162,7 @@ class BuildScriptClasspathIntegrationSpec extends AbstractIntegrationSpec implem
         """
     }
 
-    @Requires(value = IntegTestPreconditions.NotEmbeddedExecutor, reason = "explicitly requests daemon")
+    @Requires(value = TestExecutionPreconditions.NotEmbeddedExecutor, reason = "explicitly requests daemon")
     def "url connection caching is not disabled by default"() {
         given:
         buildFile << """
@@ -329,9 +330,9 @@ class BuildScriptClasspathIntegrationSpec extends AbstractIntegrationSpec implem
     }
 
     @Requires(value = [
-        IntegTestPreconditions.Java21HomeAvailable,
-        IntegTestPreconditions.Java24HomeAvailable,
-        IntegTestPreconditions.NotEmbeddedExecutor,
+        InstalledJdkTestPreconditions.Java21HomeAvailable,
+        InstalledJdkTestPreconditions.Java24HomeAvailable,
+        TestExecutionPreconditions.NotEmbeddedExecutor,
     ], reason = "must run with specific predictable JDK versions")
     def "proper version is selected for multi-release jar"() {
         given:

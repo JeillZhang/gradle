@@ -29,7 +29,7 @@ import org.gradle.test.precondition.Requires
 import org.gradle.testing.AbstractTestFrameworkIntegrationTest
 import org.junit.Assume
 
-import static org.gradle.test.preconditions.UnitTestPreconditions.HasXCTest
+import static org.gradle.test.preconditions.TestEnvironmentPreconditions.HasXCTest
 
 @RequiresInstalledToolChain(ToolChainRequirement.SWIFTC)
 @Requires(HasXCTest)

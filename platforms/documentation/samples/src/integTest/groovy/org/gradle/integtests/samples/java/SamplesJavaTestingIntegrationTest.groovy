@@ -26,7 +26,7 @@ import org.gradle.integtests.fixtures.jvm.JavaToolchainFixture
 import org.gradle.internal.jvm.Jvm
 import org.gradle.test.fixtures.file.TestFile
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.InstalledJdkTestPreconditions
 import org.junit.Rule
 
 class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest implements JavaToolchainFixture {
@@ -34,7 +34,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
     @Rule
     Sample sample = new Sample(testDirectoryProvider)
 
-    @Requires(IntegTestPreconditions.Java17HomeAvailable)
+    @Requires(InstalledJdkTestPreconditions.Java17HomeAvailable)
     @UsesSample("java/basic")
     def "can execute simple Java tests with #dsl dsl"() {
         given:
@@ -313,7 +313,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @Requires(IntegTestPreconditions.Java17HomeAvailable)
+    @Requires(InstalledJdkTestPreconditions.Java17HomeAvailable)
     @UsesSample("java/basic")
     def "can run simple Java integration tests with #dsl dsl"() {
         given:
@@ -341,7 +341,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @Requires(IntegTestPreconditions.Java17HomeAvailable)
+    @Requires(InstalledJdkTestPreconditions.Java17HomeAvailable)
     @UsesSample("java/basic")
     def "can skip the tests with an `onlyIf` condition with #dsl dsl"() {
         given:

@@ -23,7 +23,9 @@ import org.gradle.integtests.fixtures.ToBeFixedForConfigurationCache
 import org.gradle.internal.jvm.SupportedJavaVersions
 import org.gradle.test.fixtures.file.TestFile
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.FileSystemTestPreconditions
+import org.gradle.test.preconditions.TestEnvironmentPreconditions
+
 import org.gradle.testing.fixture.AbstractTestingMultiVersionIntegrationTest
 import spock.lang.Issue
 
@@ -193,7 +195,7 @@ abstract class AbstractTestTaskIntegrationTest extends AbstractTestingMultiVersi
         Runtime.runtime.availableProcessors() + 1 | _
     }
 
-    @Requires(UnitTestPreconditions.Online)
+    @Requires(TestEnvironmentPreconditions.Online)
     def "re-runs tests when resources are renamed in a jar"() {
         given:
         buildFile << """
@@ -231,7 +233,7 @@ abstract class AbstractTestTaskIntegrationTest extends AbstractTestingMultiVersi
         fails 'test'
     }
 
-    @Requires(UnitTestPreconditions.Online)
+    @Requires(TestEnvironmentPreconditions.Online)
     def "re-runs tests when resources are renamed"() {
         given:
         file("src/test/java/MyTest.java") << """
@@ -399,7 +401,7 @@ abstract class AbstractTestTaskIntegrationTest extends AbstractTestingMultiVersi
         "after"  | afterClassAnnotation
     }
 
-    @Requires(UnitTestPreconditions.FilePermissions)
+    @Requires(FileSystemTestPreconditions.FilePermissions)
     def "binary test result files have correct permissions"() {
         given:
         file('src/test/java/MyTest.java') << standaloneTestClass

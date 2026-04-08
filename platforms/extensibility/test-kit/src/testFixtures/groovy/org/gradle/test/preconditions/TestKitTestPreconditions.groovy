@@ -19,7 +19,13 @@ package org.gradle.test.preconditions
 import org.gradle.test.precondition.TestPrecondition
 import org.gradle.testkit.runner.BaseGradleRunnerIntegrationTest
 
-class TestKitPreconditions {
+/**
+ * Preconditions for TestKit version availability.
+ * Checks whether the lowest major Gradle version required for cross-version TestKit testing is available.
+ *
+ * @see org.gradle.test.precondition
+ */
+class TestKitTestPreconditions {
 
     static class LowestMajorGradleIsAvailable implements TestPrecondition {
         @Override

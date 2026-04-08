@@ -21,7 +21,8 @@ import org.gradle.integtests.fixtures.Sample
 import org.gradle.integtests.fixtures.ToBeFixedForConfigurationCache
 import org.gradle.integtests.fixtures.UsesSample
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.FileSystemTestPreconditions
+
 import org.junit.Rule
 
 class SamplesCopyIntegrationTest extends AbstractSampleIntegrationTest {
@@ -321,7 +322,7 @@ class SamplesCopyIntegrationTest extends AbstractSampleIntegrationTest {
     }
 
     @UsesSample("files/copy")
-    @Requires(UnitTestPreconditions.CaseSensitiveFs)
+    @Requires(FileSystemTestPreconditions.CaseSensitiveFs)
     def "can use copy task with rename with #dsl dsl"() {
         given:
         def dslDir = sample.dir.file(dsl)

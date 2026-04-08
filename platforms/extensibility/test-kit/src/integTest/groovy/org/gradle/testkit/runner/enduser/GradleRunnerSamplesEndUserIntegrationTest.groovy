@@ -20,8 +20,10 @@ package org.gradle.testkit.runner.enduser
 import org.gradle.integtests.fixtures.Sample
 import org.gradle.integtests.fixtures.UsesSample
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
+import org.gradle.test.preconditions.JdkVersionTestPreconditions
+import org.gradle.test.preconditions.TestEnvironmentPreconditions
+
 import org.gradle.testing.internal.util.RetryUtil
 import org.gradle.testkit.runner.fixtures.NoDebug
 import org.gradle.testkit.runner.fixtures.NonCrossVersion
@@ -30,7 +32,7 @@ import org.junit.Rule
 @NonCrossVersion
 @NoDebug
 @Requires(
-    value = IntegTestPreconditions.NotEmbeddedExecutor,
+    value = TestExecutionPreconditions.NotEmbeddedExecutor,
     reason = NOT_EMBEDDED_REASON
 )
 class GradleRunnerSamplesEndUserIntegrationTest extends BaseTestKitEndUserIntegrationTest {
@@ -86,7 +88,7 @@ class GradleRunnerSamplesEndUserIntegrationTest extends BaseTestKitEndUserIntegr
         dsl << ['groovy', 'kotlin']
     }
 
-    @Requires([UnitTestPreconditions.Online, UnitTestPreconditions.Jdk11OrEarlier])
+    @Requires([TestEnvironmentPreconditions.Online, JdkVersionTestPreconditions.Jdk11OrEarlier])
     // Uses Gradle 5.0 which does not support Java versions >11
     @UsesSample("testKit/gradleVersion")
     def gradleVersion() {

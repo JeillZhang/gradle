@@ -19,7 +19,7 @@ package org.gradle.integtests.resolve.caching
 import org.gradle.integtests.fixtures.AbstractHttpDependencyResolutionTest
 import org.gradle.integtests.fixtures.executer.GradleContextualExecuter
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 
 class CachedMissingModulesIntegrationTest extends AbstractHttpDependencyResolutionTest {
 
@@ -549,7 +549,7 @@ Required by:
         run 'retrieve'
     }
 
-    @Requires(IntegTestPreconditions.NotParallelExecutor)
+    @Requires(TestExecutionPreconditions.NotParallelExecutor)
     def "hit each remote repo only once per build and missing module"() {
         given:
         def repo1 = mavenHttpRepo("repo1")

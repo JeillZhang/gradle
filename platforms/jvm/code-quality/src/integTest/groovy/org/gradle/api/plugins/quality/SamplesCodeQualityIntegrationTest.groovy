@@ -23,7 +23,9 @@ import org.gradle.internal.jvm.Jvm
 import org.gradle.quality.integtest.fixtures.PmdCoverage
 import org.gradle.test.fixtures.file.TestFile
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.JdkVersionTestPreconditions
+import org.gradle.test.preconditions.TestEnvironmentPreconditions
+
 import org.gradle.util.internal.VersionNumber
 import org.junit.Rule
 
@@ -35,7 +37,7 @@ class SamplesCodeQualityIntegrationTest extends AbstractSampleIntegrationTest {
     Sample sample = new Sample(testDirectoryProvider)
 
     @UsesSample('codeQuality/codeQuality')
-    @Requires([UnitTestPreconditions.StableGroovy, UnitTestPreconditions.Jdk11OrLater])
+    @Requires([TestEnvironmentPreconditions.StableGroovy, JdkVersionTestPreconditions.Jdk11OrLater])
     def "can generate reports with #dsl dsl"() {
         assumeTrue(PmdCoverage.supportsJdkVersion(VersionNumber.parse(PmdPlugin.DEFAULT_PMD_VERSION), Jvm.current().javaVersionMajor))
 

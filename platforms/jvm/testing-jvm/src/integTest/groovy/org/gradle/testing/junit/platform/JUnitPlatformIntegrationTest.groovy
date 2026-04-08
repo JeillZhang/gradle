@@ -19,7 +19,7 @@ package org.gradle.testing.junit.platform
 import org.gradle.api.tasks.testing.TestResult
 import org.gradle.integtests.fixtures.DefaultTestExecutionResult
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.IntegTestPreconditions
+import org.gradle.test.preconditions.TestExecutionPreconditions
 import spock.lang.Issue
 import spock.lang.Timeout
 
@@ -444,7 +444,7 @@ public class StaticInnerTest {
 
     // When running embedded with test distribution, the remote distribution has a newer version of
     // junit-platform-launcher which is not compatible with the junit jupiter jars we test against.
-    @Requires(IntegTestPreconditions.NotEmbeddedExecutor)
+    @Requires(TestExecutionPreconditions.NotEmbeddedExecutor)
     // JUnitCoverage is quite limited and doesn't test older versions or the newest version.
     // Future work is planned to improve junit test rewriting, and at the same time should verify
     // greater ranges of junit platform testing. This is only reproducible with the newest version

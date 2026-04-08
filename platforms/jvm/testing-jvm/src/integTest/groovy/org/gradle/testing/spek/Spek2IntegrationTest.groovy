@@ -22,7 +22,8 @@ import org.gradle.api.tasks.testing.TestResult
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.versions.KotlinGradlePluginVersions
 import org.gradle.test.precondition.Requires
-import org.gradle.test.preconditions.UnitTestPreconditions
+import org.gradle.test.preconditions.JdkVersionTestPreconditions
+
 
 import static org.hamcrest.CoreMatchers.containsString
 
@@ -30,7 +31,7 @@ import static org.hamcrest.CoreMatchers.containsString
  * Integration tests demonstrating use of the Spek2 testing framework.
  */
 @Requires(
-    value = UnitTestPreconditions.KotlinSupportedJdk,
+    value = JdkVersionTestPreconditions.KotlinSupportedJdk,
     reason = "Spek2 requires a JDK that supports Kotlin"
 )
 class Spek2IntegrationTest extends AbstractIntegrationSpec implements VerifiesGenericTestReportResults {

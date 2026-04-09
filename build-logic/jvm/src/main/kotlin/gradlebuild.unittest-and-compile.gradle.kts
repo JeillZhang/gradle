@@ -274,7 +274,10 @@ fun Test.isUnitTest() = listOf("test", "writePerformanceScenarioDefinitions", "w
  * If enabled, test JVM will inherit the DEVELOCITY_ACCESS_TOKEN
  * environment variable. This allows build scans to be published for integration tests.
  */
-fun Test.inheritDevelocityAccessTokenEnv() = setOf("smoke-test").contains(project.name)
+fun Test.inheritedEnvVars(): List<String> = when {
+    project.name == "smoke-test" -> listOf("DEVELOCITY_ACCESS_KEY", "CI")
+    else -> emptyList()
+}
 
 fun Test.usesEmbeddedExecuter() = systemProperties["org.gradle.integtest.executer"]?.equals("embedded") ?: false
 
@@ -305,7 +308,7 @@ fun configureTests() {
     tasks.withType<Test>().configureEach {
 
         configureAndroidUserHome()
-        filterEnvironmentVariables(inheritDevelocityAccessTokenEnv())
+        filterEnvironmentVariables(inheritedEnvVars())
 
         maxParallelForks = project.maxParallelForks
 

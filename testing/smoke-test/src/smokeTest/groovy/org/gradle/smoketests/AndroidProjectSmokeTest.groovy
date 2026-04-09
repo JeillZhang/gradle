@@ -19,6 +19,7 @@ package org.gradle.smoketests
 import org.gradle.integtests.fixtures.executer.GradleContextualExecuter
 
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
+import static org.gradle.testkit.runner.TaskOutcome.FROM_CACHE
 
 abstract class AndroidProjectSmokeTest extends AbstractAndroidProjectSmokeTest {
 }
@@ -63,7 +64,7 @@ class AndroidProjectIncrementalCompilationSmokeTest extends AndroidProjectSmokeT
         def result = buildLocation(checkoutDir, agpVersion)
 
         then:
-        result.task(":core:ui:compileProdDebugKotlin").outcome == SUCCESS
+        result.task(":core:ui:compileProdDebugKotlin").outcome in [SUCCESS, FROM_CACHE]
         if (GradleContextualExecuter.isConfigCache()) {
             result.assertConfigurationCacheStateStored()
         }
@@ -73,7 +74,7 @@ class AndroidProjectIncrementalCompilationSmokeTest extends AndroidProjectSmokeT
         result = buildCachedLocation(checkoutDir, agpVersion)
 
         then:
-        result.task(":core:ui:compileProdDebugKotlin").outcome == SUCCESS
+        result.task(":core:ui:compileProdDebugKotlin").outcome in [SUCCESS, FROM_CACHE]
         if (GradleContextualExecuter.isConfigCache()) {
             result.assertConfigurationCacheStateLoaded()
         }

@@ -100,6 +100,7 @@ public class RootBuildLifecycleBuildActionExecutor {
                 RootBuildState rootBuild = buildStateRegistry.createRootBuild(BuildDefinition.fromStartParameter(action.getStartParameter(), null));
                 return rootBuild.run(buildController -> buildActionRunner.run(action, buildController));
             } finally {
+                ProblemsProgressEventEmitterHolder.clear();
                 lifecycleListener.beforeStop();
             }
         } finally {

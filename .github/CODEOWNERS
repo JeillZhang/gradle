@@ -10,6 +10,7 @@
 # Build infrastructure
 .teamcity/                                  @gradle/bt-developer-productivity
 .github/                                    @gradle/bt-developer-productivity @gradle/bt-product-operations # This might need to be more finegrained in the future
+/.coderabbit.yaml                           @gradle/bt-developer-productivity
 /build-logic/                               @gradle/bt-developer-productivity
 /build-logic-commons/                       @gradle/bt-developer-productivity
 /build-logic-settings/                      @gradle/bt-developer-productivity

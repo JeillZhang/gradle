@@ -16,11 +16,19 @@
 
 package org.gradle.api.problems.internal;
 
+import org.jspecify.annotations.Nullable;
+
 public class ProblemsProgressEventEmitterHolder {
+
+    @Nullable
     private static InternalProblems problemsService = null;
 
     public static void init(InternalProblems problemsService) {
         ProblemsProgressEventEmitterHolder.problemsService = problemsService;
+    }
+
+    public static void clear() {
+        problemsService = null;
     }
 
     public static InternalProblems get() {

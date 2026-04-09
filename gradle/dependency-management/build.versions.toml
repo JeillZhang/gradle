@@ -40,7 +40,7 @@ javaParserSymbolSolver = { module = "com.github.javaparser:javaparser-symbol-sol
 javaPoet = { module = "com.squareup:javapoet", version.ref = "javaPoet" }
 jaxb = { module = "com.sun.xml.bind:jaxb-impl", version = "4.0.5" }
 jhighlight = { module = "com.uwyn:jhighlight", version = "1.0" }
-jmhPlugin = { module = "me.champeau.jmh:jmh-gradle-plugin", version = "0.7.2" }
+jmhPlugin = { module = "me.champeau.jmh:jmh-gradle-plugin", version = "0.7.3" }
 jsoup = { module = "org.jsoup:jsoup", version = "1.15.3" }
 jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
 kgp = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin"}

@@ -24,6 +24,7 @@ import org.gradle.integtests.fixtures.polyglot.SkipDsl
 import org.gradle.integtests.fixtures.polyglot.PolyglotTestFixture
 import org.gradle.internal.declarativedsl.DeclarativeTestUtils
 import org.gradle.test.fixtures.dsl.GradleDsl
+import spock.lang.Issue
 
 @PolyglotDslTest
 class ProjectTypeModelDefaultsIntegrationTest extends AbstractIntegrationSpec implements ProjectFeatureFixture, PolyglotTestFixture {
@@ -406,6 +407,27 @@ class ProjectTypeModelDefaultsIntegrationTest extends AbstractIntegrationSpec im
         testCase                                           | modelDefault                 | buildConfiguration      | expectedValues
         "feature is set in default and build script"       | setFeatureText("default")    | setFeatureText("test")  | expected("text":"test")
         "feature is set in default but not build script"   | setFeatureText("default")    | ""                      | expected("text":"default")
+    }
+
+    @Issue("https://github.com/gradle/gradle/issues/37377")
+    def "configuring build-level defaults applies features in the correct order"() {
+        given:
+        withProjectFeature().prepareToExecute()
+
+        settingsFile() << getDeclarativeSettingsScriptThatSetsDefaults(setFeatureText("default"))
+
+        buildFile() << declarativeScriptThatConfiguresOnlyTestProjectType << DeclarativeTestUtils.nonDeclarativeSuffixForKotlinDsl
+
+        when:
+        run(":printFeatureDefinitionConfiguration")
+
+        then:
+        outputContains("Binding TestProjectTypeDefinition")
+        outputContains("Binding FeatureDefinition")
+        outputContains("definition text = default")
+
+        and:
+        output.indexOf("Binding TestProjectTypeDefinition") < output.indexOf("Binding FeatureDefinition")
     }
 
     private static String[] expected(Map<String, String> expectations) {

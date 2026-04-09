@@ -53,6 +53,10 @@ class DefaultExecutionProblemHandlerTest extends Specification implements Valida
         work.displayName >> "job ':test'"
     }
 
+    def cleanup() {
+        ProblemsProgressEventEmitterHolder.clear()
+    }
+
     def "fails when there is a single violation"() {
         expectReindentedValidationMessage()
         given:

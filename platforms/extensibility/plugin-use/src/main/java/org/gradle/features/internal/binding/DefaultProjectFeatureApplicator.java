@@ -116,9 +116,9 @@ abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureA
         ProjectFeatureDefinitionContext.ChildDefinitionAdditionResult<OwnDefinition, OwnBuildModel> result = instantiateDefinition(parentDefinition, projectFeature, parentDefinitionContext);
 
         if (result.isNew) {
+            pendingFeatureApplications.add(result.featureApplication);
             Plugin<Project> plugin = getPluginManager().getPluginContainer().getPlugin(projectFeature.getPluginClass());
             getModelDefaultsApplicator().applyDefaultsTo(parentDefinition, result.featureApplication.getDefinitionInstance(), new ClassLoaderContextFromScope(classLoaderScope), plugin, projectFeature);
-            pendingFeatureApplications.add(result.featureApplication);
         }
 
         return result.featureApplication;

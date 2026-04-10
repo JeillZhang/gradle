@@ -77,12 +77,4 @@ class ProjectTypeDefinitionWithMultipleNestedBindingLocations extends ProjectTyp
             }
         """
     }
-
-    @Override
-    String getBuildModelMapping() {
-        return """
-                context.registerBuildModel(definition.getFoo());
-                context.registerBuildModel(definition.getBar());
-            """
-    }
 }

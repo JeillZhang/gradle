@@ -353,6 +353,16 @@ To avoid generating subgroup accessors, use camelCase notation:
 
 |===
 
+If you cannot rename aliases, for example, when consuming a published catalog, use `asProvider()` to access the parent version directly.
+
+Given a catalog with both `jackson` and `jackson-databind` version aliases, `libs.versions.jackson` returns the subgroup accessor (because `jackson-databind` creates a `jackson.databind` subgroup).
+To get the `jackson` version itself, call `asProvider()`:
+
+====
+include::sample[dir="snippets/dependencyManagement/catalogs-asprovider/kotlin",files="build.gradle.kts[tags=use_version_asprovider]"]
+include::sample[dir="snippets/dependencyManagement/catalogs-asprovider/groovy",files="build.gradle[tags=use_version_asprovider]"]
+====
+
 === Reserved keywords
 
 Certain keywords, like `extensions`, `class`, and `convention`, are reserved and cannot be used as aliases.

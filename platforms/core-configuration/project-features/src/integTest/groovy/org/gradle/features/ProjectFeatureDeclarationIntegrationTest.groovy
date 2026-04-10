@@ -711,6 +711,38 @@ class ProjectFeatureDeclarationIntegrationTest extends AbstractIntegrationSpec i
         outputContains("Binding GroupFeatureDefinition")
     }
 
+    def "can register build model for a non-discoverable nested definition"() {
+        given:
+        PluginBuilder pluginBuilder = withProjectTypeUsingNonDiscoverableDefinition()
+        pluginBuilder.addBuildScriptContent pluginBuildScriptForJava
+        pluginBuilder.prepareToExecute()
+
+        settingsFile() << pluginsFromIncludedBuild
+
+        buildFile() << """
+            testProjectType {
+                id = "test"
+                foo {
+                    bar = "baz"
+                    feature {
+                        text = "foo"
+                        fizz {
+                            buzz = "buz"
+                        }
+                    }
+                }
+            }
+        """
+
+        when:
+        run(":printTestProjectTypeDefinitionConfiguration", ":printFeatureDefinitionConfiguration")
+
+        then:
+        outputContains("definition foo.bar = baz")
+        outputContains("model foo.barProcessed = BAZ")
+        outputContains("model text = foo BAZ")
+    }
+
     static String getDeclarativeScriptThatConfiguresOnlyTestProjectFeature() {
         return """
             testProjectType {

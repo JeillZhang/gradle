@@ -32,7 +32,7 @@ class SamplesDefiningUsingConfigurationsIntegrationTest extends AbstractIntegrat
         executer.withRepositoryMirrors()
     }
 
-    @UsesSample("dependencyManagement/definingUsingConfigurations-custom")
+    @UsesSample("integration-tests/dependencyManagement/definingUsingConfigurations-custom")
     @Requires(TestExecutionPreconditions.NotEmbeddedExecutor) // Sample only works with isolated distribution classpath, because otherwise multiple JARs contain conflicting versions of 'javax/servlet/descriptor/JspConfigDescriptor'
     def "can declare and resolve custom configuration with #dsl dsl"() {
         setup:
@@ -48,7 +48,7 @@ class SamplesDefiningUsingConfigurationsIntegrationTest extends AbstractIntegrat
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("dependencyManagement/definingUsingConfigurations-inheritance")
+    @UsesSample("integration-tests/dependencyManagement/definingUsingConfigurations-inheritance")
     def "can extend one configuration from another configuration"() {
         setup:
         executer.inDirectory(sample.dir.file(dsl))

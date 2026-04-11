@@ -31,7 +31,7 @@ class NativeIdeSamplesIntegrationTest extends AbstractVisualStudioIntegrationSpe
     @Rule public final Sample visualStudio = sample(temporaryFolder, 'visual-studio')
 
     private static Sample sample(TestDirectoryProvider testDirectoryProvider, String name) {
-        return new Sample(testDirectoryProvider, "native-binaries/${name}/groovy", name)
+        return new Sample(testDirectoryProvider, "integration-tests/native-binaries/${name}/groovy", name)
     }
 
     @ToBeFixedForConfigurationCache(because = "https://github.com/gradle/gradle/issues/36854")

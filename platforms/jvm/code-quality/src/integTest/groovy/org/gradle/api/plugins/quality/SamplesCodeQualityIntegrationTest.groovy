@@ -36,7 +36,7 @@ class SamplesCodeQualityIntegrationTest extends AbstractSampleIntegrationTest {
     @Rule
     Sample sample = new Sample(testDirectoryProvider)
 
-    @UsesSample('codeQuality/codeQuality')
+    @UsesSample('integration-tests/codeQuality/codeQuality')
     @Requires([TestEnvironmentPreconditions.StableGroovy, JdkVersionTestPreconditions.Jdk11OrLater])
     def "can generate reports with #dsl dsl"() {
         assumeTrue(PmdCoverage.supportsJdkVersion(VersionNumber.parse(PmdPlugin.DEFAULT_PMD_VERSION), Jvm.current().javaVersionMajor))

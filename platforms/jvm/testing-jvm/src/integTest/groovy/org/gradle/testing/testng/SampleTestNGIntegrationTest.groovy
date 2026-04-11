@@ -38,7 +38,7 @@ class SampleTestNGIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @UsesSample('testing/testng-suitexmlbuilder')
+    @UsesSample('integration-tests/testing/testng-suitexmlbuilder')
     void suiteXmlBuilder() {
         def testDir = sample.dir.file('groovy')
         executer.inDirectory(testDir).withTasks('clean', 'test').run()
@@ -48,7 +48,7 @@ class SampleTestNGIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @UsesSample('testing/testng-java-passing')
+    @UsesSample('integration-tests/testing/testng-java-passing')
     void javaPassing() {
         def testDir = sample.dir.file('groovy')
         executer.inDirectory(testDir).withTasks('clean', 'test').run()

@@ -33,7 +33,7 @@ class SamplesScalaQuickstartIntegrationTest extends AbstractSampleIntegrationTes
 
     @Rule public final Sample sample = new Sample(testDirectoryProvider)
 
-    @UsesSample('scala/quickstart')
+    @UsesSample('integration-tests/scala/quickstart')
     def "can build jar with #dsl dsl"() {
         // Build and test projects
         TestFile projectDir = sample.dir.file(dsl)
@@ -56,7 +56,7 @@ class SamplesScalaQuickstartIntegrationTest extends AbstractSampleIntegrationTes
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample('scala/quickstart')
+    @UsesSample('integration-tests/scala/quickstart')
     def "can build scalaDoc with #dsl dsl"() {
         TestFile projectDir = sample.dir.file(dsl)
         executer.inDirectory(projectDir).withTasks('clean', 'scaladoc').run()

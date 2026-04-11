@@ -29,7 +29,7 @@ class SamplesCustomExternalTaskIntegrationTest extends AbstractSampleIntegration
     public final Sample sample = new Sample(temporaryFolder)
 
     @Requires(value = TestExecutionPreconditions.NotEmbeddedExecutor, reason = "Requires a Gradle distribution on the test-under-test classpath, but gradleApi() does not offer the full distribution")
-    @UsesSample("base/customExternalTask")
+    @UsesSample("integration-tests/base/customExternalTask")
     def "can test task implementation with #dsl dsl"() {
         when:
         TestFile dslDir = sample.dir.file("$dsl/task")
@@ -43,7 +43,7 @@ class SamplesCustomExternalTaskIntegrationTest extends AbstractSampleIntegration
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("base/customExternalTask")
+    @UsesSample("integration-tests/base/customExternalTask")
     def "can publish and use task implementations for #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)

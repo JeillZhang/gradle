@@ -27,7 +27,7 @@ import org.junit.Rule
 @Requires(value = JdkVersionTestPreconditions.Jdk23OrEarlier, reason = "Scala does not work with Java 24 without warnings yet")
 class SamplesScalaZincIntegrationTest extends AbstractSampleIntegrationTest {
 
-    @Rule Sample sample = new Sample(temporaryFolder, 'scala/zinc')
+    @Rule Sample sample = new Sample(temporaryFolder, 'integration-tests/scala/zinc')
 
     def "can build jar with #dsl dsl"() {
         given:

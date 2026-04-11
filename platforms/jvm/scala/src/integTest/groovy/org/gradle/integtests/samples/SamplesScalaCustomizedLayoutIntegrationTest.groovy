@@ -32,7 +32,7 @@ class SamplesScalaCustomizedLayoutIntegrationTest extends AbstractSampleIntegrat
     @Rule
     Sample sample = new Sample(testDirectoryProvider)
 
-    @UsesSample("scala/customizedLayout")
+    @UsesSample("integration-tests/scala/customizedLayout")
     def "can build jar with #dsl dsl"() {
         TestFile projectDir = sample.dir.file(dsl)
 

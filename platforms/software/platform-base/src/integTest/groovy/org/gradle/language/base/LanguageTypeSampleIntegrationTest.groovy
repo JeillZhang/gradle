@@ -28,7 +28,7 @@ import org.junit.Rule
 @UnsupportedWithConfigurationCache(because = "software model")
 class LanguageTypeSampleIntegrationTest extends AbstractIntegrationSpec {
     @Rule
-    Sample languageTypeSample = new Sample(temporaryFolder, "customModel/languageType/groovy")
+    Sample languageTypeSample = new Sample(temporaryFolder, "integration-tests/customModel/languageType/groovy")
 
     def setup() {
         //  customModel/languageType/groovy sample contains buildSrc, which needs global init script to make mirror work

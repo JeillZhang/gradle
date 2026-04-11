@@ -43,7 +43,7 @@ class TestReportTaskIntegrationTest extends AbstractIntegrationSpec implements V
         return GenericTestExecutionResult.TestFramework.JUNIT4
     }
 
-    @UsesSample("testing/testReport/groovy")
+    @UsesSample("integration-tests/testing/testReport/groovy")
     def "can generate report for subprojects"() {
         given:
         super.sample(sample)

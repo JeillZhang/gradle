@@ -28,7 +28,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
     @Rule
     Sample sample = new Sample(testDirectoryProvider)
 
-    @UsesSample("files/misc")
+    @UsesSample("integration-tests/files/misc")
     def "can create a directory with #dsl dsl"() {
         given:
         def dslDir = sample.dir.file(dsl)
@@ -44,7 +44,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("files/misc")
+    @UsesSample("integration-tests/files/misc")
     def "can move a directory with #dsl dsl"() {
         given:
         def dslDir = sample.dir.file(dsl)
@@ -70,7 +70,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("files/misc")
+    @UsesSample("integration-tests/files/misc")
     @Requires(TestExecutionPreconditions.IsConfigCached)
     def "can move a directory with #dsl dsl with configuration cache"() {
         given:
@@ -92,7 +92,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("files/misc")
+    @UsesSample("integration-tests/files/misc")
     def "can delete a directory with #dsl dsl"() {
         given:
         def dslDir = sample.dir.file(dsl)
@@ -110,7 +110,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("files/misc")
+    @UsesSample("integration-tests/files/misc")
     def "can delete files matching a pattern with #dsl dsl"() {
         given:
         def dslDir = sample.dir.file(dsl)
@@ -131,7 +131,7 @@ class SamplesFilesMiscIntegrationTest extends AbstractIntegrationSpec {
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("files/misc")
+    @UsesSample("integration-tests/files/misc")
     def "can use the rootDir property in a child project with #dsl dsl"() {
         given:
         def dslDir = sample.dir.file(dsl)

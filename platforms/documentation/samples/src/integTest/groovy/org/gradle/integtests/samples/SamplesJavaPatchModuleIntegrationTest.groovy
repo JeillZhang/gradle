@@ -25,7 +25,7 @@ import org.junit.Rule
 @Requires(JdkVersionTestPreconditions.Jdk9OrLater)
 class SamplesJavaPatchModuleIntegrationTest extends AbstractIntegrationSpec {
 
-    @Rule Sample sample = new Sample(temporaryFolder, 'testing/patch-module')
+    @Rule Sample sample = new Sample(temporaryFolder, 'integration-tests/testing/patch-module')
 
     def setup() {
         executer.withRepositoryMirrors()

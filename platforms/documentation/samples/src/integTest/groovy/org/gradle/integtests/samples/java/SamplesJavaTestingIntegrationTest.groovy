@@ -35,7 +35,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
     Sample sample = new Sample(testDirectoryProvider)
 
     @Requires(InstalledJdkTestPreconditions.Java17HomeAvailable)
-    @UsesSample("java/basic")
+    @UsesSample("integration-tests/java/basic")
     def "can execute simple Java tests with #dsl dsl"() {
         given:
         Jvm jdk = AvailableJavaHomes.getJdk17()
@@ -58,7 +58,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/filtering")
+    @UsesSample("integration-tests/testing/filtering")
     def "can execute a subset of tests with filtering with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -83,7 +83,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("java/customDirs")
+    @UsesSample("integration-tests/java/customDirs")
     def "can change the destination for test results and reports with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -107,7 +107,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/testReport")
+    @UsesSample("integration-tests/testing/testReport")
     def "can create a custom TestReport task with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -131,7 +131,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/junit-categories")
+    @UsesSample("integration-tests/testing/junit-categories")
     def "can filter tests by JUnit category with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -152,7 +152,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/junitplatform-tagging")
+    @UsesSample("integration-tests/testing/junitplatform-tagging")
     def "can filter tests by JUnit Platform tag with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -173,7 +173,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/testng-groups")
+    @UsesSample("integration-tests/testing/testng-groups")
     def "can filter tests by TestNG group with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -196,7 +196,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/junitplatform-jupiter")
+    @UsesSample("integration-tests/testing/junitplatform-jupiter")
     def "can run tests using JUnit Jupiter with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -216,7 +216,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/junitplatform-mix")
+    @UsesSample("integration-tests/testing/junitplatform-mix")
     def "can run older JUnit tests with JUnit Jupiter with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -243,7 +243,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/junitplatform-engine")
+    @UsesSample("integration-tests/testing/junitplatform-engine")
     def "can run JUnit Platform tests with a subset of engines with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -265,7 +265,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/testng-preserveorder")
+    @UsesSample("integration-tests/testing/testng-preserveorder")
     def "can use the preserveOrder option with TestNG tests with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -292,7 +292,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testing/testng-groupbyinstances")
+    @UsesSample("integration-tests/testing/testng-groupbyinstances")
     def "can use the groupByInstances option with TestNG tests with #dsl dsl"() {
         given:
         TestFile dslDir = sample.dir.file(dsl)
@@ -314,7 +314,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
     }
 
     @Requires(InstalledJdkTestPreconditions.Java17HomeAvailable)
-    @UsesSample("java/basic")
+    @UsesSample("integration-tests/java/basic")
     def "can run simple Java integration tests with #dsl dsl"() {
         given:
         Jvm jdk = AvailableJavaHomes.getJdk17()
@@ -342,7 +342,7 @@ class SamplesJavaTestingIntegrationTest extends AbstractSampleIntegrationTest im
     }
 
     @Requires(InstalledJdkTestPreconditions.Java17HomeAvailable)
-    @UsesSample("java/basic")
+    @UsesSample("integration-tests/java/basic")
     def "can skip the tests with an `onlyIf` condition with #dsl dsl"() {
         given:
         Jvm jdk = AvailableJavaHomes.getJdk17()

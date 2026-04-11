@@ -51,7 +51,7 @@ class GradleRunnerSamplesEndUserIntegrationTest extends BaseTestKitEndUserIntegr
         """
     }
 
-    @UsesSample("testKit/junitQuickstart")
+    @UsesSample("integration-tests/testKit/junitQuickstart")
     def "junitQuickstart with #dsl dsl"() {
         expect:
         executer.inDirectory(sample.dir.file(dsl))
@@ -61,14 +61,14 @@ class GradleRunnerSamplesEndUserIntegrationTest extends BaseTestKitEndUserIntegr
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testKit/spockQuickstart")
+    @UsesSample("integration-tests/testKit/spockQuickstart")
     def spockQuickstart() {
         expect:
         executer.inDirectory(sample.dir.file('groovy'))
         succeeds "check"
     }
 
-    @UsesSample("testKit/automaticClasspathInjectionQuickstart")
+    @UsesSample("integration-tests/testKit/automaticClasspathInjectionQuickstart")
     def "automaticClasspathInjectionQuickstart with #dsl dsl"() {
         expect:
         executer.inDirectory(sample.dir.file(dsl))
@@ -78,7 +78,7 @@ class GradleRunnerSamplesEndUserIntegrationTest extends BaseTestKitEndUserIntegr
         dsl << ['groovy', 'kotlin']
     }
 
-    @UsesSample("testKit/automaticClasspathInjectionCustomTestSourceSet")
+    @UsesSample("integration-tests/testKit/automaticClasspathInjectionCustomTestSourceSet")
     def "automaticClasspathInjectionCustomTestSourceSet with #dsl dsl"() {
         expect:
         executer.inDirectory(sample.dir.file(dsl))
@@ -90,7 +90,7 @@ class GradleRunnerSamplesEndUserIntegrationTest extends BaseTestKitEndUserIntegr
 
     @Requires([TestEnvironmentPreconditions.Online, JdkVersionTestPreconditions.Jdk11OrEarlier])
     // Uses Gradle 5.0 which does not support Java versions >11
-    @UsesSample("testKit/gradleVersion")
+    @UsesSample("integration-tests/testKit/gradleVersion")
     def gradleVersion() {
         expect:
         RetryUtil.retry { //This test is also affected by gradle/gradle#1111 on Windows

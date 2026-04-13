@@ -48,7 +48,6 @@ abstract class DistributionIntegrationSpec extends AbstractIntegrationSpec {
         "base-services",
         "base-services-groovy",
         "build-cache",
-        "build-cache-api",
         "build-cache-base",
         "build-cache-core",
         "build-cache-local",

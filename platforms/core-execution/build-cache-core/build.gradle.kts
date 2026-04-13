@@ -7,7 +7,6 @@ description = "Internal build cache configuration and controller implementations
 dependencies {
     api(projects.baseServices)
     api(projects.buildCache)
-    api(projects.buildCacheApi)
     api(projects.buildCacheBase)
     api(projects.buildCacheLocal)
     api(projects.buildCachePackaging)

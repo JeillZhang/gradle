@@ -44,7 +44,6 @@ dependencies {
     api(projects.baseServices)
     api(projects.baseServicesGroovy)
     api(projects.buildCache)
-    api(projects.buildCacheApi)
     api(projects.buildCacheBase)
     api(projects.buildCacheCore)
     api(projects.buildDiscovery)

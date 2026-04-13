@@ -12,7 +12,6 @@ dependencies {
     api(libs.jspecify)
 
     api(projects.baseServices)
-    api(projects.buildCacheApi)
     api(projects.buildCacheSpi)
     api(projects.coreApi)
     api(projects.credentialsApi)

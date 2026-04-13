@@ -9,10 +9,11 @@ dependencies {
 
     api(projects.antApi)
     api(projects.baseServices)
-    api(projects.buildCacheApi)
+    api(projects.buildCacheSpi)
     api(projects.credentialsApi)
     api(projects.declarativeDslApi)
     api(projects.files)
+    api(projects.internalInstrumentationApi)
     api(projects.loggingApi)
     api(projects.persistentCache)
     api(projects.processServicesApi)
@@ -27,6 +28,7 @@ dependencies {
     api(libs.inject)
 
     implementation(projects.baseServicesGroovy)
+    implementation(projects.io)
     implementation(projects.logging)
 
     implementation(libs.ant)

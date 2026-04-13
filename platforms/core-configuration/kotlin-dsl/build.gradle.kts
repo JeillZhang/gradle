@@ -16,7 +16,6 @@ description = "Kotlin DSL Provider"
 dependencies {
     api(projects.antApi)
     api(projects.baseServices)
-    api(projects.buildCacheApi)
     api(projects.buildProcessServices)
     api(projects.classloaders)
     api(projects.core)

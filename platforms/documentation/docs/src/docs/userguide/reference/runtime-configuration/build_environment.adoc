@@ -497,6 +497,7 @@ When set to `all`, `summary`, or `none`, Gradle will use <<command_line_interfac
 +
 _Default is `summary`._
 
+[[sec:property:workers_max]]
 `org.gradle.workers.max=(max # of worker processes)`::
 When configured, Gradle will use a maximum of the <<command_line_interface.adoc#sec:command_line_performance,given number of workers>>.
 +

@@ -100,6 +100,7 @@ class AndroidProjectLintSmokeTest extends AndroidProjectSmokeTest {
         // Use --continue so that a deterministic set of tasks runs when some tasks fail
         runner.withArguments(runner.arguments + "--continue")
         def result = runner
+            .ignoreStackTraces("Android Lint may log stack traces when computing SARIF quick-fix edits fails")
             .deprecations(AndroidProjectDeprecations) {
                 expectMultiStringNotationDeprecation(agpVersion)
                 expectProjectDependencyNotationDeprecation()
@@ -117,6 +118,7 @@ class AndroidProjectLintSmokeTest extends AndroidProjectSmokeTest {
             checkoutDir, agpVersion, "app:lint", "-Dandroid.lintWarningsAsErrors=true"
         )
         result = runner.withArguments(runner.arguments + "--continue")
+                .ignoreStackTraces("Android Lint may log stack traces when computing SARIF quick-fix edits fails")
                 .deprecations(AndroidProjectDeprecations) {}
                 .buildAndFail()
 

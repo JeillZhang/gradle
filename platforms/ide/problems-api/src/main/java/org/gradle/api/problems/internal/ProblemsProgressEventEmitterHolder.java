@@ -21,9 +21,9 @@ import org.jspecify.annotations.Nullable;
 public class ProblemsProgressEventEmitterHolder {
 
     @Nullable
-    private static InternalProblems problemsService = null;
+    private static ProblemsInternal problemsService = null;
 
-    public static void init(InternalProblems problemsService) {
+    public static void init(ProblemsInternal problemsService) {
         ProblemsProgressEventEmitterHolder.problemsService = problemsService;
     }
 
@@ -31,7 +31,7 @@ public class ProblemsProgressEventEmitterHolder {
         problemsService = null;
     }
 
-    public static InternalProblems get() {
+    public static ProblemsInternal get() {
         if (problemsService == null) {
             throw new IllegalStateException("Problems service is not initialized.");
         }

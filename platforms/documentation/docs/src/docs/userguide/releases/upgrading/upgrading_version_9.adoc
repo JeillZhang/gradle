@@ -218,6 +218,16 @@ processResources {
 }
 |===
 
+=== Potential breaking changes
+
+[[agp_8x_incompatible]]
+==== Android Gradle Plugin 8.x is no longer compatible with Gradle 9.6
+
+Several internal classes used by Android Gradle Plugin (AGP) 8.x have been changed.
+Since AGP 8.x relied on these internal classes directly, it is no longer compatible with Gradle 9.6 and later.
+
+To resolve this, upgrade to AGP 9.x, which only uses the public Gradle API and fully supports Gradle 9.6.
+
 [[changes_9.5.0]]
 == Upgrading from 9.4.0 and earlier
 

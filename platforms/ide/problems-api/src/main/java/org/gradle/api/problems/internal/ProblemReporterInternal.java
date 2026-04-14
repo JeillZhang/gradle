@@ -23,7 +23,7 @@ import org.gradle.internal.operations.OperationIdentifier;
 
 import java.util.Collection;
 
-public interface InternalProblemReporter extends ProblemReporter {
+public interface ProblemReporterInternal extends ProblemReporter {
 
     /**
      * Reports the target problem with an explicit operation identifier.
@@ -51,5 +51,5 @@ public interface InternalProblemReporter extends ProblemReporter {
      */
     void reportError(Collection<? extends Problem> problems);
 
-    InternalProblem internalCreate(Action<? super InternalProblemSpec> action);
+    ProblemInternal internalCreate(Action<? super ProblemSpecInternal> action);
 }

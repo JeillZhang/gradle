@@ -34,6 +34,7 @@ import org.hamcrest.Matchers
 import org.junit.Rule
 
 @PolyglotDslTest
+@SkipDsl(dsl = GradleDsl.GROOVY, because = "Groovy DSL is not supported for declarative configuration")
 class ProjectFeatureDeclarationIntegrationTest extends AbstractIntegrationSpec implements ProjectFeatureFixture, PolyglotTestFixture {
 
     @Rule
@@ -204,7 +205,6 @@ class ProjectFeatureDeclarationIntegrationTest extends AbstractIntegrationSpec i
         outputContains("Binding AnotherFeatureDefinition")
     }
 
-    @SkipDsl(dsl = GradleDsl.GROOVY, because = "Groovy has no problem with finding non-public methods/types ...")
     def 'can declare and configure a custom project feature with a definition that has public and implementation types'() {
         given:
         PluginBuilder pluginBuilder = withProjectFeatureDefinitionThatHasPublicAndImplementationTypes()

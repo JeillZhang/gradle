@@ -161,7 +161,7 @@ class ResolutionIssuesIntegrationTest extends AbstractIntegrationSpec {
 
         buildFile << '''
             plugins {
-                id("com.android.application") version "8.2.2"
+                id("com.android.application") version "9.0.1"
             }
 
             android {

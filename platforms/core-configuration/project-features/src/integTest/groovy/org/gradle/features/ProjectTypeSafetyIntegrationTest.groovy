@@ -20,10 +20,12 @@ import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.executer.ExecutionFailure
 import org.gradle.integtests.fixtures.polyglot.PolyglotDslTest
 import org.gradle.integtests.fixtures.polyglot.PolyglotTestFixture
+import org.gradle.integtests.fixtures.polyglot.SkipDsl
 import org.gradle.features.internal.ProjectTypeFixture
 import org.gradle.test.fixtures.dsl.GradleDsl
 
 @PolyglotDslTest
+@SkipDsl(dsl = GradleDsl.GROOVY, because = "Groovy DSL is not supported for declarative configuration")
 class ProjectTypeSafetyIntegrationTest extends AbstractIntegrationSpec implements ProjectTypeFixture, PolyglotTestFixture {
     def setup() {
         // enable DCL support to have KTS accessors generated

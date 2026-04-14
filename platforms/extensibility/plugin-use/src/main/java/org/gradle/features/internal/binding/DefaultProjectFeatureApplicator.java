@@ -33,8 +33,8 @@ import org.gradle.api.internal.plugins.PluginManagerInternal;
 import org.gradle.api.internal.tasks.TaskDependencyFactory;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.problems.internal.GradleCoreProblemGroup;
-import org.gradle.api.problems.internal.InternalProblem;
-import org.gradle.api.problems.internal.InternalProblemReporter;
+import org.gradle.api.problems.internal.ProblemInternal;
+import org.gradle.api.problems.internal.ProblemReporterInternal;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.ProviderFactory;
 import org.gradle.api.tasks.Nested;
@@ -80,7 +80,7 @@ import java.util.Set;
 abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureApplicator {
     private final ClassLoaderScope classLoaderScope;
     private final ObjectFactory projectObjectFactory;
-    private final InternalProblemReporter problemReporter;
+    private final ProblemReporterInternal problemReporter;
     private final ServiceLookup allServices;
     private final PropertyWalker propertyWalker = new DefaultPropertyWalker(getTypeAnnotationMetadataStore());
     private final List<FeatureApplication<?, ?>> pendingFeatureApplications = new ArrayList<>();
@@ -89,7 +89,7 @@ abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureA
     public DefaultProjectFeatureApplicator(
         ClassLoaderScope classLoaderScope,
         ObjectFactory projectObjectFactory,
-        InternalProblemReporter problemReporter,
+        ProblemReporterInternal problemReporter,
         ServiceLookup allServices
     ) {
         this.classLoaderScope = classLoaderScope;
@@ -475,10 +475,10 @@ abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureA
      */
     private static class UnsafeServicesForApplyAction extends ServicesForApplyAction {
         private final String featureName;
-        private final InternalProblemReporter problemReporter; // Not used in this class
+        private final ProblemReporterInternal problemReporter; // Not used in this class
         private BuildModelRegistrarInternal buildModelRegistrar; // set after construction to share ObjectFactory created with this instance
 
-        public UnsafeServicesForApplyAction(ServiceLookup allServices, TaskRegistrar taskRegistrar, ProjectFeatureLayout projectFeatureLayout, ConfigurationRegistrar configurationRegistrar, String featureName, InternalProblemReporter problemReporter) {
+        public UnsafeServicesForApplyAction(ServiceLookup allServices, TaskRegistrar taskRegistrar, ProjectFeatureLayout projectFeatureLayout, ConfigurationRegistrar configurationRegistrar, String featureName, ProblemReporterInternal problemReporter) {
             super(allServices, taskRegistrar, projectFeatureLayout, configurationRegistrar);
             this.featureName = featureName;
             this.problemReporter = problemReporter;
@@ -509,7 +509,7 @@ abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureA
 
         @Override
         protected Object notFound(Type serviceType) {
-            InternalProblem problem = problemReporter.internalCreate(builder -> builder
+            ProblemInternal problem = problemReporter.internalCreate(builder -> builder
                 .id("unsafe-apply-action-uses-unknown-service", "An unsafe apply action is attempting to use an unknown service", GradleCoreProblemGroup.configurationUsage())
                 .contextualLabel("Project feature '" + featureName + "' has an apply action that attempts to inject an unknown service with type '" + serviceType.getTypeName() + "'.")
                 .details("Services of type " + serviceType.getTypeName() + " are not available for injection into project feature apply actions.")
@@ -525,9 +525,9 @@ abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureA
      */
     private static class SafeServicesForApplyAction extends ServicesForApplyAction {
         private final String featureName;
-        private final InternalProblemReporter problemReporter;
+        private final ProblemReporterInternal problemReporter;
 
-        public SafeServicesForApplyAction(ServiceLookup allServices, TaskRegistrar taskRegistrar, ProjectFeatureLayout projectFeatureLayout, ConfigurationRegistrar configurationRegistrar, String featureName, InternalProblemReporter problemReporter) {
+        public SafeServicesForApplyAction(ServiceLookup allServices, TaskRegistrar taskRegistrar, ProjectFeatureLayout projectFeatureLayout, ConfigurationRegistrar configurationRegistrar, String featureName, ProblemReporterInternal problemReporter) {
             super(allServices, taskRegistrar, projectFeatureLayout, configurationRegistrar);
             this.featureName = featureName;
             this.problemReporter = problemReporter;
@@ -564,7 +564,7 @@ abstract public class DefaultProjectFeatureApplicator implements ProjectFeatureA
 
         @Override
         protected Object notFound(Type serviceType) {
-            InternalProblem problem = problemReporter.internalCreate(builder -> builder
+            ProblemInternal problem = problemReporter.internalCreate(builder -> builder
                 .id("safe-apply-action-uses-unsafe-service", "A safe apply action is attempting to use an unsafe service", GradleCoreProblemGroup.configurationUsage())
                 .contextualLabel("Project feature '" + featureName + "' has a safe apply action that attempts to inject an unsafe service with type '" + serviceType.getTypeName() + "'.")
                 .details(getSafeServicesListExplanation())

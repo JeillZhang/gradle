@@ -20,12 +20,14 @@ import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.executer.ExecutionFailure
 import org.gradle.integtests.fixtures.polyglot.PolyglotDslTest
 import org.gradle.integtests.fixtures.polyglot.PolyglotTestFixture
+import org.gradle.integtests.fixtures.polyglot.SkipDsl
 import org.gradle.internal.declarativedsl.DeclarativeTestUtils
 import org.gradle.features.internal.ProjectFeatureFixture
 import org.gradle.test.fixtures.dsl.GradleDsl
 import org.gradle.test.fixtures.plugin.PluginBuilder
 
 @PolyglotDslTest
+@SkipDsl(dsl = GradleDsl.GROOVY, because = "Groovy DSL is not supported for declarative configuration")
 class ProjectFeatureSafetyIntegrationTest extends AbstractIntegrationSpec implements ProjectFeatureFixture, PolyglotTestFixture {
     def setup() {
         file("gradle.properties") << "org.gradle.kotlin.dsl.dcl=true"

@@ -27,12 +27,8 @@ androidHomeWarmup {
     rootProjectDir = project.layout.projectDirectory.dir("../../..")
     sdkVersions.set(
         listOf(
-            // Used by declaringConfigurations-kmp (AGP 8.11.2) and declaringConfigurations-android (AGP 8.13.0)
-            // Both use compileSdk 36, and AGP < 9.0 uses build-tools 35.0.0
-            SdkVersion(compileSdk = 36, buildTools = "35.0.0", agpVersion = "8.11.2"),
-
-            // Used by android-application snippet (AGP 8.3.0)
-            SdkVersion(compileSdk = 30, buildTools = "34.0.0", agpVersion = "8.3.0"),
+            // Used by declaringConfigurations-android and declaringConfigurations-kmp (AGP 9.0.1)
+            SdkVersion(compileSdk = 36, buildTools = "36.1.0", agpVersion = "9.0.1"),
 
             // Used by structuring-software-projects/android-app snippet (AGP 8.9.0)
             SdkVersion(compileSdk = 28, buildTools = "35.0.0", agpVersion = "8.9.0"),

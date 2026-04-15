@@ -157,6 +157,8 @@ tasks {
         description = "Runs Smoke tests with the configuration cache"
         systemProperty("org.gradle.integtest.executer", "configCache")
         configureForSmokeTest(excludes = listOf(gradleBuildTestPattern, androidProjectTestPattern))
+
+        dependsOn("androidHomeWarmup")
     }
 
     register<SmokeTest>("gradleBuildSmokeTest") {

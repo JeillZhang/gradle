@@ -53,6 +53,21 @@ class WrapperGenerationIntegrationTest extends AbstractIntegrationSpec {
         file("gradlew.bat").text.split(TextUtil.windowsLineSeparator).length > 1
     }
 
+    @Issue('https://github.com/gradle/gradle/issues/35905')
+    def "generated wrapper script contains correct application name"() {
+        buildFile << """
+            wrapper {
+                distributionUrl = 'http://localhost:8080/gradlew/dist'
+            }
+        """
+
+        when:
+        run "wrapper", "--no-validate-url"
+
+        then:
+        file("gradlew").text.contains("ksh gradlew")
+    }
+
     def "wrapper jar is small"() {
         buildFile << """
             wrapper {

@@ -148,7 +148,8 @@ public abstract class ValidatePlugins extends DefaultTask {
                         })
                     );
                 }
-                spec.getClasspath().setFrom(getClasses(), getClasspath());
+                // The classpath includes both the plugin classes and the dependencies:
+                spec.getClasspath().setFrom(getClasspath());
             })
             .submit(ValidateAction.class, params -> {
                 params.getClasses().setFrom(getClasses());
@@ -206,6 +207,8 @@ public abstract class ValidatePlugins extends DefaultTask {
 
     /**
      * The classpath used to load the classes under validation.
+     * <p>
+     * Includes the classes under validation and both the runtime-scoped dependencies and the compile-scoped ones.
      */
     @Classpath
     public abstract ConfigurableFileCollection getClasspath();

@@ -252,6 +252,13 @@
     "crossVersionTests": false
   },
   {
+    "name": "classpath",
+    "path": "platforms/core-runtime/classpath",
+    "unitTests": true,
+    "functionalTests": true,
+    "crossVersionTests": false
+  },
+  {
     "name": "cli",
     "path": "platforms/core-runtime/cli",
     "unitTests": true,

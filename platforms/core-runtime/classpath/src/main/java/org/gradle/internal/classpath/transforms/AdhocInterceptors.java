@@ -35,7 +35,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import static org.gradle.internal.classpath.transforms.CommonTypes.STRING_TYPE;
+import static org.gradle.internal.classpath.types.CommonTypes.STRING_TYPE;
 import static org.objectweb.asm.Type.getMethodDescriptor;
 import static org.objectweb.asm.Type.getObjectType;
 

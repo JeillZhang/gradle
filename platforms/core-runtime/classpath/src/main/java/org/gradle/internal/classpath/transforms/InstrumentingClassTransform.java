@@ -57,8 +57,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static org.gradle.internal.classpath.transforms.CommonTypes.NO_EXCEPTIONS;
-import static org.gradle.internal.classpath.transforms.CommonTypes.STRING_TYPE;
+import static org.gradle.internal.classpath.types.CommonTypes.NO_EXCEPTIONS;
+import static org.gradle.internal.classpath.types.CommonTypes.STRING_TYPE;
 import static org.gradle.internal.instrumentation.api.types.BytecodeInterceptorFilter.INSTRUMENTATION_ONLY;
 import static org.gradle.model.internal.asm.AsmConstants.ASM_LEVEL;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;

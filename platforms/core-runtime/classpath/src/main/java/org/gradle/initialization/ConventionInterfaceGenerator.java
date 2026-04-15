@@ -34,7 +34,7 @@ import org.objectweb.asm.Type;
 
 import java.util.Collection;
 
-import static org.gradle.internal.classpath.transforms.CommonTypes.OBJECT_TYPE;
+import static org.gradle.internal.classpath.types.CommonTypes.OBJECT_TYPE;
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Type.getMethodDescriptor;

@@ -1,5 +1,3 @@
-import gradlebuild.integrationtests.configureTestSourceSetInIde
-
 plugins {
     id("gradlebuild.distribution.api-java")
     id("gradlebuild.cross-version-tests")
@@ -9,32 +7,6 @@ description = "Public and internal 'core' Gradle APIs with implementation"
 
 configurations {
     register("reports")
-}
-
-// Instrumentation interceptors for tests
-// Separated from the test source set since we don't support incremental annotation processor with Java/Groovy joint compilation
-val testInterceptors = sourceSets.create("testInterceptors") {
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().output
-}
-
-configureTestSourceSetInIde(testInterceptors)
-
-sourceSets.test {
-    compileClasspath += testInterceptors.output
-    runtimeClasspath += testInterceptors.output
-}
-dependencyAnalysis {
-    issues {
-        ignoreSourceSet(testInterceptors.name)
-    }
-}
-jvmCompile {
-    addCompilationFrom(testInterceptors)
-}
-
-val testInterceptorsImplementation: Configuration by configurations.getting {
-    extendsFrom(configurations.implementation.get())
 }
 
 dependencies {
@@ -52,6 +24,7 @@ dependencies {
     api(projects.buildOperations)
     api(projects.buildOption)
     api(projects.buildProcessServices)
+    api(projects.classpath)
     api(projects.classloaders)
     api(projects.cli)
     api(projects.collections)
@@ -113,7 +86,6 @@ dependencies {
     implementation(projects.buildDiscoveryReporting)
     implementation(projects.buildOperationsTrace)
     implementation(projects.daemonLogging)
-    implementation(projects.inputTracking)
     implementation(projects.modelGroovy)
     implementation(projects.problemsRendering)
     implementation(projects.processMemoryServices)
@@ -125,7 +97,6 @@ dependencies {
     implementation(projects.workerProcessServices)
 
     implementation(libs.ant)
-    implementation(libs.asmCommons)
     implementation(libs.commonsCompress)
     implementation(libs.commonsIo)
     implementation(libs.commonsLang)
@@ -292,10 +263,6 @@ dependencies {
     annotationProcessor(projects.internalInstrumentationProcessor)
     annotationProcessor(platform(projects.distributionsDependencies))
 
-    testInterceptorsImplementation(platform(projects.distributionsDependencies))
-    testInterceptorsImplementation(testFixtures(projects.core))
-    "testInterceptorsAnnotationProcessor"(projects.internalInstrumentationProcessor)
-    "testInterceptorsAnnotationProcessor"(platform(projects.distributionsDependencies))
 }
 
 gradleModule {

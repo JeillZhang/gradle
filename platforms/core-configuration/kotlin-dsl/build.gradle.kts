@@ -49,6 +49,7 @@ dependencies {
     implementation(projects.buildOperations)
     implementation(projects.buildDiscoveryImpl)
     implementation(projects.buildOption)
+    implementation(projects.classpath)
     implementation(projects.coreKotlinExtensions)
     implementation(projects.declarativeDslEvaluator)
     implementation(projects.declarativeDslProvider)

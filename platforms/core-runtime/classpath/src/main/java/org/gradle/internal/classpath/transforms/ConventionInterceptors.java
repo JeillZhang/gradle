@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 import static org.gradle.initialization.ConventionInterfaceGenerator.DEFAULT_DECORATED_CONVENTION_NAME;
-import static org.gradle.internal.classpath.transforms.CommonTypes.OBJECT_TYPE;
+import static org.gradle.internal.classpath.types.CommonTypes.OBJECT_TYPE;
 import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Type.getMethodDescriptor;

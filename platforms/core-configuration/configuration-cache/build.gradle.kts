@@ -50,6 +50,7 @@ dependencies {
     implementation(projects.buildDiscovery)
     implementation(projects.buildDiscoveryImpl)
     implementation(projects.buildProcessServices)
+    implementation(projects.classpath)
     implementation(projects.classloaders)
     implementation(projects.coreFlowServicesApi)
     implementation(projects.coreKotlinExtensions)

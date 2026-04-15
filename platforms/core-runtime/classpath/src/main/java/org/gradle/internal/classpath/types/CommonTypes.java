@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.gradle.internal.classpath.transforms;
+package org.gradle.internal.classpath.types;
 
 import org.jspecify.annotations.NullMarked;
 import org.objectweb.asm.Type;

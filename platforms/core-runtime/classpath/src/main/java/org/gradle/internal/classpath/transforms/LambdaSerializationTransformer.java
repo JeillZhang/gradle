@@ -39,9 +39,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.gradle.internal.classpath.transforms.CommonTypes.NO_EXCEPTIONS;
-import static org.gradle.internal.classpath.transforms.CommonTypes.OBJECT_TYPE;
-import static org.gradle.internal.classpath.transforms.CommonTypes.STRING_TYPE;
+import static org.gradle.internal.classpath.types.CommonTypes.NO_EXCEPTIONS;
+import static org.gradle.internal.classpath.types.CommonTypes.OBJECT_TYPE;
+import static org.gradle.internal.classpath.types.CommonTypes.STRING_TYPE;
 import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
@@ -63,7 +63,7 @@ class LambdaSerializationTransformer extends ClassVisitor {
     private static final Type SERIALIZED_LAMBDA_TYPE = getType(SerializedLambda.class);
 
     private static final String RETURN_OBJECT_FROM_SERIALIZED_LAMBDA = getMethodDescriptor(OBJECT_TYPE, SERIALIZED_LAMBDA_TYPE);
-    private static final String RETURN_STRING = getMethodDescriptor(CommonTypes.STRING_TYPE);
+    private static final String RETURN_STRING = getMethodDescriptor(STRING_TYPE);
     private static final String RETURN_BOOLEAN_FROM_OBJECT = getMethodDescriptor(Type.BOOLEAN_TYPE, OBJECT_TYPE);
     private static final String RETURN_OBJECT_FROM_INT = getMethodDescriptor(OBJECT_TYPE, Type.INT_TYPE);
 

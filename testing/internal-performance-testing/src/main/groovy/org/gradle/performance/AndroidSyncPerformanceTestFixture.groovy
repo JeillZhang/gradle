@@ -24,8 +24,8 @@ import org.gradle.performance.fixture.PerformanceTestRunner
 import org.gradle.profiler.BuildMutator
 import org.gradle.profiler.InvocationSettings
 import org.gradle.profiler.ScenarioContext
-import org.gradle.profiler.studio.AndroidStudioSyncAction
-import org.gradle.profiler.studio.tools.AndroidStudioFinder
+import org.gradle.profiler.ide.IdeSyncAction
+import org.gradle.profiler.ide.tools.AndroidStudioFinder
 
 @CompileStatic
 class AndroidSyncPerformanceTestFixture {
@@ -77,7 +77,7 @@ class AndroidSyncPerformanceTestFixture {
         @Override
         void intercept(GradleBuildExperimentSpec.GradleBuilder builder) {
             builder.invocation {
-                buildAction(new AndroidStudioSyncAction())
+                buildAction(new IdeSyncAction())
                 useAndroidStudio(true)
                 studioSandboxDir(getStudioSandbox(workingDirectory))
                 studioInstallDir(AndroidStudioFinder.findStudioHome())

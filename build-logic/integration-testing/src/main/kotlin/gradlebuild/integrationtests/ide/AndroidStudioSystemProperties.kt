@@ -69,7 +69,7 @@ private class AndroidStudioSystemProperties(
         systemProperties.add(getStudioHome())
 
         if (runAndroidStudioInHeadlessMode.get()) {
-            systemProperties.add("-Dstudio.tests.headless=true")
+            systemProperties.add("-Dide.tests.headless=true")
         }
         if (androidStudioJvmArgs.isNotEmpty()) {
             systemProperties.add("-DstudioJvmArgs=${androidStudioJvmArgs.joinToString(separator = ",")}")

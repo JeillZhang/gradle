@@ -191,14 +191,6 @@ In this example, `my-composite` is a composite build that includes the `my-app` 
 
 The `my-composite` root settings file looks as follows:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/samples/build-organization/composite-builds-basic">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/structuring-builds/composite-builds-basic/kotlin",files="settings.gradle.kts[]"]
 include::sample[dir="snippets/structuring-builds/composite-builds-basic/groovy",files="settings.gradle[]"]
@@ -324,28 +316,12 @@ The included builds are accessed using link:{groovyDslPath}/org.gradle.api.invoc
 
 Using these APIs, it is possible to declare a dependency on a task in a particular included build:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/samples/build-organization/composite-builds-basic">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/structuring-builds/composite-builds-basic/kotlin",files="build.gradle.kts[tags=run]"]
 include::sample[dir="snippets/structuring-builds/composite-builds-basic/groovy",files="build.gradle[tags=run]"]
 ====
 
 Or you can declare a dependency on tasks with a certain path in all of the included builds:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/samples/build-organization/composite-builds-hierarchical-multirepo">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/structuring-builds/composite-builds-hierarchical-multirepo/kotlin",files="build.gradle.kts"]
@@ -497,14 +473,6 @@ Plugins that will be applied in project build scripts (e.g., `build.gradle.kts`)
 
 This approach is recommended over using the `--include-build` CLI flag, as it provides more reliable plugin resolution, especially when using the modern `plugins {}` block:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/samples/build-organization/composite-builds-basic">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/structuring-builds/composite-builds-basic/kotlin/my-app",files="settings.gradle.kts[tags=mag]"]
 include::sample[dir="snippets/structuring-builds/composite-builds-basic/groovy/my-app",files="settings.gradle[tags=mag]"]
@@ -580,14 +548,6 @@ For these cases, explicitly declaring the substitutions for an included build is
 
 For example, a single-project build called `anonymous-library`, produces a Java utility library but does not declare a value for the group attribute:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/samples/build-organization/composite-builds-declared-substitution">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/structuring-builds/composite-builds-declared-substitution/kotlin",files="anonymous-library/build.gradle.kts[]"]
 include::sample[dir="snippets/structuring-builds/composite-builds-declared-substitution/groovy",files="anonymous-library/build.gradle[]"]
@@ -623,14 +583,6 @@ This is necessary because the rules are globally applied in the build, and Gradl
 
 For example, we create a separate `publishedRuntimeClasspath` configuration that gets resolved to the published versions of modules that also exist in one of the local builds.
 This is done by deactivating global dependency substitution rules:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/structuring-builds/customizingResolution-deactivateGlobalSubstitution">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/structuring-builds/customizingResolution-deactivateGlobalSubstitution/kotlin",files="build.gradle.kts[tags=disableGlobalDependencySubstitutionRules]"]

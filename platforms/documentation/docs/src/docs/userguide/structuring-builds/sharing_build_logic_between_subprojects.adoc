@@ -73,14 +73,6 @@ A typical multi-project build has the following layout:
 
 The build file for `api`, `services`, and `shared` has many commonalities:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/structuring-builds/buildSrc">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/structuring-builds/no-buildSrc/kotlin",files="api/build.gradle.kts[tags=common-logic];services/build.gradle.kts[tags=common-logic];shared/build.gradle.kts[tags=common-logic]"]
 include::sample[dir="snippets/structuring-builds/no-buildSrc/groovy",files="api/build.gradle[tags=common-logic];services/build.gradle[tags=common-logic];shared/build.gradle[tags=common-logic]"]
@@ -172,14 +164,6 @@ This kind of plugin is called a *convention plugin*.
 
 The shared logic is removed from the `api`, `services`, and `shared` build files.
 And the `shared` plugin is applied in the files instead:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/structuring-builds/buildSrc">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/structuring-builds/buildSrc/kotlin",files="api/build.gradle.kts[tags=non-common-logic];services/build.gradle.kts[tags=non-common-logic];shared/build.gradle.kts[tags=non-common-logic]"]

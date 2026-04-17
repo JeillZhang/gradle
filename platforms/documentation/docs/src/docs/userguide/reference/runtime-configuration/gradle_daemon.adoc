@@ -316,14 +316,6 @@ $ ./gradlew updateDaemonJvm --jvm-version=17
 
 Or configure the task in the build script of the root project:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/runtime-configuration/customized-task">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/runtime-configuration/customized-task/kotlin",files="build.gradle.kts[tags=customized-daemon-jvm-task]"]
 include::sample[dir="snippets/reference/runtime-configuration/customized-task/groovy",files="build.gradle[tags=customized-daemon-jvm-task]"]
@@ -491,14 +483,6 @@ Gradle sets, by convention, build platforms based on architectures `X86_64` and 
 * https://www.microsoft.com/en-us/windows[Windows]
 
 These platforms can be configured through the `toolchainPlatforms` property of the `UpdateDaemonJvm` task.
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/runtime-configuration/customized-task">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/runtime-configuration/customized-task/kotlin",files="build.gradle.kts[tags=customized-plat-daemon-jvm-task]"]

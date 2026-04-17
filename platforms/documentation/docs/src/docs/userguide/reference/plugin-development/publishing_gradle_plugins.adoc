@@ -43,14 +43,6 @@ Provide the credentials as Gradle properties (`gradle.publish.key` and `gradle.p
 
 Add the `com.gradle.plugin-publish` plugin to your build:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/publishingPlugins">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/plugin-development/publishingPlugins/kotlin",files="build.gradle.kts[tags=plugins_block]"]
 include::sample[dir="snippets/reference/plugin-development/publishingPlugins/groovy",files="build.gradle[tags=plugins_block]"]
@@ -67,14 +59,6 @@ Older versions required applying these plugins manually.
 == Configuring the {publishplugin}
 
 Configure the plugin in `build.gradle(.kts)`:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/publishingPlugins">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/publishingPlugins/kotlin",files="build.gradle.kts[tags=global_config]"]
@@ -159,14 +143,6 @@ After approval, your plugin appears on the Portal and is available for anyone to
 If you published a plugin without using the <<java_gradle_plugin.adoc#java_gradle_plugin,Java Gradle Plugin Development Plugin>>, the publication will lack the <<plugins_intermediate.adoc#sec:plugin_markers,Plugin Marker Artifact>> required by the plugins DSL.
 
 To use such a plugin, add a `resolutionStrategy` block inside `pluginManagement {}` in the consuming project’s `settings.gradle(.kts)`:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/customPlugin">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/customPlugin/kotlin/consumer",files="settings.gradle.kts[tags=use-legacy-plugin]"]

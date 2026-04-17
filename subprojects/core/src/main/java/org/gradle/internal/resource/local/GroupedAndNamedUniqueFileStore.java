@@ -18,7 +18,6 @@ package org.gradle.internal.resource.local;
 import org.gradle.api.Action;
 import org.gradle.api.Namer;
 import org.gradle.api.internal.file.temp.TemporaryFileProvider;
-import org.gradle.api.internal.filestore.ArtifactIdentifierFileStore;
 import org.gradle.internal.file.FileAccessTimeJournal;
 import org.gradle.internal.file.FileAccessTracker;
 import org.gradle.internal.file.impl.SingleDepthFileAccessTracker;
@@ -30,7 +29,7 @@ import java.util.Set;
 /**
  * A file store that stores items grouped by some provided function over the key and an SHA1 hash of the value. This means that files are only ever added and never modified once added, so a resource from this store can be used without locking. Locking is required to add entries.
  */
-public class GroupedAndNamedUniqueFileStore<K> implements ArtifactIdentifierFileStore<K> {
+public class GroupedAndNamedUniqueFileStore<K> implements FileStore<K>, FileStoreSearcher<K> {
 
     protected static final int NUMBER_OF_CHECKSUM_DIRS = 1;
 
@@ -62,7 +61,6 @@ public class GroupedAndNamedUniqueFileStore<K> implements ArtifactIdentifierFile
         return delegate.search(toPath(key, "*"));
     }
 
-    @Override
     public FileAccessTracker getFileAccessTracker() {
         return checksumDirAccessTracker;
     }
@@ -96,7 +94,6 @@ public class GroupedAndNamedUniqueFileStore<K> implements ArtifactIdentifierFile
         return temporaryFileProvider.createTemporaryFile("filestore", "bin");
     }
 
-    @Override
     public File whereIs(K key, String checksum) {
         return new File(baseDir, toPath(key, checksum));
     }

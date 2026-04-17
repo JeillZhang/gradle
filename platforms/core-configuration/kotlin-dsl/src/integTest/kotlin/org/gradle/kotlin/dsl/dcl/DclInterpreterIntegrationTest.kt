@@ -16,6 +16,7 @@
 
 package org.gradle.kotlin.dsl.dcl
 
+import org.gradle.api.provider.Property
 import org.gradle.features.annotations.BindsProjectFeature
 import org.gradle.features.annotations.BindsProjectType
 import org.gradle.features.annotations.RegistersProjectFeatures
@@ -124,6 +125,7 @@ class DclInterpreterIntegrationTest : AbstractKotlinIntegrationTest() {
                 import org.gradle.api.Named
                 import org.gradle.api.NamedDomainObjectContainer
                 import javax.inject.Inject
+                import ${Property::class.qualifiedName}
                 import ${BindsProjectType::class.qualifiedName}
                 import ${BindsProjectFeature::class.qualifiedName}
                 import ${Definition::class.qualifiedName}
@@ -192,8 +194,8 @@ class DclInterpreterIntegrationTest : AbstractKotlinIntegrationTest() {
 
                 interface MyNestedFeatureDefinition : MyFeatureDefinition
 
-                abstract class MyElement(val elementName: String) : Named {
-                    override fun getName() = elementName
+                interface MyElement : Named {
+                    val elementName: Property<String>
                 }
                 """.trimIndent()
         )

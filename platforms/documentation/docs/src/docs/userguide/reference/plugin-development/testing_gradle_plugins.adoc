@@ -26,14 +26,6 @@ The end user can provide the URL via an extension named `verification`.
 The following build script assumes that the plugin JAR file has been published to a binary repository.
 The script demonstrates how to apply the plugin to the project and configure its exposed extension:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/testingPlugins">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/plugin-development/testingPlugins/kotlin/include-plugin-build",files="build.gradle.kts[]"]
 include::sample[dir="snippets/reference/plugin-development/testingPlugins/groovy/include-plugin-build",files="build.gradle[]"]
@@ -119,14 +111,6 @@ There are two ways to include a plugin project in a consuming project:
 
 The following code snippet demonstrates the use of the settings file:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/testingPlugins">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/plugin-development/testingPlugins/kotlin/include-plugin-build",files="settings.gradle.kts[tags=include-build]"]
 include::sample[dir="snippets/reference/plugin-development/testingPlugins/groovy/include-plugin-build",files="settings.gradle[tags=include-build]"]
@@ -202,14 +186,6 @@ dependencies {
 ----
 
 We use that to define an `integrationTestImplementation` dependency to the project itself, which represents the "main" variant of our project (i.e., the compiled plugin code):
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/testingPlugins">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/testingPlugins/kotlin/url-verifier-plugin",files="build.gradle.kts[tags=test-source-set]"]
@@ -348,14 +324,6 @@ You will need to execute the `assemble` task to initially generate the plugin cl
 
 The following is an example of a unit test of the `Greeting` plugin from <<implementing_gradle_plugins_binary.adoc#implementing_binary_plugins, Binary Plugins>>:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/plugin-binary">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/plugin-development/plugin-binary/kotlin",files="plugin/src/test/kotlin/org/example/GreetingPluginTest.kt[]"]
 include::sample[dir="snippets/reference/plugin-development/plugin-binary/groovy",files="plugin/src/test/groovy/org/example/GreetingPluginTest.groovy[]"]
@@ -364,14 +332,6 @@ include::sample[dir="snippets/reference/plugin-development/plugin-binary/groovy"
 == Example of a functional test
 
 The following is an example of a functional test of the `Greeting` plugin from <<implementing_gradle_plugins_binary.adoc#implementing_binary_plugins, Binary Plugins>>:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/plugin-binary">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/plugin-binary/kotlin",files="plugin/src/functionalTest/kotlin/org/example/GreetingPluginFunctionalTest.kt[]"]

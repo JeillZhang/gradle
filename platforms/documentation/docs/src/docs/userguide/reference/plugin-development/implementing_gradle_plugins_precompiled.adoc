@@ -134,14 +134,6 @@ You can provide configuration for your plugin by adding an extension object to t
 
 Let's update our `greetings` example:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/greeting">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/plugin-development/greeting/kotlin", files="buildSrc/src/main/kotlin/greetings.gradle.kts[tags=create-extension]"]
 include::sample[dir="snippets/reference/plugin-development/greeting/groovy", files="buildSrc/src/main/groovy/greetings.gradle[tags=create-extension]"]
@@ -171,14 +163,6 @@ In plugins, you can define default values, also known as *conventions*, using th
 
 Convention properties are properties that are initialized with default values but can be overridden:
 
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/greeting">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
-
 ====
 include::sample[dir="snippets/reference/plugin-development/greeting/kotlin", files="buildSrc/src/main/kotlin/greetings.gradle.kts[tags=convention]"]
 include::sample[dir="snippets/reference/plugin-development/greeting/groovy", files="buildSrc/src/main/groovy/greetings.gradle[tags=convention]"]
@@ -195,14 +179,6 @@ If the `message` property is not explicitly set, its value will be automatically
 Using an extension and mapping it to a custom task's input/output properties is common in plugins.
 
 In this example, the message property of the `GreetingPluginExtension` is mapped to the message property of the `GreetingTask` as an input:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/greeting">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/greeting/kotlin", files="buildSrc/src/main/kotlin/greetings.gradle.kts[tags=task]"]
@@ -226,14 +202,6 @@ You can find out more about types that you can use in task implementations and e
 == Applying external plugins
 
 In order to apply an external plugin in a precompiled script plugin, it has to be added to the plugin project's implementation classpath in the plugin's build file:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/precompiledScriptPlugins-externalPlugins">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/precompiledScriptPlugins-externalPlugins/kotlin",files="buildSrc/build.gradle.kts[]"]
@@ -265,14 +233,6 @@ link:{groovyDslPath}/org.gradle.api.initialization.Settings.html[`Settings`] sco
 The following example defines a simple plugin in a separate build called `settings-plugin`.
 
 Configure plugin management for the plugin build:
-
-++++
-<div style="text-align: right;">
-  <a href="https://github.com/gradle/gradle/tree/master/platforms/documentation/docs/src/snippets/reference/plugin-development/precompiledScriptPlugins-settings">
-    <img src="https://img.shields.io/badge/View%20full%20project-GitHub-blue?logo=github&style=flat" alt="View full sample project on GitHub"/>
-  </a>
-</div>
-++++
 
 ====
 include::sample[dir="snippets/reference/plugin-development/precompiledScriptPlugins-settings/kotlin",files="settings-plugin/settings.gradle.kts[]"]

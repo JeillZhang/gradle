@@ -230,7 +230,7 @@ abstract class AbstractTestEnvironmentIntegrationTest extends AbstractTestingMul
         run 'test'
 
         then:
-        def result = new DefaultTestExecutionResult(testDirectory, testFramework)
+        def result = new DefaultTestExecutionResult(testDirectory)
         result.assertTestClassesExecuted('org.gradle.JUnitTest')
         result.testClass('org.gradle.JUnitTest').assertTestPassed('mySystemClassLoaderIsUsed')
     }

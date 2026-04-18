@@ -219,8 +219,8 @@ abstract class AbstractJUnitTestExecutionIntegrationTest extends AbstractTesting
         then:
         def results = resultsFor(testDirectory)
         results.assertAtLeastTestPathsExecuted('org.gradle.OkTest', 'org.gradle.OtherTest')
-        results.testPath('org.gradle.OkTest', 'ok').onlyRoot().assertHasResult(TestResult.ResultType.SUCCESS)
-        results.testPath('org.gradle.OtherTest', 'ok').onlyRoot().assertHasResult(TestResult.ResultType.SUCCESS)
+        results.testPath('org.gradle.OkTest', maybeParentheses('ok')).onlyRoot().assertHasResult(TestResult.ResultType.SUCCESS)
+        results.testPath('org.gradle.OtherTest', maybeParentheses('ok')).onlyRoot().assertHasResult(TestResult.ResultType.SUCCESS)
     }
 
     def "runs all tests in the same forked jvm"() {
@@ -404,7 +404,7 @@ abstract class AbstractJUnitTestExecutionIntegrationTest extends AbstractTesting
 
         and:
         def results = resultsFor(testDirectory)
-        results.testPath("TestCase", "test").onlyRoot()
+        results.testPath("TestCase", maybeParentheses("test")).onlyRoot()
             .assertHasResult(TestResult.ResultType.FAILURE)
             .assertFailureMessages(containsString("java.lang.VerifyError"))
             .assertFailureMessages(containsString("\$EmptyImmutableCollection"))

@@ -37,8 +37,6 @@ abstract class AbstractJvmFailFastIntegrationSpec extends AbstractTestingMultiVe
     BlockingHttpServer server = new BlockingHttpServer()
     JvmBlockingTestClassGenerator generator
 
-    abstract GenericTestExecutionResult.TestFramework getTestFramework()
-
     def setup() {
         server.start()
         generator = new JvmBlockingTestClassGenerator(testDirectory, server, testFrameworkImports, testFrameworkDependencies, configureTestFramework)
@@ -63,7 +61,7 @@ abstract class AbstractJvmFailFastIntegrationSpec extends AbstractTestingMultiVe
 
         and:
         GenericTestExecutionResult testResults = resultsFor()
-        testResults.assertTestPathsExecuted(":pkg.FailedTest:failTest", ":pkg.OtherTest:passingTest")
+        testResults.assertTestPathsExecuted(":pkg.FailedTest:${maybeParentheses('failTest')}", ":pkg.OtherTest:${maybeParentheses('passingTest')}")
 
         TestPathExecutionResult gradleTest = testResults.testPath("")
         gradleTest.rootNames == ['Gradle Test Run :test']
@@ -98,7 +96,7 @@ abstract class AbstractJvmFailFastIntegrationSpec extends AbstractTestingMultiVe
         gradleHandle.waitForFailure()
 
         and:
-        GenericTestExecutionResult testResults = resultsFor("tests/test", testFramework)
+        GenericTestExecutionResult testResults = resultsFor()
         TestPathExecutionResult failedTest = testResults.testPath("pkg.FailedTest")
         failedTest.onlyRoot().getFailedChildCount() == 1
         TestPathExecutionResult otherTest = testResults.testPath("pkg.OtherTest")
@@ -125,7 +123,7 @@ abstract class AbstractJvmFailFastIntegrationSpec extends AbstractTestingMultiVe
         gradleHandle.waitForFailure()
 
         and:
-        GenericTestExecutionResult testResults = resultsFor("tests/test", testFramework)
+        GenericTestExecutionResult testResults = resultsFor()
         assert 1 == resourceForTest.keySet().sum {path ->
             if (testResults.testPathExists(path)) {
                 TestPathExecutionResult test = testResults.testPath(path)

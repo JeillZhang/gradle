@@ -113,7 +113,7 @@ class JUnitJupiterTestTaskIntegrationTest extends AbstractTestTaskIntegrationTes
             segments.add(classes.subList(0, i + 1).join('$'))
         }
         results.assertTestPathsExecuted(
-            ':' + segments.join(':') + ":thisIsAlsoARatherLongMethodName"
+            ':' + segments.join(':') + ":thisIsAlsoARatherLongMethodName()"
         )
     }
 

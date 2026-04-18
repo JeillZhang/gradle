@@ -17,7 +17,6 @@
 package org.gradle.buildinit.plugins
 
 import org.gradle.api.JavaVersion
-import org.gradle.api.internal.tasks.testing.report.generic.GenericTestExecutionResult
 import org.gradle.buildinit.plugins.fixtures.ScriptDslFixture
 import org.gradle.buildinit.plugins.internal.modifiers.BuildInitDsl
 import org.gradle.buildinit.plugins.internal.modifiers.BuildInitTestFramework
@@ -134,7 +133,7 @@ class JavaApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegrati
         run("build")
 
         then:
-        assertTestPassed("org.example.AppTest", "application has a greeting", GenericTestExecutionResult.TestFramework.SPOCK)
+        assertTestPassed("org.example.AppTest", "application has a greeting")
 
         where:
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
@@ -155,7 +154,7 @@ class JavaApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegrati
         run("build")
 
         then:
-        assertTestPassed("org.example.AppTest", "appHasAGreeting", GenericTestExecutionResult.TestFramework.TEST_NG)
+        assertTestPassed("org.example.AppTest", "appHasAGreeting")
 
         where:
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
@@ -176,7 +175,7 @@ class JavaApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegrati
         run("build")
 
         then:
-        assertTestPassed("org.example.AppTest", "appHasAGreeting", GenericTestExecutionResult.TestFramework.JUNIT_JUPITER)
+        assertTestPassed("org.example.AppTest", "appHasAGreeting")
 
         where:
         scriptDsl << ScriptDslFixture.SCRIPT_DSLS
@@ -184,7 +183,6 @@ class JavaApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegrati
 
     def "creates sample source with package and #testFramework and #scriptDsl build scripts"() {
         when:
-        resultsTestFramework(testFramework as BuildInitTestFramework)
         run('init', '--type', 'java-application', '--test-framework', testFramework.id, '--package', 'my.app', '--dsl', scriptDsl.id, '--java-version', JavaVersion.current().majorVersion)
 
         then:
@@ -225,7 +223,7 @@ class JavaApplicationInitIntegrationTest extends AbstractJvmLibraryInitIntegrati
         run("build")
 
         then:
-        assertTestPassed("my.app.AppTest", "application has a greeting", GenericTestExecutionResult.TestFramework.SPOCK)
+        assertTestPassed("my.app.AppTest", "application has a greeting")
 
         when:
         run("run")

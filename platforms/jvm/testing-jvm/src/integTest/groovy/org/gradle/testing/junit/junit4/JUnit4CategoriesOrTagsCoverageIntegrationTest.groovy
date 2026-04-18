@@ -62,7 +62,7 @@ class JUnit4CategoriesOrTagsCoverageIntegrationTest extends AbstractJUnit4Catego
         fails("test")
 
         then:
-        def result = new DefaultTestExecutionResult(testDirectory, testFramework)
+        def result = new DefaultTestExecutionResult(testDirectory)
         result.assertTestClassesNotExecuted('SomeTestClass')
 
         failure.assertThatCause(matchesRegexp(~/Could not start Gradle Test Executor \d+\./))

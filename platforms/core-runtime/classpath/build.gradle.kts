@@ -28,7 +28,7 @@ jvmCompile {
     addCompilationFrom(testInterceptors)
 }
 
-val testInterceptorsImplementation: Configuration by configurations.getting {
+val testInterceptorsImplementation = configurations.getByName("testInterceptorsImplementation") {
     extendsFrom(configurations.implementation.get())
 }
 

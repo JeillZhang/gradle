@@ -1,9 +1,9 @@
-val taskX by tasks.registering {
+val taskX = tasks.register("taskX") {
     doLast {
         println("taskX")
     }
 }
-val taskY by tasks.registering {
+val taskY = tasks.register("taskY") {
     doLast {
         println("taskY")
     }

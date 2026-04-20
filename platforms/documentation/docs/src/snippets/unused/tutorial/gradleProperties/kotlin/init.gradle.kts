@@ -3,8 +3,8 @@ settingsEvaluated {
     // Using the API, provides a lazy Provider<String>
     println(providers.gradleProperty("gradlePropertiesProp").get())
 
-    // Using Kotlin delegated properties on `settings`
-    val gradlePropertiesProp: String by this
+    // Using the settings API
+    val gradlePropertiesProp = providers.gradleProperty("gradlePropertiesProp").get()
     println(gradlePropertiesProp)
 }
 // end::gradle-properties[]

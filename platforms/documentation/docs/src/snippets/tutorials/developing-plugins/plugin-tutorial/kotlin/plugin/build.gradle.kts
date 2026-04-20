@@ -51,7 +51,7 @@ dependencies {
 
 gradlePlugin {
     // Define the plugin
-    val greeting by plugins.creating {
+    plugins.create("greeting") {
         id = "org.example.greeting"
         implementationClass = "org.example.PluginTutorialPlugin"
     }
@@ -94,7 +94,7 @@ configurations["functionalTestImplementation"].extendsFrom(configurations["testI
 configurations["functionalTestRuntimeOnly"].extendsFrom(configurations["testRuntimeOnly"])
 
 // Add a task to run the functional tests
-val functionalTest by tasks.registering(Test::class) {
+val functionalTest = tasks.register<Test>("functionalTest") {
     testClassesDirs = functionalTestSourceSet.output.classesDirs
     classpath = functionalTestSourceSet.runtimeClasspath
     useJUnitPlatform()

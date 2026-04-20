@@ -425,26 +425,11 @@ include::sample[dir="snippets/reference/dsl-apis/containers-api/kotlin",files="b
 
 NOTE: The above sample relies on the <<task_configuration_avoidance.adoc#task_configuration_avoidance,configuration avoidance APIs>>. If you need or want to eagerly configure or register container elements, simply replace `named()` with `getByName()` and `register()` with `create()`.
 
-=== Using Kotlin delegated properties
-
-Another way to interact with containers is via Kotlin delegated properties.
-These are particularly useful if you need a reference to a container element that you can use elsewhere in the build.
-Additionally, Kotlin delegated properties can easily be renamed via IDE refactoring.
-
-The following example achieves the same result as the one in the previous section, but it uses delegated properties and reuses those references instead of string-literal task paths:
-
-====
-include::sample[dir="snippets/reference/dsl-apis/containers-delegated-properties/kotlin",files="build.gradle.kts[tags=delegated-properties]"]
-====
-<1> Uses the reference to the `myTask1` task rather than a task path
-
-NOTE: The above sample relies on the <<task_configuration_avoidance.adoc#task_configuration_avoidance,configuration avoidance APIs>>. If you need or want to eagerly configure or register container elements, simply replace link:{kotlinDslPath}/gradle/org.gradle.kotlin.dsl/existing.html[`existing()`] with link:{kotlinDslPath}/gradle/org.gradle.kotlin.dsl/getting.html[`getting()`] and link:{kotlinDslPath}/gradle/org.gradle.kotlin.dsl/registering.html[`registering()`] with link:{kotlinDslPath}/gradle/org.gradle.kotlin.dsl/creating.html[`creating()`].
-
 === Configuring multiple container elements together
 
 When configuring several elements of a container, you can group interactions in a block to avoid repeating the container's name on each interaction.
 
-The following example demonstrates a combination of type-safe accessors, the container API, and Kotlin delegated properties:
+The following example demonstrates a combination of type-safe accessors and the container API:
 
 ====
 include::sample[dir="snippets/reference/dsl-apis/containers-scope/kotlin",files="build.gradle.kts[tags=scope]"]
@@ -459,40 +444,19 @@ include::sample[dir="snippets/reference/dsl-apis/containers-scope/kotlin",files=
 // ====
 
 [[kotdsl:properties]]
-== Working with runtime properties
-
-Gradle has two main sources of properties defined at runtime: <<build_environment.adoc#sec:project_properties,_project properties_>> and <<writing_build_scripts_intermediate.adoc#sec:extra_properties,_extra properties_>>.
-
-The Kotlin DSL provides specific syntax for working with these property types, which we will explore in the following sections.
-
-=== Project properties
-
-The Kotlin DSL allows you to access project properties by binding them via Kotlin delegated properties.
-
-The following snippet demonstrates this technique for a couple of project properties, one of which _must_ be defined:
-
-====
-include::sample[dir="snippets/reference/dsl-apis/basics/kotlin",files="build.gradle.kts[tags=property]"]
-====
-<1> Makes the `myProperty` project property available via a `myProperty` delegated property — the project property must exist in this case, otherwise the build will fail when the build script attempts to use the `myProperty` value
-<2> Does the same for the `myNullableProperty` project property, but the build won't fail on using the `myNullableProperty` value as long as you check for null (standard https://kotlinlang.org/docs/reference/null-safety.html[Kotlin rules for null safety] apply)
-
-The same approach works in both settings and initialization scripts, except you use `by settings` and `by gradle` respectively in place of `by project`.
-
-=== Extra properties
+== Working with extra properties
 
 Extra properties are available on any object that implements the
 link:{groovyDslPath}/org.gradle.api.plugins.ExtensionAware.html#org.gradle.api.plugins.ExtensionAware[ExtensionAware] interface.
 
-In Kotlin DSL, you can access and create extra properties via delegated properties, using the `by extra` syntax as demonstrated in the following sample:
+The Kotlin DSL provides the `extra` accessor for working with extra properties as a map:
 
 ====
 include::sample[dir="snippets/reference/dsl-apis/basics/kotlin",files="build.gradle.kts[tags=extra]"]
 ====
-<1> Creates a new extra property called `myNewProperty` in the current context (the project in this case) and initializes it with the value `"initial value"`, which also determines the property's _type_
-<2> Create a new extra property whose initial value is calculated by the provided lambda
-<3> Binds an existing extra property from the current context (the project in this case) to a `myProperty` reference
-<4> Does the same as the previous line but allows the property to have a null value
+<1> Creates a new extra property called `myNewProperty` in the current context (the project in this case) and initializes it with the value `"initial value"`
+<2> Access an existing extra property from the current context (the project in this case)
+<3> Does the same as the previous line but allows the property to have a null value
 
 This approach works for all Gradle scripts: project build scripts, script plugins, settings scripts, and initialization scripts.
 
@@ -501,38 +465,18 @@ You can also access extra properties on a root project from a subproject using t
 ====
 include::sample[dir="snippets/reference/dsl-apis/basics/kotlin",files="my-sub-project/build.gradle.kts[tags=prop]"]
 ====
-<1> Binds the root project's `myNewProperty` extra property to a reference of the same name
+<1> Reads the root project's `myNewProperty` extra property
 
 Extra properties aren't just limited to projects.
 For example, `Task` extends `ExtensionAware`, so you can attach extra properties to tasks as well.
 
-Here's an example that defines a new `myNewTaskProperty` on the `test` task and then uses that property to initialize another task:
+Here's an example that defines a new `reportType` on the `test` task and then uses that property to initialize another task:
 
 ====
 include::sample[dir="snippets/reference/dsl-apis/basics/kotlin",files="build.gradle.kts[tags=test-task]"]
 ====
 <1> Creates a new `reportType` extra property on the `test` task
-<2> Makes the `test` task's `reportType` extra property available to configure the `archiveTestReports` task
-
-If you're happy to use eager configuration rather than the configuration avoidance APIs, you could use a single, "global" property for the report type, like this:
-
-====
-include::sample[dir="snippets/reference/dsl-apis/basics/kotlin",files="build.gradle.kts[tags=test-task-eager]"]
-====
-<1> Creates and initializes an extra property on the `test` task, binding it to a "global" property
-<2> Uses the "global" property to initialize the `archiveTestReports` task
-
-There is one last syntax for extra properties that treats `extra` as a map.
-We generally recommend against using this, as it bypasses Kotlin's type checking and limits IDE support.
-However, it is more succinct than the delegated properties syntax and can be used if you only need to set an extra property without referencing it later.
-
-Here is a simple example demonstrating how to set and read extra properties using the map syntax:
-
-====
-include::sample[dir="snippets/reference/dsl-apis/basics/kotlin",files="build.gradle.kts[tags=write]"]
-====
-<1> Creates a new project extra property called `myNewProperty` and sets its value
-<2> Reads the value from the project extra property we created — note the `project.` qualifier on `extra[...]`, otherwise Gradle will assume we want to read an extra property from the _task_
+<2> Reads the `test` task's `reportType` extra property to configure the `archiveTestReports` task
 
 [[kotdsl:types]]
 == Working with Gradle types
@@ -546,7 +490,6 @@ A property represents a value that can be set and read lazily:
 
 - Setting a value: `property.set(value)` or `property = value`
 - Accessing the value: `property.get()`
-- Using the delegate syntax: `val propValue: String by property`
 
 ====
 include::sample[dir="snippets/reference/dsl-apis/basics/kotlin/my-sub-project",files="build.gradle.kts[tags=property]"]

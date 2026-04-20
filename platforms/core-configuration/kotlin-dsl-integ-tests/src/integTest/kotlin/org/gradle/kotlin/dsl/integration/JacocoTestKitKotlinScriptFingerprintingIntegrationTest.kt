@@ -47,7 +47,7 @@ class JacocoTestKitKotlinScriptFingerprintingIntegrationTest : AbstractKotlinInt
                 id("com.gradle.plugin-publish") version ("2.0.0")
             }
             
-            val jacocoRuntime by configurations.creating
+            val jacocoRuntime = configurations.create("jacocoRuntime")
             
             dependencies {
                 testImplementation("junit:junit:4.13")

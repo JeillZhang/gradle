@@ -1,6 +1,6 @@
 // tag::configure-plugin-version[]
 pluginManagement {
-  val helloPluginVersion: String by settings
+  val helloPluginVersion = settings.providers.gradleProperty("helloPluginVersion").get()
   plugins {
     id("com.example.hello") version "${helloPluginVersion}"
   }

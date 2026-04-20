@@ -3,7 +3,7 @@ pluginManagement {
     repositories {
         maven {
 // end::use-plugin[]
-            val producerName: String? by settings
+            val producerName = providers.gradleProperty("producerName").orNull
             val repoLocation = "../$producerName/build/repo"
 // tag::use-plugin[]
             url = uri(repoLocation)

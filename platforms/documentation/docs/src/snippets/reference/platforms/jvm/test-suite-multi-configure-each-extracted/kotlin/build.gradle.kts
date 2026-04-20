@@ -36,19 +36,19 @@ testing {
         }
 
         /* This is the equivalent of:
-            val test by getting(JvmTestSuite::class) {
+            named<JvmTestSuite>("test") {
                 applyMockito(this)
             }
          */
-        val test by getting(JvmTestSuite::class, applyMockito)  // <2>
+        named<JvmTestSuite>("test", applyMockito)  // <2>
 
         /* This is the equivalent of:
-            val integrationTest by registering(JvmTestSuite::class)
+            register<JvmTestSuite>("integrationTest")
             applyMockito(integrationTest.get())
          */
-        val integrationTest by registering(JvmTestSuite::class, applyMockito) // <3>
+        register<JvmTestSuite>("integrationTest", applyMockito) // <3>
 
-        val functionalTest by registering(JvmTestSuite::class) {
+        register<JvmTestSuite>("functionalTest") {
             useJUnit()
             dependencies {
                 implementation("org.apache.commons:commons-lang3:3.11")
@@ -58,7 +58,7 @@ testing {
 }
 // end::multi-configure[]
 
-val checkDependencies by tasks.registering {
+val checkDependencies = tasks.register("checkDependencies") {
     val testRuntimeClasspath: FileCollection = configurations.getByName("testRuntimeClasspath")
     val integrationTestRuntimeClasspath: FileCollection = configurations.getByName("integrationTestRuntimeClasspath")
     val functionalTestRuntimeClasspath: FileCollection = configurations.getByName("functionalTestRuntimeClasspath")

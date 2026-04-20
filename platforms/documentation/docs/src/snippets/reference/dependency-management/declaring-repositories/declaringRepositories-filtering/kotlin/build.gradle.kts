@@ -52,7 +52,7 @@ repositories {
 }
 // end::repository-snapshots[]
 
-val libs by configurations.creating
+val libs = configurations.create("libs")
 
 dependencies {
     libs("com.google.guava:guava:23.0")

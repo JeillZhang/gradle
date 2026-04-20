@@ -8,13 +8,13 @@ repositories {
 
 val kindAttr = Attribute.of("kind", String::class.java)
 
-val v1Jar by tasks.registering(Jar::class) {
+val v1Jar = tasks.register<Jar>("v1Jar") {
     archiveBaseName.set("v1")
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
     from("src/v1")
 }
 
-val v2Jar by tasks.registering(Jar::class) {
+val v2Jar = tasks.register<Jar>("v2Jar") {
     archiveBaseName.set("v2")
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
     from("src/v2")

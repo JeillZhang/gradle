@@ -129,9 +129,9 @@ class PerformanceTestPlugin : Plugin<Project> {
 
     private
     fun Project.createPerformanceTestSourceSet(): SourceSet = the<SourceSetContainer>().run {
-        val main by getting
-        val test by getting
-        val performanceTest by creating {
+        val main = getByName("main")
+        val test = getByName("test")
+        val performanceTest = create("performanceTest") {
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
         }
@@ -143,7 +143,7 @@ class PerformanceTestPlugin : Plugin<Project> {
         addDependenciesAndConfigurations("performance")
 
         val testLibs = project.the<VersionCatalogsExtension>().named("testLibs")
-        val junit by configurations.creating
+        val junit = configurations.create("junit")
         dependencies {
             if (project.name != "enterprise-plugin-performance") {
                 "performanceTestImplementation"(project(":internal-performance-testing"))

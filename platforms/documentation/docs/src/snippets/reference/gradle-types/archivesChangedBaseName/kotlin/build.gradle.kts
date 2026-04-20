@@ -12,11 +12,11 @@ base {
 }
 // end::base-plugin-config[]
 
-val myZip by tasks.registering(Zip::class) {
+val myZip = tasks.register<Zip>("myZip") {
     from("somedir")
 }
 
-val myOtherZip by tasks.registering(Zip::class) {
+val myOtherZip = tasks.register<Zip>("myOtherZip") {
     archiveAppendix = "wrapper"
     archiveClassifier = "src"
     from("somedir")

@@ -119,7 +119,7 @@ internal
 fun Project.createGenerateAutoTestedSamplesTestTask(sourceSet: SourceSet, testType: TestType) {
     val prefix = testType.prefix
     val sourceSets = the<SourceSetContainer>()
-    val main by sourceSets.getting
+    val main = sourceSets.getByName("main")
     val sourceSet = sourceSets.getByName("${prefix}Test")
 
     val groovySourceDir = sourceSet.extensions.findByType<GroovySourceDirectorySet>()

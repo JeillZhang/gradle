@@ -1272,12 +1272,12 @@ dependencies {
     }
 }
 
-val sourceFiles by configurations.creating {
+val sourceFiles = configurations.create("sourceFiles") {
     isCanBeConsumed = false
     isCanBeResolved = false
 }
 
-val summarizedFiles by configurations.creating {
+val summarizedFiles = configurations.create("summarizedFiles") {
     extendsFrom(sourceFiles)
     isCanBeConsumed = false
     isCanBeResolved = true

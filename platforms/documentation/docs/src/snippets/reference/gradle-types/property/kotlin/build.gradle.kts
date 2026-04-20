@@ -80,7 +80,7 @@ val pluginExtension = extensions.create<MyPluginExtension>("pluginExtension")
 
 pluginExtension.apply {
     myNamedContainer {
-        val myName by registering
+        register("myName")
     }
 }
 

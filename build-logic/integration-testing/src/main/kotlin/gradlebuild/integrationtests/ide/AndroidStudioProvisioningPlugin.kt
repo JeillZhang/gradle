@@ -74,7 +74,7 @@ class AndroidStudioProvisioningPlugin : Plugin<Project> {
                 }
             }
 
-            val androidStudioRuntime by configurations.creating
+            val androidStudioRuntime = configurations.create("androidStudioRuntime")
 
             dependencies {
                 androidStudioRuntime("android-studio:android-studio:$androidStudioVersion@$androidStudioFileName")

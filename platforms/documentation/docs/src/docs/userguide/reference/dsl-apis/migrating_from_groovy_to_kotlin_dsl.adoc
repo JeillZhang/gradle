@@ -433,12 +433,12 @@ The following example declares two new configurations:
  * `integTestImplementation`, which is configured to extend the `testImplementation` configuration and to which we add a different dependency
 
 ====
-include::sample[dir="snippets/reference/dsl-apis/configurations-and-dependencies-custom/kotlin",files="build.gradle.kts[tags=delegated-properties]"]
+include::sample[dir="snippets/reference/dsl-apis/configurations-and-dependencies-custom/kotlin",files="build.gradle.kts[tags=direct-reference]"]
 include::sample[dir="snippets/reference/dsl-apis/configurations-and-dependencies-custom/groovy",files="build.gradle[tags=custom]"]
 ====
 
-Note that we can only use the `db(...)` and `integTestImplementation(...)` notation within the `dependencies {}` block in the above example because both configurations are declared as delegated properties beforehand via the `creating()` method.
-If the configurations were defined elsewhere, you could only reference them either by first creating delegating properties via `configurations`  — as opposed to `configurations.creating()` — or by using string literals within the `dependencies {}` block.
+Note that we can only use the `db(...)` and `integTestImplementation(...)` notation within the `dependencies {}` block in the above example because both configurations are created and referenced beforehand via the `create()` method.
+If the configurations were defined elsewhere, you could only reference them either by first accessing them via `configurations`  — as opposed to `configurations.create()` — or by using string literals within the `dependencies {}` block.
 The following example demonstrates both approaches:
 
 ====

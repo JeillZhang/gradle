@@ -476,7 +476,7 @@ class ProjectSchemaAccessorsIntegrationTest : AbstractKotlinIntegrationTest() {
                         """
                         import my.App
                         import my.Lib
-                        val my: String? by project
+                        val my = project.findProperty("my") as String?
                         val extensionType = if (my == "app") App::class else Lib::class
                         extensions.create("my", extensionType)
                         """
@@ -762,7 +762,7 @@ class ProjectSchemaAccessorsIntegrationTest : AbstractKotlinIntegrationTest() {
                 }
             }
 
-            val adhocConfig by configurations.creating
+            val adhocConfig = configurations.create("adhocConfig")
             configurations.create("for-string-invoke")
 
             (artifacts) {
@@ -1082,7 +1082,7 @@ class ProjectSchemaAccessorsIntegrationTest : AbstractKotlinIntegrationTest() {
             }
 
             tasks {
-                val myCheck by registering {
+                val myCheck = register("myCheck") {
                     dependsOn(testClasses)
                     doLast {
                         println(testClasses.get().description)
@@ -1113,7 +1113,7 @@ class ProjectSchemaAccessorsIntegrationTest : AbstractKotlinIntegrationTest() {
                         srcDir("src/main/java-too")
                     }
                 }
-                val integTest by registering {
+                register("integTest") {
                     java.srcDir(file("src/integTest/java"))
                     resources.srcDir(file("src/integTest/resources"))
                     compileClasspath += sourceSets.main.get().output + configurations.testRuntimeClasspath.get()
@@ -1122,7 +1122,7 @@ class ProjectSchemaAccessorsIntegrationTest : AbstractKotlinIntegrationTest() {
             }
 
             tasks {
-                val integTest by registering(Test::class) {
+                val integTest = register<Test>("integTest") {
                     description = "Runs the integration tests."
                     group = "verification"
                     testClassesDirs = sourceSets["integTest"].output.classesDirs

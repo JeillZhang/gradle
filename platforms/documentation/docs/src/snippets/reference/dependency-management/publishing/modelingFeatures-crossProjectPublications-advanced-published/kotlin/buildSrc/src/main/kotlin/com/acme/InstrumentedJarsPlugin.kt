@@ -13,8 +13,6 @@ import org.gradle.api.attributes.java.TargetJvmVersion
 import org.gradle.api.component.AdhocComponentWithVariants
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.creating
-import org.gradle.kotlin.dsl.getValue
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.named
 import javax.inject.Inject
@@ -52,8 +50,8 @@ class InstrumentedJarsPlugin : Plugin<Project> {
 
     }
 
-    private fun Project.createOutgoingConfiguration(): Configuration {
-        val instrumentedJars by configurations.creating {
+    private fun Project.createOutgoingConfiguration(): Configuration =
+        configurations.create("instrumentedJars") {
             isCanBeConsumed = true
             isCanBeResolved = false
             attributes {
@@ -64,8 +62,6 @@ class InstrumentedJarsPlugin : Plugin<Project> {
                 attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named("instrumented-jar"))
             }
         }
-        return instrumentedJars
-    }
 
     private fun Project.addVariantToExistingComponent(outgoing: Configuration) {
         // tag::add_variant_to_existing_component[]

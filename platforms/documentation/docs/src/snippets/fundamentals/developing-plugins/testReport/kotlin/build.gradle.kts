@@ -4,7 +4,7 @@ plugins {
 }
 
 // tag::test-report[]
-val testReportData by configurations.creating {
+val testReportData = configurations.create("testReportData") {
     isCanBeConsumed = false
     attributes {
         attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.DOCUMENTATION))

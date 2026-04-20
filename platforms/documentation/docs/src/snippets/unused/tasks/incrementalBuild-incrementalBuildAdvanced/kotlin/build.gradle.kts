@@ -30,7 +30,7 @@ tasks.register<ProcessTemplates>("processTemplates") {
 // end::custom-task-class[]
 
 // tag::task-arg-method[]
-val copyTemplates by tasks.registering(Copy::class) {
+val copyTemplates = tasks.register<Copy>("copyTemplates") {
     into(file(layout.buildDirectory.dir("tmp")))
     from("src/templates")
 }

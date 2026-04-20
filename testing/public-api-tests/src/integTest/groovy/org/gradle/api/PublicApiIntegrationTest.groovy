@@ -166,7 +166,7 @@ class PublicApiIntegrationTest extends AbstractIntegrationSpec implements JavaTo
 
             class PublishedApiTestPlugin : Plugin<Project> {
                 override fun apply(project: Project) {
-                    val customTask by project.tasks.registering(CustomTask::class) {
+                    project.tasks.register<CustomTask>("customTask") {
                         mapValues.set(mapOf("alma" to 1, "bela" to 2))
                         println("Hello from plugin")
                     }

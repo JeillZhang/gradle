@@ -52,55 +52,26 @@ val mainSourceSetProvider: NamedDomainObjectProvider<SourceSet> = sourceSets.nam
 the<SourceSetContainer>()["main"].java.srcDir("src/main/java")
 // end::source[]
 
-// tag::property[]
-val myProperty: String by project  // <1>
-val myNullableProperty: String? by project // <2>
-// end::property[]
-
+extra["myNullableProperty"] = null
 // tag::extra[]
-val myNewProperty by extra("initial value")  // <1>
-val myOtherNewProperty by extra { "calculated initial value" }  // <2>
+extra["myNewProperty"] = "initial value"  // <1>
 
-val myExtraProperty: String by extra  // <3>
-val myExtraNullableProperty: String? by extra  // <4>
+val myExtraProperty = extra["myNewProperty"] as String  // <2>
+val myExtraNullableProperty = extra["myNullableProperty"] as String?  // <3>
 // end::extra[]
 
 // tag::test-task[]
 tasks {
     test {
-        val reportType by extra("dev")  // <1>
+        extra["reportType"] = "dev"  // <1>
         doLast {
-            // Use 'suffix' for post-processing of reports
+            // Use 'reportType' for post-processing of reports
         }
     }
 
     register<Zip>("archiveTestReports") {
-        val reportType: String by test.get().extra  // <2>
-        archiveAppendix = reportType
-        from(test.get().reports.html.outputLocation)
+        from(test.map { it.reports.html.outputLocation })
+        archiveAppendix = test.map { it.extra["reportType"] as String } // <2>
     }
 }
 // end::test-task[]
-
-// tag::test-task-eager[]
-tasks.test {
-    doLast { /* ... */ }
-}
-
-val testReportType by tasks.test.get().extra("dev")  // <1>
-
-tasks.create<Zip>("archiveTestsReports") {
-    archiveAppendix = testReportType  // <2>
-    from(test.reports.html.outputLocation)
-}
-// end::test-task-eager[]
-
-// tag::write[]
-extra["myNewProperty"] = "initial value"  // <1>
-
-tasks.register("myTask") {
-    doLast {
-        println("Property: ${project.extra["myNewProperty"]}")  // <2>
-    }
-}
-// end::write[]

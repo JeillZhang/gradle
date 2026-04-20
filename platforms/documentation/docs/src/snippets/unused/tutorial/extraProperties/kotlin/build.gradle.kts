@@ -3,8 +3,10 @@ plugins {
     id("java-library")
 }
 
-val springVersion by extra("3.1.0.RELEASE")
-val emailNotification by extra { "build@master.org" }
+val springVersion = "3.1.0.RELEASE"
+val emailNotification = "build@master.org"
+extra["springVersion"] = springVersion
+extra["emailNotification"] = emailNotification
 
 sourceSets.all { extra["purpose"] = null }
 

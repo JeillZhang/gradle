@@ -2,7 +2,7 @@ repositories {
     mavenCentral()
 }
 
-val checkstyle by configurations.creating
+val checkstyle = configurations.create("checkstyle")
 
 dependencies {
     "checkstyle"("com.puppycrawl.tools:checkstyle:9.3")

@@ -1,6 +1,6 @@
 import org.gradle.api.attributes.java.TargetJvmEnvironment
 
-val libs by configurations.creating {
+val libs = configurations.create("libs") {
     attributes {
         attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage.JAVA_API))
         attribute(TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE, objects.named(TargetJvmEnvironment.STANDARD_JVM))

@@ -1,7 +1,6 @@
 package reporters
 import org.gradle.api.problems.ProblemGroup
 import org.gradle.api.problems.ProblemId
-import org.gradle.kotlin.dsl.registering
 
 interface Injected {
     @get:Inject val problems: Problems
@@ -16,7 +15,7 @@ problems.getReporter().report(ProblemId.create("adhoc-script-deprecation", "Depr
 }
 
 tasks {
-    val warningTask by registering {
+    register("warningTask") {
         doLast {
             problems.getReporter().report(ProblemId.create("adhoc-task-deprecation", "Deprecated task", problemGroup)) {
                 contextualLabel("Task 'warningTask' is deprecated")
@@ -25,7 +24,7 @@ tasks {
         }
     }
 
-    val failingTask by registering {
+    register("failingTask") {
         doLast {
             problems.getReporter().throwing(RuntimeException("The 'failingTask' should not be called"), ProblemId.create("broken-task", "Task should not be called", problemGroup)) {
                     contextualLabel("Task 'failingTask' should not be called")

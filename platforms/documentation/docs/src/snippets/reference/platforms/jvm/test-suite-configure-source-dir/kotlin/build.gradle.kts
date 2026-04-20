@@ -28,7 +28,7 @@ repositories {
 // tag::configure-source-dir[]
 testing {
     suites {
-        val integrationTest by registering(JvmTestSuite::class) { // <1>
+        register<JvmTestSuite>("integrationTest") { // <1>
             sources { // <2>
                 java { // <3>
                     setSrcDirs(listOf("src/it/java")) // <4>
@@ -42,7 +42,7 @@ testing {
 // tag::configure-test-task[]
 testing {
     suites {
-        val integrationTest by getting(JvmTestSuite::class) {
+        named<JvmTestSuite>("integrationTest") {
             targets {
                 all { // <1>
                     testTask.configure {

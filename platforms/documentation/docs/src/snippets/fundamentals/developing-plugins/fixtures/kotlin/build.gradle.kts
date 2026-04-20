@@ -20,11 +20,11 @@ dependencies {
 }
 // end::consumer_dependencies[]
 
-val functionalTest by configurations.creating {
+val functionalTest = configurations.create("functionalTest") {
     isCanBeConsumed = false
     isCanBeResolved = false
 }
-val functionalTestClasspath by configurations.creating {
+configurations.create("functionalTestClasspath") {
     extendsFrom(functionalTest)
     isCanBeConsumed = false
     attributes {

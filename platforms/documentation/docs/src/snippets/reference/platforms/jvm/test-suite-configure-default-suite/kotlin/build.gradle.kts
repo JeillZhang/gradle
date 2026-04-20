@@ -28,7 +28,7 @@ repositories {
 // tag::configure-default-suite[]
 testing {
     suites {
-        val test by getting(JvmTestSuite::class) {
+        named<JvmTestSuite>("test") {
             useTestNG() // <1>
 
             targets {

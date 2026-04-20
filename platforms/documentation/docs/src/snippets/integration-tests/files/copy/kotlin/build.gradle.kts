@@ -22,7 +22,7 @@ abstract class MyReportTask : DefaultTask() {
     }
 }
 
-val myReportTask by tasks.registering(MyReportTask::class) {
+val myReportTask = tasks.register<MyReportTask>("myReportTask") {
     outputFile = layout.buildDirectory.file("reports/my-report.pdf")
 }
 
@@ -31,7 +31,7 @@ abstract class MyArchiveTask : DefaultTask() {
     abstract val dirToArchive: DirectoryProperty
 }
 
-val archiveReportsTask by tasks.registering(MyArchiveTask::class) {
+val archiveReportsTask = tasks.register<MyArchiveTask>("archiveReportsTask") {
     dirToArchive = layout.buildDirectory.dir("toArchive")
 }
 
@@ -119,7 +119,7 @@ tasks.register<Copy>("copyWithTruncate") {
 
 
 
-val copyTask by tasks.registering(Copy::class) {
+val copyTask = tasks.register<Copy>("copyTask") {
     from("src/main/webapp")
     into(layout.buildDirectory.dir("explodedWar"))
 }

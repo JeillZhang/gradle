@@ -47,6 +47,8 @@ val propagatedEnvironmentVariables = listOf(
     // Used by Gradle test infrastructure
     "REPO_MIRROR_URLS",
     "YARNPKG_MIRROR_URL",
+    // Optional mirror for services.gradle.org layout in internal tests (ReleasedGradleDistribution)
+    "GRADLE_INTERNAL_TEST_SERVICES_BASE_URL",
 
     // Used to find local java installations
     "SDKMAN_CANDIDATES_DIR",

@@ -10,7 +10,7 @@ dependencies {
 // tag::create_report[]
 reporting {
     reports {
-        val testAggregateTestReport by creating(AggregateTestReport::class) { // <.>
+        create<AggregateTestReport>("testAggregateTestReport") { // <.>
             testSuiteName = "test"
         }
     }

@@ -32,10 +32,10 @@ dependencyAnalysis {
 
 addDependenciesAndConfigurations("smoke")
 
-val smokeTestImplementation: Configuration by configurations
-val smokeTestDistributionRuntimeOnly: Configuration by configurations
-val smokeTestBinDistribution: Configuration by configurations
-val smokeTestSrcDistribution: Configuration by configurations
+val smokeTestImplementation = configurations.getByName("smokeTestImplementation")
+val smokeTestDistributionRuntimeOnly = configurations.getByName("smokeTestDistributionRuntimeOnly")
+val smokeTestBinDistribution = configurations.getByName("smokeTestBinDistribution")
+val smokeTestSrcDistribution = configurations.getByName("smokeTestSrcDistribution")
 
 dependencies {
     testFixturesImplementation(projects.internalIntegTesting)
@@ -93,11 +93,11 @@ tasks {
      * Note that you can change it to `file:///path/to/your/nowinandroid-clone/.git#<commitId>`
      * if you need to iterate quickly on changes to it.
      */
-    val androidProject by registering(RemoteProject::class) {
+    val androidProject = register<RemoteProject>("androidProject") {
         setRemoteUriAndRefFromGradleProperty("androidSmokeTestProjectRef")
     }
 
-    val gradleBuildCurrent by registering(RemoteProject::class) {
+    val gradleBuildCurrent = register<RemoteProject>("gradleBuildCurrent") {
         remoteUri = rootDir.absolutePath
         ref = buildCommitId
     }

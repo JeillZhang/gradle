@@ -167,10 +167,10 @@ def value = providers.gradleProperty("myProp")
 ----
 val myProp: String by project.properties
 ----
-| Delegate from `project` directly:
+| Get the project property directly:
 [source,kotlin]
 ----
-val myProp: String by project
+val myProp = project.property("myProp") as String
 ----
 
 | Forwarding properties as system properties:
@@ -217,6 +217,143 @@ processResources {
     }
 }
 |===
+
+[[kotlin_dsl_delegated_properties]]
+==== Deprecation of Kotlin DSL delegated properties
+
+All Kotlin DSL property delegate extensions have been deprecated and will
+be removed in Gradle 10. This includes container delegates (`by
+registering`, `by creating`, `by existing`, `by getting`), property
+delegates (`by project`, `by settings`, `by extra`), and value delegates
+(`Property<T>` and `ConfigurableFileCollection` getValue/setValue
+operators).
+
+Use the explicit API instead.
+
+The container delegates (`registering`, `creating`, `existing`, `getting`)
+are defined on `NamedDomainObjectContainer` and
+`NamedDomainObjectCollection`. They apply to any container, not just
+`tasks` or `configurations`.
+
+The examples below use a generic
+`container` placeholder; replace it with `tasks`, `configurations`,
+`sourceSets`, or whichever container you use.
+
+**Container delegates:**
+
+[cols="1,1"]
+|===
+|Deprecated delegate |Replacement
+
+|`val x by container.registering`
+|`val x = container.register("x")`
+
+|`val x by container.registering { }`
+|`val x = container.register("x") { }`
+
+|`val x by container.registering(Type::class)`
+|`val x = container.register<Type>("x")`
+
+|`val x by container.registering(Type::class) { }`
+|`val x = container.register<Type>("x") { }`
+
+|`val x by container.creating`
+|`val x = container.create("x")`
+
+|`val x by container.creating { }`
+|`val x = container.create("x") { }`
+
+|`val x by container.creating(Type::class)`
+|`val x = container.create<Type>("x")`
+
+|`val x by container.creating(Type::class) { }`
+|`val x = container.create<Type>("x") { }`
+
+|`val x by container.existing`
+|`val x = container.named("x")`
+
+|`val x by container.existing { }`
+|`val x = container.named("x") { }`
+
+|`val x by container.existing(Type::class)`
+|`val x = container.named<Type>("x")`
+
+|`val x by container.existing(Type::class) { }`
+|`val x = container.named<Type>("x") { }`
+
+|`val x by container.getting`
+|`val x = container.getByName("x")`
+
+|`val x by container.getting { }`
+|`val x = container.getByName("x") { }`
+
+|`val x by container.getting(Type::class)`
+|`val x = container.getByName<Type>("x")`
+
+|`val x by container.getting(Type::class) { }`
+|`val x = container.getByName<Type>("x") { }`
+
+|`val x: Type by container` (lookup)
+|`val x = container.getByName("x")`
+
+|`val x: Type by provider` (`NamedDomainObjectProvider<T>` unwrap)
+|`val x = provider.get()`
+|===
+
+**Property, extra, and value delegates:**
+
+[cols="1,1"]
+|===
+|Deprecated delegate |Replacement
+
+|`val p: String by project`
+|`val p = project.property("p")`
+
+|`val p: String? by project`
+|`val p = project.findProperty("p")`
+
+|`val p: String by settings` (Gradle property)
+|`val p = providers.gradleProperty("p").get()`
+
+|`val p: String? by settings` (Gradle property, nullable)
+|`val p = providers.gradleProperty("p").orNull`
+
+|`val p: String by settings` (extra property)
+|`val p = extra["p"] as String`
+
+|`val p: String? by settings` (extra property, nullable)
+|`val p = extra["p"] as String?`
+
+|`val v by extra("value")` or `val v by extra { value }`
+|`extra.set("v", value)`
+
+|`val v: String by extra`
+|`val v = extra["v"] as String`
+
+|`val v: String? by extra`
+|`val v = extra["v"] as String?`
+
+|`val x: String by myProperty` (`Property<T>` read)
+|`val x = myProperty.get()`
+
+|`x = "new"` via `var x: String by myProperty` (`Property<T>` write)
+|`myProperty.set("new")`
+
+|`val files by myFileCollection` (`ConfigurableFileCollection` read)
+|`val files = myFileCollection.getFiles()`
+
+|`files = ...` via `var files by myFileCollection` (`ConfigurableFileCollection` write)
+|`myFileCollection.setFrom(...)`
+
+|`val ext: Type by extensions`
+|`val ext = extensions.getByType<Type>()`
+|===
+
+Delegated properties are being removed because they create silent
+correctness bugs (e.g. no-op delegates, wrong extra property scope),
+couple entity names to variable names, diverge between build scripts and
+class-based plugins, and duplicate functionality already provided by
+explicit APIs or other DSL sugar.
 
 === Potential breaking changes
 

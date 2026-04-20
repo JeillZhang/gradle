@@ -573,7 +573,7 @@ class ConfigurationCacheJavaIntegrationTest extends AbstractIntegrationSpec {
                 `java-library`
             }
 
-            val manifestClasspath by configurations.creating {
+            val manifestClasspath = configurations.create("manifestClasspath") {
                 assert(isCanBeResolved)
                 isCanBeConsumed = false
                 isTransitive = false

@@ -12,8 +12,8 @@ if (hasProperty("myProjectProp")) {
     println(property("myProjectProp"))
 }
 
-// Using Kotlin delegated properties on `project`
-val myProjectProp: String by project
+// Using the project API
+val myProjectProp = project.property("myProjectProp") as String
 println(myProjectProp)
 // end::configuration[]
 

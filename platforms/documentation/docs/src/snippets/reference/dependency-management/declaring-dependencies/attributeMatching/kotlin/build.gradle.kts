@@ -1,6 +1,6 @@
 // tag::java-configuration-example[]
 // declare a "configuration" named "implementation"
-val implementation by configurations.creating {
+val implementation = configurations.create("implementation") {
     isCanBeConsumed = false
     isCanBeResolved = false
 }

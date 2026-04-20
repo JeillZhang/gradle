@@ -701,7 +701,7 @@ class GradleKotlinDslIntegrationTest : AbstractKotlinIntegrationTest() {
             "gradle/answer.gradle.kts",
             """
 
-            val answer by extra { "42" }
+            extra["answer"] = "42"
 
             """
         )
@@ -716,7 +716,7 @@ class GradleKotlinDslIntegrationTest : AbstractKotlinIntegrationTest() {
             withBuildScript(
                 """
                 apply(from = "$remoteScriptUrl")
-                val answer: String by extra
+                val answer = extra["answer"] as String
                 println("*" + answer + "*")
                 """
             )
@@ -753,7 +753,7 @@ class GradleKotlinDslIntegrationTest : AbstractKotlinIntegrationTest() {
             "gradle/answer.gradle.kts",
             """
 
-            val answer by extra { "42" }
+            extra["answer"] = "42"
 
             """
         )
@@ -766,7 +766,7 @@ class GradleKotlinDslIntegrationTest : AbstractKotlinIntegrationTest() {
 
             apply(from = project.buildscript.classLoader.getResource("common.gradle.kts").toURI())
 
-            val answer: String by extra
+            val answer = extra["answer"] as String
             println("*" + answer + "*")
             """
         )

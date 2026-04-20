@@ -1,5 +1,5 @@
 // Need to have at least one configuration declared, otherwise the rules are never evaluated
-val conf by configurations.creating
+configurations.create("conf")
 
 // tag::module_to_project_substitution[]
 configurations.configureEach {

@@ -7,7 +7,7 @@ dependencies {
 }
 
 // tag::groovy-compilation-avoidance[]
-val astTransformation by configurations.creating
+val astTransformation = configurations.create("astTransformation")
 dependencies {
     astTransformation(project(":ast-transformation"))
 }

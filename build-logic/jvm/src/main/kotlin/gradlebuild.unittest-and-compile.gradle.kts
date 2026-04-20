@@ -117,8 +117,7 @@ fun configureSourcesVariant() {
     }
 
     // TODO: This should not be necessary anymore now that we have variant reselection.
-    @Suppress("UnusedPrivateProperty")
-    val transitiveSourcesElements by configurations.creating {
+    configurations.create("transitiveSourcesElements") {
         isCanBeResolved = false
         isCanBeConsumed = true
         extendsFrom(configurations.implementation.get())
@@ -176,7 +175,7 @@ fun addDependencies() {
         testRuntimeOnly(testLibs.findLibrary("junitPlatform").get())
 
         // use a separate configuration for the platform dependency that does not get published as part of 'apiElements' or 'runtimeElements'
-        val platformImplementation by configurations.creating
+        val platformImplementation = configurations.create("platformImplementation")
         configurations["compileClasspath"].extendsFrom(platformImplementation)
         configurations["runtimeClasspath"].extendsFrom(platformImplementation)
         configurations["testCompileClasspath"].extendsFrom(platformImplementation)

@@ -1,1 +1,1 @@
-val message by extra("foobar")  // <4>
+extra["message"] = "foobar"  // <4>

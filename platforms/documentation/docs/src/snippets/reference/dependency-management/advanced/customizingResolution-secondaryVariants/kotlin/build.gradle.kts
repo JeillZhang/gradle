@@ -10,7 +10,7 @@ version = "1.2.3"
 // tag::add[]
 // Create a new secondary variant on the existing 'apiElements' configuration.
 // This variant will be available during artifact selection (not graph resolution).
-val apiElementVariant: ConfigurationVariant by configurations.apiElements.get().outgoing.variants.creating {
+configurations.apiElements.get().outgoing.variants.create("apiElementVariant") {
     attributes {
         // Override the 'Usage' attribute to distinguish this variant from the default 'java-api'.
         // This allows consumers requesting 'custom-variant' usage to select this artifact set.
@@ -26,7 +26,7 @@ val fooVariantAttribute = Attribute.of("com.example.fooVariant", String::class.j
 
 // Create a consumable configuration named 'fooFiles'
 // This configuration serves as the container for outgoing variants
-val fooFiles: Configuration by configurations.creating {
+val fooFiles = configurations.create("fooFiles") {
     isCanBeDeclared = false
     isCanBeResolved = false
     isCanBeConsumed = true
@@ -38,7 +38,7 @@ val fooFiles: Configuration by configurations.creating {
 
 // Define the first variant of 'fooFiles'
 // This variant inherits all attributes from the parent configuration and adds a distinguishing attribute to identify the variant
-val fooFilesVariant1: ConfigurationVariant by fooFiles.outgoing.variants.creating {
+fooFiles.outgoing.variants.create("fooFilesVariant1") {
     attributes {
         attribute(fooVariantAttribute, "variant1")
     }
@@ -46,7 +46,7 @@ val fooFilesVariant1: ConfigurationVariant by fooFiles.outgoing.variants.creatin
 
 // Define a second variant of 'fooFiles'
 // This one overrides the inherited 'fooAttribute' value and sets a different 'fooVariantAttribute' value
-val fooFilesVariant2: ConfigurationVariant by fooFiles.outgoing.variants.creating {
+fooFiles.outgoing.variants.create("fooFilesVariant2") {
     attributes {
         attribute(fooAttribute, "secondary") // Overrides inherited attribute
         attribute(fooVariantAttribute, "variant2")

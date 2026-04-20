@@ -80,9 +80,9 @@ val ndoc = extensions.create<MyPluginExtensionNamedDomainObjectContainer>("ndoc"
 
 ndoc.apply {
     people {
-        val bobby by registering 
-        val hank by registering 
-        val peggy by registering
+        register("bobby")
+        register("hank")
+        register("peggy")
     }
 }
 // end::ndoc[]
@@ -112,7 +112,7 @@ epdoc.animals.registerBinding(Dog::class, Dog::class)
 
 epdoc.apply {
     animals {
-        val bubba by registering(Dog::class) {
+        register<Dog>("bubba") {
             breed = "basset hound"
         }
     }

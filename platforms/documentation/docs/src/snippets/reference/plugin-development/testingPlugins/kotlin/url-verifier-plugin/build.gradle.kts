@@ -7,7 +7,7 @@ group = "org.gradle.sample"
 version = "1.0"
 
 // tag::test-source-set[]
-val integrationTest by sourceSets.creating
+val integrationTest = sourceSets.create("integrationTest")
 
 dependencies {
     "integrationTestImplementation"(project())
@@ -27,7 +27,7 @@ tasks.check {
 }
 // end::test-task[]
 
-val functionalTest by sourceSets.creating
+val functionalTest = sourceSets.create("functionalTest")
 dependencies {
     "functionalTestImplementation"(project())
 }

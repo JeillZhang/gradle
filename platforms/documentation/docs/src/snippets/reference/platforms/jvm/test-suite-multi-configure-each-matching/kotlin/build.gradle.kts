@@ -34,8 +34,8 @@ testing {
                 implementation("org.mockito:mockito-junit-jupiter:4.6.1")
             }
         }
-        val integrationTest by registering(JvmTestSuite::class)
-        val functionalTest by registering(JvmTestSuite::class) {
+        register<JvmTestSuite>("integrationTest")
+        register<JvmTestSuite>("functionalTest") {
             useJUnit() // <2>
             dependencies { // <3>
                 implementation("org.apache.commons:commons-lang3:3.11")
@@ -45,7 +45,7 @@ testing {
 }
 // end::multi-configure[]
 
-val checkDependencies by tasks.registering {
+val checkDependencies = tasks.register("checkDependencies") {
     val testRuntimeClasspath: FileCollection = configurations.getByName("testRuntimeClasspath")
     val integrationTestRuntimeClasspath: FileCollection = configurations.getByName("integrationTestRuntimeClasspath")
     val functionalTestRuntimeClasspath: FileCollection = configurations.getByName("functionalTestRuntimeClasspath")

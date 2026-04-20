@@ -3,7 +3,7 @@ plugins {
 }
 
 // tag::declare-outgoing-configuration[]
-val instrumentedJars by configurations.creating {
+val instrumentedJars = configurations.create("instrumentedJars") {
     isCanBeConsumed = true
     isCanBeResolved = false
     attributes {

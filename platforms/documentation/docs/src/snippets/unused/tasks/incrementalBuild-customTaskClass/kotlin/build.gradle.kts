@@ -4,7 +4,7 @@ plugins {
     base
 }
 
-val processTemplates by tasks.registering(ProcessTemplates::class) {
+val processTemplates = tasks.register<ProcessTemplates>("processTemplates") {
     templateEngine = TemplateEngineType.FREEMARKER
     sourceFiles.from(fileTree("src/templates"))
     templateData.name = "test"

@@ -49,10 +49,10 @@ sourceSets {
     }
 }
 
-val intTestImplementation by configurations.getting {
+val intTestImplementation = configurations.getByName("intTestImplementation") {
     extendsFrom(configurations.implementation.get())
 }
-val intTestRuntimeOnly by configurations.getting
+val intTestRuntimeOnly = configurations.getByName("intTestRuntimeOnly")
 
 configurations["intTestRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
 
@@ -64,7 +64,7 @@ dependencies {
 
 // tag::using-custom-doclet[]
 // tag::create-custom-doclet[]
-val asciidoclet by configurations.creating
+val asciidoclet = configurations.create("asciidoclet")
 
 dependencies {
     asciidoclet("org.asciidoctor:asciidoclet:1.+")

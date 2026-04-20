@@ -10,7 +10,7 @@ repositories {
 }
 // end::multiple-repositories[]
 
-val libs by configurations.creating
+val libs = configurations.create("libs")
 
 dependencies {
     libs("jboss:jboss-system:4.2.2.GA")

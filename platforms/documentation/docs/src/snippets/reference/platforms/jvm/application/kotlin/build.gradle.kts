@@ -36,7 +36,7 @@ application {
 // end::executableDir-conf[]
 
 // tag::distribution-spec[]
-val createDocs by tasks.registering {
+val createDocs = tasks.register("createDocs") {
     val docs = layout.buildDirectory.dir("docs")
     outputs.dir(docs)
     doLast {

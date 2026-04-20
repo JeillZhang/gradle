@@ -33,7 +33,7 @@ dependencies {
 
 testing {
     suites {
-        val integrationTest by registering(JvmTestSuite::class) {
+        register<JvmTestSuite>("integrationTest") {
             dependencies {
                 implementation(project()) // <3>
             }

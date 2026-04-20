@@ -31,7 +31,7 @@ repositories {
 // tag::configure-testing-extension[]
 testing {
     suites { // <1>
-        val test by getting(JvmTestSuite::class) { // <2>
+        val test = named<JvmTestSuite>("test") { // <2>
             useJUnitJupiter() // <3>
         }
 

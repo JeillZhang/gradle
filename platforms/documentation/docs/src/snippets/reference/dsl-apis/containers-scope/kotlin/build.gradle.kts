@@ -7,7 +7,7 @@ tasks {
     test {
         testLogging.showStackTraces = true
     }
-    val myCheck by registering {
+    val myCheck = register("myCheck") {
         doLast { /* assert on something meaningful */ }
     }
     check {

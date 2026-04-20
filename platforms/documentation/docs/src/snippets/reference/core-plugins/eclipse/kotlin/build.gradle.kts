@@ -73,8 +73,8 @@ eclipse.wtp.facet.file.withXml(Action<XmlProvider> {
 })
 // end::wtp-with-xml[]
 
-val integTest by sourceSets.creating
-val functional by configurations.creating
+val integTest = sourceSets.create("integTest")
+val functional = configurations.create("functional")
 
 eclipse {
     classpath {

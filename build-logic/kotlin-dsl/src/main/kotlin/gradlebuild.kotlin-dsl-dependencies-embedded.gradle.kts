@@ -32,7 +32,7 @@ val kotlinVersion = libs.findVersion("kotlin").get().getStrictVersion()
 
 tasks {
 
-    val generateKotlinDependencyExtensions by registering(GenerateKotlinDependencyExtensions::class) {
+    val generateKotlinDependencyExtensions = register<GenerateKotlinDependencyExtensions>("generateKotlinDependencyExtensions") {
         outputDir = apiExtensionsOutputDir
         embeddedKotlinVersion = kotlinVersion
         kotlinDslPluginsVersion = publishedKotlinDslPluginVersion
@@ -55,7 +55,7 @@ tasks {
     }
 
 // -- Version manifest properties --------------------------------------
-    val writeVersionsManifest by registering(WriteProperties::class) {
+    val writeVersionsManifest = register<WriteProperties>("writeVersionsManifest") {
         destinationFile = layout.buildDirectory.file("versionsManifest/gradle-kotlin-dsl-versions.properties")
         property("kotlin", kotlinVersion)
     }
@@ -67,14 +67,14 @@ tasks {
 
 // -- Embedded Kotlin dependencies -------------------------------------
 
-val embeddedKotlinBaseDependencies by configurations.creating
+val embeddedKotlinBaseDependencies = configurations.create("embeddedKotlinBaseDependencies")
 
 dependencies {
     embeddedKotlinBaseDependencies(libs.findLibrary("kotlinStdlib").get())
     embeddedKotlinBaseDependencies(libs.findLibrary("kotlinReflect").get())
 }
 
-val writeEmbeddedKotlinDependencies by tasks.registering {
+val writeEmbeddedKotlinDependencies = tasks.register("writeEmbeddedKotlinDependencies") {
     val outputFile = layout.buildDirectory.file("embeddedKotlinDependencies/gradle-kotlin-dsl-embedded-kotlin.properties")
     outputs.file(outputFile)
     val values = embeddedKotlinBaseDependencies

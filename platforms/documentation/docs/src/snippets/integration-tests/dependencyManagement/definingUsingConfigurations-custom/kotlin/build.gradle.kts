@@ -1,5 +1,5 @@
 // tag::custom-configuration[]
-val jasper by configurations.creating
+val jasper = configurations.create("jasper")
 
 repositories {
     mavenCentral()

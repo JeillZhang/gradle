@@ -3,8 +3,8 @@ repositories {
     google()
 }
 
-val implementation by configurations.creating
-val runtimeOnly by configurations.creating
+val implementation = configurations.create("implementation")
+val runtimeOnly = configurations.create("runtimeOnly")
 
 // tag::define-dependency[]
 dependencies {

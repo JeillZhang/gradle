@@ -1,4 +1,4 @@
-val buildProfile: String? by project  // <1>
+val buildProfile = project.findProperty("buildProfile") as String?  // <1>
 
 apply(from = "profile-${buildProfile ?: "default"}.gradle.kts")  // <2>
 

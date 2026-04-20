@@ -28,7 +28,7 @@ repositories {
 // tag::configure-suite-dependencies[]
 testing {
     suites {
-        val test by getting(JvmTestSuite::class) { // <1>
+        named<JvmTestSuite>("test") { // <1>
             dependencies {
                 // Note that this is equivalent to adding dependencies to testImplementation in the top-level dependencies block
                 implementation("org.assertj:assertj-core:3.21.0") // <2>

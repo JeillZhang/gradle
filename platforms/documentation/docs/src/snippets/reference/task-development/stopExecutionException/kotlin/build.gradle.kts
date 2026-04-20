@@ -1,4 +1,4 @@
-val compile by tasks.registering {
+val compile = tasks.register("compile") {
     doLast {
         println("We are doing the compile.")
     }

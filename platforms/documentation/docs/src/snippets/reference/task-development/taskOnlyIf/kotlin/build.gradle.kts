@@ -1,4 +1,4 @@
-val hello by tasks.registering {
+val hello = tasks.register("hello") {
     doLast {
         println("hello world")
     }

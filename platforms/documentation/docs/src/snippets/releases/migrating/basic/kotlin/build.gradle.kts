@@ -10,7 +10,8 @@ java {
 
 version = "1.2.1"
 
-val currentBuildNumber by extra("1234")
+val currentBuildNumber = "1234"
+extra["currentBuildNumber"] = currentBuildNumber
 
 // tag::repositories[]
 repositories {

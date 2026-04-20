@@ -4,10 +4,10 @@ plugins {
 
 // tag::create-configurations[]
 configurations {
-    val myCodeCompileClasspath: Configuration by creating
+    create("myCodeCompileClasspath")
 }
 
 sourceSets {
-    val myCode: SourceSet by creating
+    create("myCode")
 }
 // end::create-configurations[]

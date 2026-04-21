@@ -29,6 +29,7 @@ import org.gradle.api.internal.SettingsInternal.BUILD_SRC
 import org.gradle.api.internal.artifacts.transform.TransformStepNode
 import org.gradle.api.internal.cache.CacheConfigurationsInternal
 import org.gradle.api.internal.cache.CacheResourceConfigurationInternal.EntryRetention
+import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.internal.project.ProjectState
 import org.gradle.api.provider.Provider
 import org.gradle.api.services.BuildServiceRegistry
@@ -543,7 +544,7 @@ class ConfigurationCacheState(
             build.createProjects()
             gradle.serviceOf<ProjectRefResolver>().projectsReady()
 
-            applyProjectStates(projects, gradle)
+            applyProjectStates(projects, gradle, build.state.projects)
             readRequiredBuildServicesOf(gradle)
 
             val workGraph = if (readBoolean()) readWorkGraph(gradle) else null
@@ -645,11 +646,13 @@ class ConfigurationCacheState(
     }
 
     private
-    fun applyProjectStates(projects: List<CachedProjectState>, gradle: GradleInternal) {
-        for (project in projects) {
-            if (project is ProjectWithWork && project.normalizationState != null) {
-                val projectState = gradle.owner.projects.getProject(project.path)
-                projectState.mutableModel.normalization.configureFromCachedState(project.normalizationState)
+    fun applyProjectStates(projects: List<CachedProjectState>, gradle: GradleInternal, projectRegistry: BuildProjectRegistry) {
+        projectRegistry.applyToMutableStateOfAllProjects { access ->
+            for (project in projects) {
+                if (project is ProjectWithWork && project.normalizationState != null) {
+                    val projectState = gradle.owner.projects.getProject(project.path)
+                    access.getMutableModel(projectState).normalization.configureFromCachedState(project.normalizationState)
+                }
             }
         }
     }
@@ -901,29 +904,39 @@ class ConfigurationCacheState(
         transformInputProjects: Set<Path>
     ): List<CachedProjectState> {
         val relevantProjects = relevantProjectsRegistry.relevantProjects(nodes)
-        return projects.allProjects
-            .filter(shouldStoreProject)
-            .map { project ->
-                val mutableModel = project.mutableModel
-                // Relevant projects are those observed during dependency resolution or owning scheduled nodes.
-                // A build-logic build may have no scheduled nodes since it has already been executed by this point.
-                // However, if one of its projects is used as a transform input in another build, we still need
-                // to store it as ProjectWithWork. Such a project is not captured by this build's RelevantProjectsRegistry
-                // because the dependency resolution that observed it happened in a different build's context.
-                // So we explicitly include it (along with its parent hierarchy) via transformInputProjects.
-                if (relevantProjects.contains(project) || project.projectPath in transformInputProjects) {
-                    mutableModel.layout.buildDirectory.finalizeValue()
-                    ProjectWithWork(
-                        project.projectPath,
-                        mutableModel.projectDir,
-                        mutableModel.buildFile,
-                        mutableModel.layout.buildDirectory.asFile.get(),
-                        mutableModel.normalization.computeCachedState()
-                    )
-                } else {
-                    ProjectWithNoWork(project.projectPath, mutableModel.projectDir, mutableModel.buildFile)
+        return projects.fromMutableStateOfAllProjects { access ->
+            projects.allProjects
+                .filter(shouldStoreProject)
+                .map { project ->
+                    collectCachedProjectState(relevantProjects, transformInputProjects, project, access.getMutableModel(project))
                 }
-            }
+        }
+    }
+
+    private fun collectCachedProjectState(
+        relevantProjects: Set<ProjectState>,
+        transformInputProjects: Set<Path>,
+        project: ProjectState,
+        mutableModel: ProjectInternal,
+    ): CachedProjectState {
+        // Relevant projects are those observed during dependency resolution or owning scheduled nodes.
+        // A build-logic build may have no scheduled nodes since it has already been executed by this point.
+        // However, if one of its projects is used as a transform input in another build, we still need
+        // to store it as ProjectWithWork. Such a project is not captured by this build's RelevantProjectsRegistry
+        // because the dependency resolution that observed it happened in a different build's context.
+        // So we explicitly include it (along with its parent hierarchy) via transformInputProjects.
+        if (relevantProjects.contains(project) || project.projectPath in transformInputProjects) {
+            mutableModel.layout.buildDirectory.finalizeValue()
+            return ProjectWithWork(
+                project.projectPath,
+                project.projectDir,
+                mutableModel.buildFile,
+                mutableModel.layout.buildDirectory.asFile.get(),
+                mutableModel.normalization.computeCachedState()
+            )
+        } else {
+            return ProjectWithNoWork(project.projectPath, project.projectDir, mutableModel.buildFile)
+        }
     }
 
     private

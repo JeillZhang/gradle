@@ -202,14 +202,19 @@ public class EclipseModelBuilder implements ParameterizedToolingModelBuilder<Ecl
             children.add(buildHierarchy(child));
         }
 
-        EclipseModel eclipseModel = projectState.getMutableModel().getExtensions().getByType(EclipseModel.class);
-        org.gradle.plugins.ide.eclipse.model.EclipseProject internalProject = eclipseModel.getProject();
+        record NameAndDescription(String name, String description) {}
 
-        String name = internalProject.getName();
+        NameAndDescription data = projectState.fromMutableState(project -> {
+            EclipseModel eclipseModel = project.getExtensions().getByType(EclipseModel.class);
+            org.gradle.plugins.ide.eclipse.model.EclipseProject internalProject = eclipseModel.getProject();
+
+            String name = internalProject.getName();
+            String description = GUtil.elvis(internalProject.getComment(), null);
+            return new NameAndDescription(name, description);
+        });
         String path = projectState.getIdentity().getProjectPath().asString();
-        String description = GUtil.elvis(internalProject.getComment(), null);
         File projectDir = projectState.getProjectDir();
-        DefaultEclipseProject eclipseProject = new DefaultEclipseProject(name, path, description, projectDir, children).setGradleProject(rootGradleProject.findByPath(path));
+        DefaultEclipseProject eclipseProject = new DefaultEclipseProject(data.name, path, data.description, projectDir, children).setGradleProject(rootGradleProject.findByPath(path));
 
         for (DefaultEclipseProject child : children) {
             child.setParent(eclipseProject);

@@ -3252,6 +3252,7 @@ Class <org.gradle.plugins.ide.internal.resolver.model.IdeExtendedRepoFileDepende
 Class <org.gradle.plugins.ide.internal.tooling.BasicIdeaModelBuilder> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (BasicIdeaModelBuilder.java:0)
 Class <org.gradle.plugins.ide.internal.tooling.BuildEnvironmentBuilder> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (BuildEnvironmentBuilder.java:0)
 Class <org.gradle.plugins.ide.internal.tooling.BuildInvocationsBuilder> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (BuildInvocationsBuilder.java:0)
+Class <org.gradle.plugins.ide.internal.tooling.EclipseModelBuilder$1NameAndDescription> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (EclipseModelBuilder.java:0)
 Class <org.gradle.plugins.ide.internal.tooling.EclipseModelBuilder$ClasspathElements> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (EclipseModelBuilder.java:0)
 Class <org.gradle.plugins.ide.internal.tooling.EclipseModelBuilder> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (EclipseModelBuilder.java:0)
 Class <org.gradle.plugins.ide.internal.tooling.GradleProjectBuilder> is not annotated (directly or via an enclosing element) with @org.jspecify.annotations.NullMarked in (GradleProjectBuilder.java:0)

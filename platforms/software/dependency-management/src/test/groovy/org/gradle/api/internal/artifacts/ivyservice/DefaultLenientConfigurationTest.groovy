@@ -27,7 +27,9 @@ import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.Visit
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.results.DefaultVisitedGraphResults
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.results.VisitedGraphResults
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.oldresult.TransientConfigurationResults
-import org.gradle.api.internal.artifacts.result.MinimalResolutionResult
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.GraphStructure
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ResolvedDependencyGraph
+import org.gradle.api.internal.attributes.ImmutableAttributes
 import spock.lang.Specification
 
 import java.util.function.Function
@@ -83,7 +85,8 @@ class DefaultLenientConfigurationTest extends Specification {
     }
 
     private DefaultLenientConfiguration newConfiguration() {
-        VisitedGraphResults visitedGraphResults = new DefaultVisitedGraphResults(Stub(MinimalResolutionResult), [] as Set)
+        ResolvedDependencyGraph graph = new ResolvedDependencyGraph(ImmutableAttributes.EMPTY, () -> Stub(GraphStructure), null)
+        VisitedGraphResults visitedGraphResults = new DefaultVisitedGraphResults(graph, [] as Set)
         new DefaultLenientConfiguration(Stub(ResolutionHost), visitedGraphResults, artifactSet, resultsLoader, Mock(ResolvedArtifactSetResolver), Mock(ArtifactSelectionSpec))
     }
 

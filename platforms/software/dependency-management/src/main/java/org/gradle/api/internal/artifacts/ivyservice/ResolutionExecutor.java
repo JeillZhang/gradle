@@ -62,24 +62,25 @@ import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.results.
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.oldresult.ResolutionFailureCollector;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.oldresult.TransientConfigurationResults;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.oldresult.TransientConfigurationResultsBuilder;
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.AdhocHandlingComponentResultSerializer;
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.AttributeContainerSerializer;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ComponentSelectionDescriptorFactory;
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.GraphStructure;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ResolvedDependencyGraph;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.StreamingResolutionResultBuilder;
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ThisBuildTreeOnlyGraphElementStore;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.store.ResolutionResultsStoreFactory;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.store.StoreSet;
 import org.gradle.api.internal.artifacts.repositories.ResolutionAwareRepository;
-import org.gradle.api.internal.artifacts.result.MinimalResolutionResult;
 import org.gradle.api.internal.artifacts.transform.ConsumerProvidedVariantFinder;
 import org.gradle.api.internal.artifacts.transform.DefaultTransformUpstreamDependenciesResolver;
 import org.gradle.api.internal.artifacts.transform.TransformUpstreamDependenciesResolver;
 import org.gradle.api.internal.artifacts.transform.TransformedVariantFactory;
+import org.gradle.api.internal.attributes.AttributeDesugaring;
 import org.gradle.api.internal.attributes.AttributeSchemaServices;
 import org.gradle.api.internal.attributes.AttributesFactory;
 import org.gradle.api.internal.attributes.ImmutableAttributes;
 import org.gradle.api.internal.attributes.immutable.ImmutableAttributesSchema;
 import org.gradle.api.internal.attributes.immutable.artifact.ImmutableArtifactTypeRegistry;
+import org.gradle.api.internal.model.NamedObjectInstantiator;
 import org.gradle.api.internal.tasks.TaskDependencyFactory;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
@@ -130,11 +131,10 @@ public class ResolutionExecutor {
     private final BuildOperationExecutor buildOperationExecutor;
     private final CalculatedValueContainerFactory calculatedValueContainerFactory;
     private final ComponentSelectorConverter componentSelectorConverter;
-    private final AttributeContainerSerializer attributeContainerSerializer;
     private final CapabilitySelectorSerializer capabilitySelectorSerializer;
     private final ResolvedArtifactSetResolver artifactSetResolver;
     private final ComponentSelectionDescriptorFactory componentSelectionDescriptorFactory;
-    private final AdhocHandlingComponentResultSerializer componentResultSerializer;
+    private final ThisBuildTreeOnlyGraphElementStore graphElementStore;
     private final ResolvedVariantCache resolvedVariantCache;
     private final GraphVariantSelector graphVariantSelector;
     private final LocalComponentRegistry localComponentRegistry;
@@ -152,6 +152,8 @@ public class ResolutionExecutor {
     private final VariantArtifactSetCache variantArtifactSetCache;
     private final VariantTransformRegistry transformRegistry;
     private final ComponentMetadataProcessorFactory componentMetadataProcessorFactory;
+    private final AttributeDesugaring attributeDesugaring;
+    private final NamedObjectInstantiator namedObjectInstantiator;
 
     @Inject
     public ResolutionExecutor(
@@ -162,11 +164,10 @@ public class ResolutionExecutor {
         BuildOperationExecutor buildOperationExecutor,
         CalculatedValueContainerFactory calculatedValueContainerFactory,
         ComponentSelectorConverter componentSelectorConverter,
-        AttributeContainerSerializer attributeContainerSerializer,
         CapabilitySelectorSerializer capabilitySelectorSerializer,
         ResolvedArtifactSetResolver artifactSetResolver,
         ComponentSelectionDescriptorFactory componentSelectionDescriptorFactory,
-        AdhocHandlingComponentResultSerializer componentResultSerializer,
+        ThisBuildTreeOnlyGraphElementStore graphElementStore,
         ResolvedVariantCache resolvedVariantCache,
         GraphVariantSelector graphVariantSelector,
         LocalComponentRegistry localComponentRegistry,
@@ -183,7 +184,9 @@ public class ResolutionExecutor {
         ResolutionFailureHandler resolutionFailureHandler,
         VariantArtifactSetCache variantArtifactSetCache,
         VariantTransformRegistry transformRegistry,
-        ComponentMetadataProcessorFactory componentMetadataProcessorFactory
+        ComponentMetadataProcessorFactory componentMetadataProcessorFactory,
+        AttributeDesugaring attributeDesugaring,
+        NamedObjectInstantiator namedObjectInstantiator
     ) {
         this.dependencyGraphResolver = dependencyGraphResolver;
         this.storeFactory = storeFactory;
@@ -192,11 +195,10 @@ public class ResolutionExecutor {
         this.buildOperationExecutor = buildOperationExecutor;
         this.calculatedValueContainerFactory = calculatedValueContainerFactory;
         this.componentSelectorConverter = componentSelectorConverter;
-        this.attributeContainerSerializer = attributeContainerSerializer;
         this.capabilitySelectorSerializer = capabilitySelectorSerializer;
         this.artifactSetResolver = artifactSetResolver;
         this.componentSelectionDescriptorFactory = componentSelectionDescriptorFactory;
-        this.componentResultSerializer = componentResultSerializer;
+        this.graphElementStore = graphElementStore;
         this.resolvedVariantCache = resolvedVariantCache;
         this.graphVariantSelector = graphVariantSelector;
         this.localComponentRegistry = localComponentRegistry;
@@ -214,6 +216,8 @@ public class ResolutionExecutor {
         this.variantArtifactSetCache = variantArtifactSetCache;
         this.transformRegistry = transformRegistry;
         this.componentMetadataProcessorFactory = componentMetadataProcessorFactory;
+        this.attributeDesugaring = attributeDesugaring;
+        this.namedObjectInstantiator = namedObjectInstantiator;
     }
 
     /**
@@ -232,7 +236,7 @@ public class ResolutionExecutor {
         CalculatedValue<ResolverResults> futureCompleteResults
     ) {
         ResolutionFailureCollector failureCollector = new ResolutionFailureCollector(componentSelectorConverter, domainObjectContext);
-        InMemoryResolutionResultBuilder resolutionResultBuilder = new InMemoryResolutionResultBuilder(params.getIncludeAllSelectableVariantResults());
+        InMemoryResolutionResultBuilder resolutionResultBuilder = new InMemoryResolutionResultBuilder();
         DefaultResolvedArtifactsBuilder artifactsBuilder = new DefaultResolvedArtifactsBuilder(buildProjectDependencies);
 
         ComponentResolvers resolvers = getResolvers(params, legacyParams, Collections.emptyList());
@@ -242,7 +246,7 @@ public class ResolutionExecutor {
         doResolve(params, legacyParams, ImmutableList.of(), resolvers, IS_LOCAL_EDGE, visitors);
 
         Set<UnresolvedDependency> unresolvedDependencies = failureCollector.complete(Collections.emptySet());
-        VisitedGraphResults graphResults = new DefaultVisitedGraphResults(resolutionResultBuilder.getResolutionResult(), unresolvedDependencies);
+        VisitedGraphResults graphResults = new DefaultVisitedGraphResults(resolutionResultBuilder.getResolvedDependencyGraph(), unresolvedDependencies);
         VisitedArtifactResults artifactsResults = artifactsBuilder.complete();
 
         TransformUpstreamDependenciesResolver.Factory dependenciesResolverFactory = visitedArtifacts -> new DefaultTransformUpstreamDependenciesResolver(
@@ -289,8 +293,8 @@ public class ResolutionExecutor {
         TransientConfigurationResultsBuilder oldTransientModelBuilder = new TransientConfigurationResultsBuilder(oldModelStore, oldModelCache, moduleIdentifierFactory, buildOperationExecutor, params.getResolutionHost());
 
         BinaryStore newModelStore = stores.nextBinaryStore();
-        Store<ResolvedDependencyGraph> newModelCache = stores.newModelCache();
-        StreamingResolutionResultBuilder newModelBuilder = new StreamingResolutionResultBuilder(newModelStore, newModelCache, attributeContainerSerializer, capabilitySelectorSerializer, componentResultSerializer, componentSelectionDescriptorFactory, params.getIncludeAllSelectableVariantResults());
+        Store<GraphStructure> newModelCache = stores.newModelCache();
+        StreamingResolutionResultBuilder newModelBuilder = new StreamingResolutionResultBuilder(newModelStore, newModelCache, graphElementStore, attributeDesugaring, capabilitySelectorSerializer, componentSelectionDescriptorFactory, moduleIdentifierFactory, attributesFactory, namedObjectInstantiator, params.getIncludeAllSelectableVariantResults());
 
         DefaultResolvedArtifactsBuilder artifactsBuilder = new DefaultResolvedArtifactsBuilder(buildProjectDependencies);
         ResolutionFailureCollector failureCollector = new ResolutionFailureCollector(componentSelectorConverter, domainObjectContext);
@@ -323,8 +327,8 @@ public class ResolutionExecutor {
         }
 
         Set<UnresolvedDependency> resolutionFailures = failureCollector.complete(lockingFailures);
-        MinimalResolutionResult resolutionResult = newModelBuilder.getResolutionResult(lockingFailures);
-        VisitedGraphResults graphResults = new DefaultVisitedGraphResults(resolutionResult, resolutionFailures);
+        ResolvedDependencyGraph resolvedDependencyGraph = newModelBuilder.getResolvedDependencyGraph(lockingFailures);
+        VisitedGraphResults graphResults = new DefaultVisitedGraphResults(resolvedDependencyGraph, resolutionFailures);
 
         // Only write dependency locks if resolution completed without failure.
         if (lockingVisitor != null && !graphResults.hasAnyFailure()) {

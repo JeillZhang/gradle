@@ -455,7 +455,7 @@ class ArtifactTransformValuesInjectionIntegrationTest extends AbstractDependency
         )
     }
 
-    def "cannot query parameters for transform without parameters"() {
+    def "can query parameters for transform with None parameters"() {
         createDirs("a", "b", "c")
         settingsFile << """
             include 'a', 'b', 'c'
@@ -471,17 +471,14 @@ class ArtifactTransformValuesInjectionIntegrationTest extends AbstractDependency
 
             abstract class MakeGreen implements TransformAction<TransformParameters.None> {
                 void transform(TransformOutputs outputs) {
-                    println getParameters()
+                    println("Parameters: " + getParameters())
                 }
             }
         """
 
-        when:
-        fails(":a:resolve")
-
-        then:
-        failure.assertResolutionFailure(':a:resolver')
-        failure.assertHasCause("Cannot query the parameters of an instance of TransformAction that takes no parameters.")
+        expect:
+        succeeds(":a:resolve")
+        outputContains("Parameters: org.gradle.api.artifacts.transform.TransformParameters\$None@")
     }
 
     def "transform parameters type cannot use caching annotations"() {

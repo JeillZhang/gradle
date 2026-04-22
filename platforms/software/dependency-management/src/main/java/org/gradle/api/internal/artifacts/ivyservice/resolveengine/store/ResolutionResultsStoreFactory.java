@@ -17,7 +17,7 @@
 package org.gradle.api.internal.artifacts.ivyservice.resolveengine.store;
 
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.oldresult.TransientConfigurationResults;
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ResolvedDependencyGraph;
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.GraphStructure;
 import org.gradle.api.internal.file.temp.TemporaryFileProvider;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
@@ -43,7 +43,7 @@ public class ResolutionResultsStoreFactory implements Closeable {
     private final int maxSize;
 
     private CachedStoreFactory<TransientConfigurationResults> oldModelCache;
-    private CachedStoreFactory<ResolvedDependencyGraph> newModelCache;
+    private CachedStoreFactory<GraphStructure> newModelCache;
 
     private final AtomicInteger storeSetBaseId = new AtomicInteger();
 
@@ -83,7 +83,7 @@ public class ResolutionResultsStoreFactory implements Closeable {
         return oldModelCache;
     }
 
-    private synchronized CachedStoreFactory<ResolvedDependencyGraph> getNewModelCache() {
+    private synchronized CachedStoreFactory<GraphStructure> getNewModelCache() {
         if (newModelCache == null) {
             newModelCache = new CachedStoreFactory<>("Resolution result");
             cleanUpLater.add(newModelCache);
@@ -103,7 +103,7 @@ public class ResolutionResultsStoreFactory implements Closeable {
             }
 
             @Override
-            public Store<ResolvedDependencyGraph> newModelCache() {
+            public Store<GraphStructure> newModelCache() {
                 return getNewModelCache().createCachedStore(storeSetId);
             }
 

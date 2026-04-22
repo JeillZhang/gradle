@@ -24,6 +24,12 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public interface ResolvedComponentResultInternal extends ResolvedComponentResult {
+
+    /**
+     * Get the index of this component in the underling graph structure.
+     */
+    int index();
+
     /**
      * Used by the Android plugin. Do not use this method.
      */
@@ -50,14 +56,6 @@ public interface ResolvedComponentResultInternal extends ResolvedComponentResult
      * @since 7.5
      */
     List<ResolvedVariantResult> getAvailableVariants();
-
-    /**
-     * Get a variant by its node ID.
-     *
-     * @return null if this component does not have a variant with the specified ID.
-     */
-    @Nullable
-    ResolvedVariantResult getVariant(long id);
 
     @Override
     ComponentSelectionReasonInternal getSelectionReason();

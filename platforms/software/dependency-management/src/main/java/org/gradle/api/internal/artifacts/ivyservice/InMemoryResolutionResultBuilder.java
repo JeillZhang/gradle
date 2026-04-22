@@ -16,20 +16,21 @@
 
 package org.gradle.api.internal.artifacts.ivyservice;
 
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import org.gradle.api.artifacts.result.ResolutionResult;
-import org.gradle.api.artifacts.result.ResolvedVariantResult;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.DependencyGraphComponent;
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.DependencyGraphEdge;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.DependencyGraphNode;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.DependencyGraphVisitor;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.ResolvedGraphVariant;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.graph.RootGraphNode;
-import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ResolutionResultGraphBuilder;
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.GraphStructure;
+import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.GraphStructureBuilder;
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.result.ResolvedDependencyGraph;
-import org.gradle.api.internal.artifacts.result.MinimalResolutionResult;
 import org.gradle.api.internal.attributes.ImmutableAttributes;
+import org.gradle.internal.resolve.ModuleVersionResolveException;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Collections;
 
 /**
  * Dependency graph visitor that will build a {@link ResolutionResult} eagerly.
@@ -37,53 +38,74 @@ import java.util.Collections;
  */
 public class InMemoryResolutionResultBuilder implements DependencyGraphVisitor {
 
-    private final ResolutionResultGraphBuilder resolutionResultBuilder = new ResolutionResultGraphBuilder();
-    private final boolean includeAllSelectableVariantResults;
+    private final LongSet visitedComponents = new LongOpenHashSet();
+    private final GraphStructureBuilder builder = new GraphStructureBuilder();
 
-    private long rootVariantId;
-    private long rootComponentId;
     private @Nullable ImmutableAttributes requestAttributes;
-
-    public InMemoryResolutionResultBuilder(boolean includeAllSelectableVariantResults) {
-        this.includeAllSelectableVariantResults = includeAllSelectableVariantResults;
-    }
 
     @Override
     public void start(RootGraphNode root) {
-        this.rootVariantId = root.getNodeId();
-        this.rootComponentId = root.getOwner().getResultId();
         this.requestAttributes = root.getResolveState().getAttributes();
-    }
-
-    @Override
-    public void visitNode(DependencyGraphNode node) {
-        DependencyGraphComponent component = node.getOwner();
-        resolutionResultBuilder.startVisitComponent(component.getResultId(), component.getSelectionReason(), component.getRepositoryName(), component.getComponentId(), component.getModuleVersion());
-        for (ResolvedGraphVariant variant : component.getSelectedVariants()) {
-            ResolvedVariantResult publicView = component.getResolveState().getPublicViewFor(variant.getResolveState(), null);
-            resolutionResultBuilder.visitSelectedVariant(variant.getNodeId(), publicView);
-        }
-
-        if (includeAllSelectableVariantResults) {
-            resolutionResultBuilder.visitComponentVariants(component.getResolveState().getAllSelectableVariantResults());
-        } else {
-            resolutionResultBuilder.visitComponentVariants(Collections.emptyList());
-        }
-
-        resolutionResultBuilder.endVisitComponent();
+        builder.start(root.getNodeId());
     }
 
     @Override
     public void visitEdges(DependencyGraphNode node) {
-        resolutionResultBuilder.visitOutgoingEdges(node.getOwner().getResultId(), node.getNodeId(), node.getOutgoingEdges());
+        DependencyGraphComponent component = node.getOwner();
+        if (visitedComponents.add(component.getResultId())) {
+            builder.addComponent(
+                component.getResultId(),
+                component.getSelectionReason(),
+                component.getRepositoryName(),
+                component.getComponentId(),
+                component.getModuleVersion()
+            );
+        }
+
+        ResolvedGraphVariant externalVariant = node.getExternalVariant();
+        long externalVariantId = externalVariant != null ? externalVariant.getNodeId() : -1;
+
+        builder.addNode(
+            node.getNodeId(),
+            component.getResultId(),
+            node.getMetadata().getAttributes(),
+            node.getMetadata().getCapabilities(),
+            node.getMetadata().getDisplayName(),
+            externalVariantId
+        );
+
+        for (DependencyGraphEdge edge : node.getOutgoingEdges()) {
+            if (!edge.isTargetVirtualPlatform()) {
+                ModuleVersionResolveException failure = edge.getFailure();
+                if (failure == null) {
+                    builder.addSuccessfulEdge(
+                        edge.getRequested(),
+                        edge.isConstraint(),
+                        edge.getTargetVariantId()
+                    );
+                } else {
+                    builder.addFailedEdge(
+                        edge.getRequested(),
+                        edge.isConstraint(),
+                        edge.getReason(),
+                        failure
+                    );
+                }
+            }
+        }
     }
 
-    public MinimalResolutionResult getResolutionResult() {
+    public ResolvedDependencyGraph getResolvedDependencyGraph() {
         if (requestAttributes == null) {
             throw new IllegalStateException("Resolution result not computed yet");
         }
-        ResolvedDependencyGraph graph = resolutionResultBuilder.getResolvedGraph(rootComponentId, rootVariantId);
-        return new MinimalResolutionResult(() -> graph, requestAttributes);
+
+        GraphStructure structure = builder.build();
+        return new ResolvedDependencyGraph(
+            requestAttributes,
+            () -> structure,
+            null
+        );
     }
 
 }

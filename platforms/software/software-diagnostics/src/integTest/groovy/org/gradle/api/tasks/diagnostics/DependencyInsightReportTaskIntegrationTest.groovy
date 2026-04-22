@@ -345,6 +345,7 @@ org:leaf:1.0
    Failures:
       - Could not resolve org:leaf2:1.0.
           - Conflict found for module 'org:leaf2': between versions 2.5, 1.5 and 1.0
+      - Could not resolve org:leaf2:1.0. (already reported)
 
 org:leaf2:1.0 FAILED
 +--- org:middle1:1.0

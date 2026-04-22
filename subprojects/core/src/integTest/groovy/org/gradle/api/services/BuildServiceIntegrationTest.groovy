@@ -1285,6 +1285,31 @@ Hello, subproject1
         outputContains("service: value is 2")
     }
 
+    @Issue("https://github.com/gradle/gradle/issues/30182")
+    def "service with no parameters can access None parameters"() {
+        buildFile << """
+            abstract class CountingService implements BuildService<${BuildServiceParameters.name}.None> {
+                CountingService() {
+                    println("service: parameters = " + getParameters())
+                }
+            }
+
+            def provider = gradle.sharedServices.registerIfAbsent("counter", CountingService) {}
+
+            task check {
+                doFirst {
+                    provider.get()
+                }
+            }
+        """
+
+        when:
+        run("check")
+
+        then:
+        outputContains("service: parameters = org.gradle.api.services.BuildServiceParameters\$None@")
+    }
+
     def "service can be registered without action"() {
         noParametersServiceImplementation()
         buildFile << """

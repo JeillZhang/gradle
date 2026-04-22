@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-    testImplementation('org.spockframework:spock-core:2.3-groovy-4.0') {
-        exclude group: 'org.codehaus.groovy'
+    testImplementation('org.spockframework:spock-core:2.4-groovy-4.0') {
+        exclude group: 'org.apache.groovy'
     }
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

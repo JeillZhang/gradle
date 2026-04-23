@@ -242,9 +242,8 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
         private void runOperations() {
             CurrentBuildOperationRef.instance().with(parent, () -> {
                 try {
-                    T operation;
-                    while ((operation = waitForNextOperation()) != null) {
-                        runBatch(operation);
+                    while (waitForNextOperation()) {
+                        runBatch();
                     }
                 } catch (Throwable t) {
                     addFailure(t);
@@ -254,20 +253,19 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
             });
         }
 
-        @Nullable
-        private T waitForNextOperation() {
+        private boolean waitForNextOperation() {
             lock.lock();
             try {
                 // If the token was already invalidated (e.g. in runBatch), exit immediately
                 // to avoid becoming a zombie thread stuck in await().
                 if (token != null && !token.isValid()) {
-                    return null;
+                    return false;
                 }
                 while (queueState == QueueState.Working && helper.isQueueEmpty()) {
                     if (helper.isExtraWorker()) {
                         // We should exit, immediately invalidate our token to ensure the count goes down now.
                         invalidateIfNeeded();
-                        return null;
+                        return false;
                     }
                     try {
                         workAvailable.await();
@@ -275,18 +273,18 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
                         throw UncheckedException.throwAsUncheckedException(e);
                     }
                 }
-                return helper.pollWork();
+                return !helper.isQueueEmpty();
             } finally {
                 lock.unlock();
             }
         }
 
-        private void runBatch(final T firstOperation) {
+        private void runBatch() {
             int operationsExecuted;
             if (context.requiresWorkerLease()) {
-                operationsExecuted = workerLeases.runAsWorkerThread(() -> executePendingWork(firstOperation));
+                operationsExecuted = workerLeases.runAsWorkerThread(this::executePendingWork);
             } else {
-                operationsExecuted = executePendingWork(firstOperation);
+                operationsExecuted = executePendingWork();
             }
 
             // We need to update pending count outside of withLocks() so that we don't have a race
@@ -295,9 +293,9 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
             completeOperations(operationsExecuted);
         }
 
-        private int executePendingWork(T firstOperation) {
+        private int executePendingWork() {
             if (allowAccessToProjectState) {
-                return doRunBatch(firstOperation);
+                return doRunBatch();
             } else {
                 // Disallow this thread from making any changes to the project locks while it is running the work. This implies that this thread will not
                 // block waiting for access to some other project, which means it can proceed even if some other thread is waiting for a project lock it
@@ -309,7 +307,7 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
                 // constraint and then gradually roll this out to other worker threads, such as task action workers.
                 //
                 // See {@link ProjectLeaseRegistry#whileDisallowingProjectLockChanges} for more details
-                return workerLeases.whileDisallowingProjectLockChanges(() -> doRunBatch(firstOperation));
+                return workerLeases.whileDisallowingProjectLockChanges(this::doRunBatch);
             }
         }
 
@@ -317,18 +315,14 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
          * Run as much work as possible until the queue is empty or the queue is cancelled.
          * Then, we return and release the worker lease while we wait for more work to be added to the queue.
          */
-        private int doRunBatch(T firstOperation) {
+        private int doRunBatch() {
             int operationCount = 0;
-            T operation = firstOperation;
-            while (operation != null) {
+            while (true) {
                 if (queueState == QueueState.Cancelled) {
-                    // If an operation was pulled from the queue, but the queue was cancelled before this operation could start
-                    // (for instance, because this worker was waiting on a worker lease) discard it without running.
-                    return ++operationCount;
+                    break;
                 }
-                runOperation(operation);
-                operationCount++;
 
+                T operation;
                 lock.lock();
                 try {
                     if (helper.isExtraWorker()) {
@@ -340,6 +334,14 @@ class DefaultBuildOperationQueue<T extends BuildOperation> implements BuildOpera
                 } finally {
                     lock.unlock();
                 }
+
+                if (operation == null) {
+                    break;
+                }
+
+                runOperation(operation);
+                operationCount++;
+
             }
             return operationCount;
         }

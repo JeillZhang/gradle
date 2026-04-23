@@ -290,7 +290,6 @@ include::multi_project_builds.adoc[leveloffset=+2]
 include::sharing_build_logic_between_subprojects.adoc[leveloffset=+2]
 include::composite_builds.adoc[leveloffset=+2]
 include::configuration_on_demand.adoc[leveloffset=+2]
-include::isolated_projects.adoc[leveloffset=+2]
 
 [[part:optimizing_build_times]]
 == OPTIMIZING GRADLE BUILDS
@@ -313,6 +312,9 @@ include::configuration_cache_enabling.adoc[leveloffset=+2]
 include::configuration_cache_requirements.adoc[leveloffset=+2]
 include::configuration_cache_debugging.adoc[leveloffset=+2]
 include::configuration_cache_status.adoc[leveloffset=+2]
+
+// Isolated Projects
+include::isolated_projects.adoc[leveloffset=+2]
 
 [[part:securing_builds]]
 == SECURING BUILDS

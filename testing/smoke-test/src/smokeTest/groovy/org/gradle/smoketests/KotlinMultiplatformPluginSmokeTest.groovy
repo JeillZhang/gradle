@@ -48,6 +48,10 @@ class KotlinMultiplatformPluginSmokeTest extends AbstractKotlinPluginSmokeTest {
                 kotlinVersionNumber.baseVersion > KotlinGradlePluginVersions.KOTLIN_2_1_20 && kotlinVersionNumber.baseVersion < KotlinGradlePluginVersions.KOTLIN_2_3_20,
                 "The archives configuration has been deprecated for artifact declaration. This will fail with an error in Gradle 10. Add artifacts as direct task dependencies of the 'assemble' task instead of declaring them in the archives configuration. Consult the upgrading guide for further information: https://docs.gradle.org/${GradleVersion.current().version}/userguide/upgrading_version_9.html#sec:archives-configuration",
             )
+            .expectLegacyDeprecationWarningIf(
+                kotlinVersionNumber.baseVersion >= KotlinGradlePluginVersions.KOTLIN_2_3_20,
+                "The Configuration.getTaskDependencyFromProjectDependency(boolean, String) method has been deprecated. This is scheduled to be removed in Gradle 10. Consult the upgrading guide for further information: https://docs.gradle.org/${GradleVersion.current().version}/userguide/upgrading_version_9.html#deprecate_getTaskDependencyFromProjectDependency"
+            )
             .build()
 
         then:
@@ -127,6 +131,10 @@ class KotlinMultiplatformPluginSmokeTest extends AbstractKotlinPluginSmokeTest {
             .expectLegacyDeprecationWarningIf(
                 kotlinVersionNumber.baseVersion > KotlinGradlePluginVersions.KOTLIN_2_1_20 && kotlinVersionNumber.baseVersion < KotlinGradlePluginVersions.KOTLIN_2_3_20,
                 "The archives configuration has been deprecated for artifact declaration. This will fail with an error in Gradle 10. Add artifacts as direct task dependencies of the 'assemble' task instead of declaring them in the archives configuration. Consult the upgrading guide for further information: https://docs.gradle.org/${GradleVersion.current().version}/userguide/upgrading_version_9.html#sec:archives-configuration",
+            )
+            .expectLegacyDeprecationWarningIf(
+                kotlinVersionNumber.baseVersion >= KotlinGradlePluginVersions.KOTLIN_2_3_20,
+                "The Configuration.getTaskDependencyFromProjectDependency(boolean, String) method has been deprecated. This is scheduled to be removed in Gradle 10. Consult the upgrading guide for further information: https://docs.gradle.org/${GradleVersion.current().version}/userguide/upgrading_version_9.html#deprecate_getTaskDependencyFromProjectDependency"
             )
             .build()
 

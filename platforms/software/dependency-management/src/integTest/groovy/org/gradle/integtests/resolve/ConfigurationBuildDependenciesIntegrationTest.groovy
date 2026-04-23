@@ -459,6 +459,21 @@ class ConfigurationBuildDependenciesIntegrationTest extends AbstractHttpDependen
         executed ":child:jar", ":useCompileConfiguration"
     }
 
+    def "getTaskDependencyFromProjectDependency is deprecated"() {
+        given:
+        createDir("child")
+        buildFile << """
+            configurations.compile.getTaskDependencyFromProjectDependency($useDependsOn, "build")
+        """
+
+        expect:
+        executer.expectDocumentedDeprecationWarning("The Configuration.getTaskDependencyFromProjectDependency(boolean, String) method has been deprecated. This is scheduled to be removed in Gradle 10. Consult the upgrading guide for further information: https://docs.gradle.org/current/userguide/upgrading_version_9.html#deprecate_getTaskDependencyFromProjectDependency")
+        succeeds("help")
+
+        where:
+        useDependsOn << [true, false]
+    }
+
     void makeFluid(boolean fluid) {
         if (fluid) {
             buildFile << """
@@ -468,4 +483,5 @@ class ConfigurationBuildDependenciesIntegrationTest extends AbstractHttpDependen
             """
         }
     }
+
 }

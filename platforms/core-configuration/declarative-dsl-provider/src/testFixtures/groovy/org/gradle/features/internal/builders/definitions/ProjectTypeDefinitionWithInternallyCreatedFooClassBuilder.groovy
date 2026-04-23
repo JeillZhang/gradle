@@ -80,7 +80,7 @@ class ProjectTypeDefinitionWithInternallyCreatedFooClassBuilder extends ProjectT
                 model.getId().set(definition.getId());
                 ${publicTypeClassName}.Foo myFoo = definition.getMyFoo();
                 ${publicTypeClassName}.Foo.FooBuildModel fooBuildModel =
-                    services.getBuildModelRegistrar().registerBuildModel(myFoo);
+                    getBuildModelRegistrar().registerBuildModel(myFoo);
                 fooBuildModel.getBarProcessed().set(myFoo.getBar().map(it -> it.toUpperCase()));
             """
     }

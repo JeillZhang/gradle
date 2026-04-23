@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.types
 
 import org.gradle.features.annotations.BindsProjectType
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectTypeDefinitionWithDeeplyNestedNdocClassBuilder
@@ -42,6 +44,8 @@ class ProjectTypePluginWithDeeplyNestedNdocClassBuilder extends ProjectTypePlugi
             import org.gradle.api.Project;
             import org.gradle.api.model.ObjectFactory;
             import org.gradle.api.provider.Property;
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${ProjectTypeBinding.class.name};
             import ${BindsProjectType.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
@@ -66,16 +70,23 @@ class ProjectTypePluginWithDeeplyNestedNdocClassBuilder extends ProjectTypePlugi
                     }
 
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, (context, definition, model) -> {
-                            System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, ApplyAction.class)
+                            .withNestedBuildModelImplementationType(
+                                ${definition.sourceModelPublicClassName}.class,
+                                DefaultSourceModel.class
+                            )
+                            .withUnsafeApplyAction();
+                    }
+                }
 
-                            ${definition.buildModelMapping}
-                        })
-                        .withNestedBuildModelImplementationType(
-                            ${definition.sourceModelPublicClassName}.class,
-                            DefaultSourceModel.class
-                        )
-                        .withUnsafeApplyAction();
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+
+                        ${definition.buildModelMapping}
                     }
                 }
 

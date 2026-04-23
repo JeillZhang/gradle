@@ -18,6 +18,8 @@ package org.gradle.features.internal.builders.types
 
 import org.gradle.features.annotations.BindsProjectType
 import org.gradle.features.binding.BuildModelRegistrar
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectTypeDefinitionClassBuilder
@@ -76,6 +78,8 @@ class ProjectTypePluginClassBuilder {
             import org.gradle.api.provider.ListProperty;
             import org.gradle.api.provider.Property;
             import org.gradle.api.tasks.Nested;
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${ProjectTypeBinding.class.name};
             import ${BindsProjectType.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
@@ -86,25 +90,30 @@ class ProjectTypePluginClassBuilder {
 
                 static class Binding implements ${ProjectTypeBinding.class.simpleName} {
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, (context, definition, model) -> {
-                            Services services = context.getObjectFactory().newInstance(Services.class);
-
-                            System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
-
-                            ${definition.buildModelMapping}
-
-                            services.getTaskRegistrar().register("print${definition.publicTypeClassName}Configuration", DefaultTask.class, task -> {
-                                task.doLast("print restricted extension content", t -> {
-                                    ${definition.displayDefinitionPropertyValues()}
-                                    ${definition.displayModelPropertyValues()}
-                                });
-                            });
-                        })
+                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, ApplyAction.class)
                         ${maybeDeclareDefinitionImplementationType()}
                         ${maybeDeclareBindingModifiers()};
                     }
+                }
 
-                    ${servicesInterface}
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    ${servicesInjection}
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+
+                        ${definition.buildModelMapping}
+
+                        getTaskRegistrar().register("print${definition.publicTypeClassName}Configuration", DefaultTask.class, task -> {
+                            task.doLast("print restricted extension content", t -> {
+                                ${definition.displayDefinitionPropertyValues()}
+                                ${definition.displayModelPropertyValues()}
+                            });
+                        });
+                    }
                 }
 
                 @Override
@@ -123,15 +132,13 @@ class ProjectTypePluginClassBuilder {
         return bindingModifiers.isEmpty() ? "" : bindingModifiers.collect { ".${it}" }.join("")
     }
 
-    String getServicesInterface() {
+    String getServicesInjection() {
         return """
-            interface Services {
                 @javax.inject.Inject
-                ${TaskRegistrar.class.name} getTaskRegistrar();
+                abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
 
                 @javax.inject.Inject
-                ${BuildModelRegistrar.class.name} getBuildModelRegistrar();
-            }
+                abstract protected ${BuildModelRegistrar.class.name} getBuildModelRegistrar();
         """
     }
 }

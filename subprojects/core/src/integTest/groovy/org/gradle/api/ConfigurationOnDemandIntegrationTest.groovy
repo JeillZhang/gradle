@@ -388,6 +388,7 @@ project(':api') {
         """
 
         when:
+        executer.expectDocumentedDeprecationWarning("The buildNeeded task has been deprecated. This is scheduled to be removed in Gradle 10. Consult the upgrading guide for further information: https://docs.gradle.org/current/userguide/upgrading_version_9.html#deprecate_build_needed_build_dependents_tasks")
         run(":b:buildNeeded")
 
         then:
@@ -408,6 +409,7 @@ project(':api') {
         """
 
         when:
+        executer.expectDocumentedDeprecationWarning("The buildDependents task has been deprecated. This is scheduled to be removed in Gradle 10. Consult the upgrading guide for further information: https://docs.gradle.org/current/userguide/upgrading_version_9.html#deprecate_build_needed_build_dependents_tasks")
         run(":a:buildDependents")
 
         then:

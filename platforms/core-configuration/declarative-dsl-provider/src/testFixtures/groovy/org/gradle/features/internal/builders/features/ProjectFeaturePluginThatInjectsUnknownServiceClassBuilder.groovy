@@ -31,24 +31,22 @@ class ProjectFeaturePluginThatInjectsUnknownServiceClassBuilder extends ProjectF
     }
 
     @Override
-    String getServicesInterface() {
+    String getServicesInjection() {
         return """
-            interface Services {
-                @javax.inject.Inject
-                ${ProjectFeatureLayout.class.name} getProjectFeatureLayout();
+                    interface UnknownService extends ${TaskRegistrar.class.name} { }
 
-                @javax.inject.Inject
-                ${ProviderFactory.class.name} getProviderFactory();
+                    @javax.inject.Inject
+                    abstract protected ${ProjectFeatureLayout.class.name} getProjectFeatureLayout();
 
-                default ${TaskRegistrar.class.name} getTaskRegistrar() {
-                    return getUnknownService();
-                }
+                    @javax.inject.Inject
+                    abstract protected ${ProviderFactory.class.name} getProviderFactory();
 
-                @javax.inject.Inject
-                UnknownService getUnknownService();
-            }
+                    protected ${TaskRegistrar.class.name} getTaskRegistrar() {
+                        return getUnknownService();
+                    }
 
-            interface UnknownService extends ${TaskRegistrar.class.name} { }
+                    @javax.inject.Inject
+                    abstract protected UnknownService getUnknownService();
         """
     }
 }

@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.types
 
 import org.gradle.features.annotations.BindsProjectType
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectTypeDefinitionWithNdocContainingDefinitionsClassBuilder
@@ -45,6 +47,8 @@ class ProjectTypePluginWithDefinitionNdocClassBuilder extends ProjectTypePluginC
             import org.gradle.api.model.ObjectFactory;
             import org.gradle.api.provider.ListProperty;
             import org.gradle.api.provider.Property;
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${ProjectTypeBinding.class.name};
             import ${BindsProjectType.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
@@ -71,41 +75,44 @@ class ProjectTypePluginWithDefinitionNdocClassBuilder extends ProjectTypePluginC
                     }
 
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, (context, definition, model) -> {
-                            Services services = context.getObjectFactory().newInstance(Services.class);
-
-                            System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
-
-                            ${definition.buildModelMapping}
-
-                            services.getTaskRegistrar().register("printSourceModels", DefaultTask.class, task -> {
-                                task.doLast("print", t -> {
-                                    model.getSources().get().forEach(s ->
-                                        System.out.println("source processed dir = " + s.getProcessedDir().get()));
-                                });
-                            });
-
-                            // Pre-compute at apply time (configuration cache requires serializable captures)
-                            java.util.List<String> modelClassLines = new java.util.ArrayList<>();
-                            definition.getSources().forEach(s ->
-                                modelClassLines.add("source model class: " + context.getBuildModel(s).getClass().getSimpleName())
-                            );
-                            services.getTaskRegistrar().register("printSourceModelClass", DefaultTask.class, task -> {
-                                task.doLast("print", t -> {
-                                    for (String line : modelClassLines) { System.out.println(line); }
-                                });
-                            });
-                        })
-                        .withNestedBuildModelImplementationType(
-                            ${definition.sourceModelPublicClassName}.class,
-                            DefaultSourceModel.class
-                        )
-                        .withUnsafeApplyAction();
+                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, ApplyAction.class)
+                            .withNestedBuildModelImplementationType(
+                                ${definition.sourceModelPublicClassName}.class,
+                                DefaultSourceModel.class
+                            )
+                            .withUnsafeApplyAction();
                     }
+                }
 
-                    interface Services {
-                        @javax.inject.Inject
-                        ${TaskRegistrar.class.name} getTaskRegistrar();
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    @javax.inject.Inject
+                    abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+
+                        ${definition.buildModelMapping}
+
+                        getTaskRegistrar().register("printSourceModels", DefaultTask.class, task -> {
+                            task.doLast("print", t -> {
+                                model.getSources().get().forEach(s ->
+                                    System.out.println("source processed dir = " + s.getProcessedDir().get()));
+                            });
+                        });
+
+                        // Pre-compute at apply time (configuration cache requires serializable captures)
+                        java.util.List<String> modelClassLines = new java.util.ArrayList<>();
+                        definition.getSources().forEach(s ->
+                            modelClassLines.add("source model class: " + context.getBuildModel(s).getClass().getSimpleName())
+                        );
+                        getTaskRegistrar().register("printSourceModelClass", DefaultTask.class, task -> {
+                            task.doLast("print", t -> {
+                                for (String line : modelClassLines) { System.out.println(line); }
+                            });
+                        });
                     }
                 }
 

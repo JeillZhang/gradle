@@ -278,12 +278,12 @@ public class CompositeDomainObjectSet<T> extends DelegatingDomainObjectSet<T> {
 
         @Override
         public boolean isEmpty() {
-            return store.stream().allMatch(it -> it.get().isEmpty());
+            return store.stream().allMatch(it -> it.getWithoutSideEffects().isEmpty());
         }
 
         @Override
         public boolean contains(Object o) {
-            return store.stream().anyMatch(it -> it.get().contains(o));
+            return store.stream().anyMatch(it -> it.getWithoutSideEffects().contains(o));
         }
 
         @Override

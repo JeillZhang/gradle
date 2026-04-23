@@ -29,18 +29,16 @@ class ProjectTypeThatUsesUnknownServicesClassBuilder extends ProjectTypePluginCl
     }
 
     @Override
-    String getServicesInterface() {
+    String getServicesInjection() {
         return """
-            interface Services {
-                default ${TaskRegistrar.class.name} getTaskRegistrar() {
-                    return getUnknownService();
-                }
+                    interface UnknownService extends ${TaskRegistrar.class.name} { }
 
-                @javax.inject.Inject
-                UnknownService getUnknownService();
-            }
+                    protected ${TaskRegistrar.class.name} getTaskRegistrar() {
+                        return getUnknownService();
+                    }
 
-            interface UnknownService extends ${TaskRegistrar.class.name} { }
+                    @javax.inject.Inject
+                    abstract protected UnknownService getUnknownService();
         """
     }
 }

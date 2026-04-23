@@ -30,22 +30,20 @@ class ProjectFeaturePluginThatUsesUnsafeServicesClassBuilder extends ProjectFeat
     }
 
     @Override
-    String getServicesInterface() {
+    String getServicesInjection() {
         return """
-            interface Services {
-                @javax.inject.Inject
-                ${ProjectFeatureLayout.class.name} getProjectFeatureLayout();
+                    @javax.inject.Inject
+                    abstract protected ${ProjectFeatureLayout.class.name} getProjectFeatureLayout();
 
-                @javax.inject.Inject
-                ${ProviderFactory.class.name} getProviderFactory();
+                    @javax.inject.Inject
+                    abstract protected ${ProviderFactory.class.name} getProviderFactory();
 
-                @javax.inject.Inject
-                Project getProject(); // Unsafe Service
+                    @javax.inject.Inject
+                    abstract protected Project getProject(); // Unsafe Service
 
-                default ${TaskContainer.class.name} getTaskRegistrar() {
-                    return getProject().getTasks();
-                }
-            }
+                    protected ${TaskContainer.class.name} getTaskRegistrar() {
+                        return getProject().getTasks();
+                    }
         """
     }
 }

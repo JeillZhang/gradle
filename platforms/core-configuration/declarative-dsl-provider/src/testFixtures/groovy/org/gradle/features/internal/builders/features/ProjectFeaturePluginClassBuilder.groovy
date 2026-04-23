@@ -18,6 +18,9 @@ package org.gradle.features.internal.builders.features
 
 import org.gradle.api.provider.ProviderFactory
 import org.gradle.features.annotations.BindsProjectFeature
+import org.gradle.features.binding.Definition
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectFeatureApplyAction
 import org.gradle.features.binding.ProjectFeatureBinding
 import org.gradle.features.binding.ProjectFeatureBindingBuilder
 import org.gradle.features.file.ProjectFeatureLayout
@@ -91,6 +94,8 @@ class ProjectFeaturePluginClassBuilder {
             import ${ProjectFeatureBindingBuilder.class.name};
             import static ${ProjectFeatureBindingBuilder.class.name}.bindingToTargetDefinition;
             import ${ProjectFeatureBinding.class.name};
+            import ${ProjectFeatureApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
 
             @${BindsProjectFeature.class.simpleName}(${projectFeaturePluginClassName}.Binding.class)
             public class ${projectFeaturePluginClassName} implements Plugin<Project> {
@@ -101,28 +106,34 @@ class ProjectFeaturePluginClassBuilder {
                             "${name}",
                             ${definition.publicTypeClassName}.class,
                             ${bindingTypeClassName}.class,
-                            (context, definition, model, parent) -> {
-                                Services services = context.getObjectFactory().newInstance(Services.class);
-                                System.out.println("Binding ${definition.publicTypeClassName}");
-                                System.out.println("${name} model class: " + model.getClass().getSimpleName());
-                                System.out.println("${name} parent model class: " + context.getBuildModel(parent).getClass().getSimpleName());
-
-                                ${definition.buildModelMapping}
-
-                                services.getTaskRegistrar().register("print${definition.publicTypeClassName}Configuration", task -> {
-                                    task.doLast(t -> {
-                                        ${definition.displayDefinitionPropertyValues()}
-                                        ${definition.displayModelPropertyValues()}
-                                    });
-                                });
-                            }
+                            ApplyAction.class
                         )
                         ${maybeDeclareDefinitionImplementationType()}
                         ${maybeDeclareBuildModelImplementationType()}
                         ${maybeDeclareBindingModifiers()};
                     }
+                }
 
-                    ${servicesInterface}
+                static abstract class ApplyAction implements ${ProjectFeatureApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.getBuildModelFullPublicClassName()}, ${parentTypeForApplyAction}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    ${servicesInjection}
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.getBuildModelFullPublicClassName()} model, ${parentTypeForApplyAction} parent) {
+                        System.out.println("Binding ${definition.publicTypeClassName}");
+                        System.out.println("${name} model class: " + model.getClass().getSimpleName());
+                        System.out.println("${name} parent model class: " + context.getBuildModel(parent).getClass().getSimpleName());
+
+                        ${definition.buildModelMapping.replace('services.', '')}
+
+                        getTaskRegistrar().register("print${definition.publicTypeClassName}Configuration", task -> {
+                            task.doLast(t -> {
+                                ${definition.displayDefinitionPropertyValues()}
+                                ${definition.displayModelPropertyValues()}
+                            });
+                        });
+                    }
                 }
 
                 @Override
@@ -131,6 +142,13 @@ class ProjectFeaturePluginClassBuilder {
                 }
             }
         """
+    }
+
+    String getParentTypeForApplyAction() {
+        if (bindingMethodName == "bindProjectFeatureToBuildModel") {
+            return "${Definition.class.name}<${bindingTypeClassName}>"
+        }
+        return bindingTypeClassName
     }
 
     String maybeDeclareDefinitionImplementationType() {
@@ -145,18 +163,17 @@ class ProjectFeaturePluginClassBuilder {
         return bindingModifiers.isEmpty() ? "" : bindingModifiers.collect { ".${it}" }.join("")
     }
 
-    String getServicesInterface() {
+    String getServicesInjection() {
         return """
-            interface Services {
-                @javax.inject.Inject
-                ${TaskRegistrar.class.name} getTaskRegistrar();
+            @javax.inject.Inject
+            abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
 
-                @javax.inject.Inject
-                ${ProjectFeatureLayout.class.name} getProjectFeatureLayout();
+            @javax.inject.Inject
+            abstract protected ${ProjectFeatureLayout.class.name} getProjectFeatureLayout();
 
-                @javax.inject.Inject
-                ${ProviderFactory.class.name} getProviderFactory();
-            }
+            @javax.inject.Inject
+            abstract protected ${ProviderFactory.class.name} getProviderFactory();
         """
     }
+
 }

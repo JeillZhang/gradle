@@ -241,11 +241,11 @@ class ProjectTypeSafetyIntegrationTest extends AbstractIntegrationSpec implement
 
         then:
         failure.assertHasCause(
-            "Project feature 'testProjectType' has an apply action that attempts to inject an unknown service with type 'org.gradle.test.ProjectTypeImplPlugin\$Binding\$UnknownService'.\n" +
+            "Project feature 'testProjectType' has an apply action that attempts to inject an unknown service with type 'org.gradle.test.ProjectTypeImplPlugin\$ApplyAction\$UnknownService'.\n" +
             "\n" +
-            "Reason: Services of type org.gradle.test.ProjectTypeImplPlugin\$Binding\$UnknownService are not available for injection into project feature apply actions.\n" +
+            "Reason: Services of type org.gradle.test.ProjectTypeImplPlugin\$ApplyAction\$UnknownService are not available for injection into project feature apply actions.\n" +
             "\n" +
-            "Possible solution: Remove the 'org.gradle.test.ProjectTypeImplPlugin\$Binding\$UnknownService' injection from the apply action."
+            "Possible solution: Remove the 'org.gradle.test.ProjectTypeImplPlugin\$ApplyAction\$UnknownService' injection from the apply action."
         )
     }
 

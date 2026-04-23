@@ -843,7 +843,14 @@ public abstract class DefaultConfiguration extends AbstractFileCollection implem
      * {@inheritDoc}
      */
     @Override
+    @Deprecated
+    @SuppressWarnings("deprecation")
     public TaskDependency getTaskDependencyFromProjectDependency(final boolean useDependedOn, final String taskName) {
+        DeprecationLogger.deprecateMethod(Configuration.class, "getTaskDependencyFromProjectDependency(boolean, String)")
+            .willBeRemovedInGradle10()
+            .withUpgradeGuideSection(9, "deprecate_getTaskDependencyFromProjectDependency")
+            .nagUser();
+
         if (useDependedOn) {
             return new TasksFromProjectDependencies(taskName, () -> {
                 return getAllDependencies().withType(ProjectDependency.class);

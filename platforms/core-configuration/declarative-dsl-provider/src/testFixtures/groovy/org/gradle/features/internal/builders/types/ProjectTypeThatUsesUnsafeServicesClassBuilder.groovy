@@ -28,16 +28,14 @@ class ProjectTypeThatUsesUnsafeServicesClassBuilder extends ProjectTypePluginCla
     }
 
     @Override
-    String getServicesInterface() {
+    String getServicesInjection() {
         return """
-            interface Services {
-                @javax.inject.Inject
-                Project getProject(); // Unsafe Service
+                    @javax.inject.Inject
+                    abstract protected Project getProject(); // Unsafe Service
 
-                default ${TaskContainer.class.name} getTaskRegistrar() {
-                    return getProject().getTasks();
-                }
-            }
+                    protected ${TaskContainer.class.name} getTaskRegistrar() {
+                        return getProject().getTasks();
+                    }
         """
     }
 }

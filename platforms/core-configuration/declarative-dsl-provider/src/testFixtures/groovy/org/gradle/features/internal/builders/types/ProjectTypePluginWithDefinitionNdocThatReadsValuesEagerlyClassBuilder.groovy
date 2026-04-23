@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.types
 
 import org.gradle.features.annotations.BindsProjectType
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectTypeDefinitionWithNdocContainingDefinitionsClassBuilder
@@ -44,6 +46,8 @@ class ProjectTypePluginWithDefinitionNdocThatReadsValuesEagerlyClassBuilder exte
             import org.gradle.api.Project;
             import org.gradle.api.model.ObjectFactory;
             import org.gradle.api.provider.Property;
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${ProjectTypeBinding.class.name};
             import ${BindsProjectType.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
@@ -67,33 +71,36 @@ class ProjectTypePluginWithDefinitionNdocThatReadsValuesEagerlyClassBuilder exte
 
                 static class Binding implements ${ProjectTypeBinding.class.simpleName} {
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, (context, definition, model) -> {
-                            Services services = context.getObjectFactory().newInstance(Services.class);
-
-                            System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
-
-                            // Eager read at apply time - throws if source dir not yet configured
-                            // (Pre-computed to avoid capturing non-serializable objects for configuration cache)
-                            java.util.List<String> eagerLines = definition.getSources().stream().map(source -> {
-                                String dir = source.getSourceDir().get();
-                                return "eager source dir for " + source.getName() + " = " + dir;
-                            }).collect(java.util.stream.Collectors.toList());
-                            services.getTaskRegistrar().register("printEagerSourceValues", DefaultTask.class, task -> {
-                                task.doLast("print", t -> {
-                                    for (String line : eagerLines) { System.out.println(line); }
-                                });
-                            });
-                        })
-                        .withNestedBuildModelImplementationType(
-                            ${definition.sourceModelPublicClassName}.class,
-                            DefaultSourceModel.class
-                        )
-                        .withUnsafeApplyAction();
+                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, ApplyAction.class)
+                            .withNestedBuildModelImplementationType(
+                                ${definition.sourceModelPublicClassName}.class,
+                                DefaultSourceModel.class
+                            )
+                            .withUnsafeApplyAction();
                     }
+                }
 
-                    interface Services {
-                        @javax.inject.Inject
-                        ${TaskRegistrar.class.name} getTaskRegistrar();
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    @javax.inject.Inject
+                    abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+
+                        // Eager read at apply time - throws if source dir not yet configured
+                        // (Pre-computed to avoid capturing non-serializable objects for configuration cache)
+                        java.util.List<String> eagerLines = definition.getSources().stream().map(source -> {
+                            String dir = source.getSourceDir().get();
+                            return "eager source dir for " + source.getName() + " = " + dir;
+                        }).collect(java.util.stream.Collectors.toList());
+                        getTaskRegistrar().register("printEagerSourceValues", DefaultTask.class, task -> {
+                            task.doLast("print", t -> {
+                                for (String line : eagerLines) { System.out.println(line); }
+                            });
+                        });
                     }
                 }
 

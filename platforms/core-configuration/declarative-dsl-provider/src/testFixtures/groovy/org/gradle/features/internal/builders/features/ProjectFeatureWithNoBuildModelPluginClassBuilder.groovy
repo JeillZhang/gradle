@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.features
 
 import org.gradle.features.annotations.BindsProjectFeature
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectFeatureApplyAction
 import org.gradle.features.binding.ProjectFeatureBinding
 import org.gradle.features.binding.ProjectFeatureBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectFeatureDefinitionClassBuilder
@@ -42,6 +44,8 @@ class ProjectFeatureWithNoBuildModelPluginClassBuilder extends ProjectFeaturePlu
             import ${ProjectFeatureBindingBuilder.class.name};
             import static ${ProjectFeatureBindingBuilder.class.name}.bindingToTargetDefinition;
             import ${ProjectFeatureBinding.class.name};
+            import ${ProjectFeatureApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${TaskRegistrar.class.name};
 
             @${BindsProjectFeature.class.simpleName}(${projectFeaturePluginClassName}.Binding.class)
@@ -53,16 +57,23 @@ class ProjectFeatureWithNoBuildModelPluginClassBuilder extends ProjectFeaturePlu
                             "${name}",
                             ${definition.publicTypeClassName}.class,
                             ${bindingTypeClassName}.class,
-                            (context, definition, model, parent) -> {
-                                System.out.println("Binding ${definition.publicTypeClassName}");
-                                System.out.println("${name} model class: " + model.getClass().getSimpleName());
-
-                                TestProjectTypeDefinition.ModelType parentModel = context.getBuildModel(parent);
-                                parentModel.getId().set(definition.getText());
-                            }
+                            ApplyAction.class
                         )
                         ${maybeDeclareDefinitionImplementationType()}
                         ${maybeDeclareBindingModifiers()};
+                    }
+                }
+
+                static abstract class ApplyAction implements ${ProjectFeatureApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.getBuildModelFullPublicClassName()}, ${parentTypeForApplyAction}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.getBuildModelFullPublicClassName()} model, ${parentTypeForApplyAction} parent) {
+                        System.out.println("Binding ${definition.publicTypeClassName}");
+                        System.out.println("${name} model class: " + model.getClass().getSimpleName());
+
+                        TestProjectTypeDefinition.ModelType parentModel = context.getBuildModel(parent);
+                        parentModel.getId().set(definition.getText());
                     }
                 }
 

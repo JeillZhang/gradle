@@ -17,9 +17,12 @@
 package org.gradle.features.internal.builders.types
 
 import org.gradle.features.annotations.BindsProjectType
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectTypeDefinitionClassBuilder
+import org.gradle.features.registration.TaskRegistrar
 
 /**
  * A {@link ProjectTypePluginClassBuilder} for creating a plugin class that exposes multiple project types.
@@ -43,6 +46,8 @@ class ProjectPluginThatProvidesMultipleProjectTypesBuilder extends ProjectTypePl
             import org.gradle.api.provider.ListProperty;
             import org.gradle.api.provider.Property;
             import org.gradle.api.tasks.Nested;
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${BindsProjectType.class.name};
             import javax.inject.Inject;
 
@@ -50,31 +55,47 @@ class ProjectPluginThatProvidesMultipleProjectTypesBuilder extends ProjectTypePl
             abstract public class ${projectTypePluginClassName} implements Plugin<Project> {
                 static class Binding implements ${ProjectTypeBinding.class.name} {
                     public void bind(${ProjectTypeBindingBuilder.class.name} builder) {
-                        builder.bindProjectType("testProjectType", ${definition.publicTypeClassName}.class, (context, definition, model) -> {
-                            Services services = context.getObjectFactory().newInstance(Services.class);
-                            System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
-                            model.getId().set(definition.getId());
-                            services.getTaskRegistrar().register("printTestProjectTypeDefinitionConfiguration", DefaultTask.class, task -> {
-                                task.doLast("print restricted extension content", t -> {
-                                    ${definition.displayDefinitionPropertyValues()}
-                                    ${definition.displayModelPropertyValues()}
-                                });
-                            });
-                        });
-                        builder.bindProjectType("anotherProjectType", ${anotherProjectTypeDefinition.publicTypeClassName}.class, (context, definition, model) -> {
-                            Services services = context.getObjectFactory().newInstance(Services.class);
-                            System.out.println("Binding " + ${anotherProjectTypeDefinition.publicTypeClassName}.class.getSimpleName());
-                            model.getId().set(definition.getId());
-                            services.getTaskRegistrar().register("printAnotherProjectTypeDefinitionConfiguration", DefaultTask.class, task -> {
-                                task.doLast("print restricted extension content", t -> {
-                                    ${anotherProjectTypeDefinition.displayDefinitionPropertyValues()}
-                                    ${anotherProjectTypeDefinition.displayModelPropertyValues()}
-                                });
+                        builder.bindProjectType("testProjectType", ${definition.publicTypeClassName}.class, TestApplyAction.class);
+                        builder.bindProjectType("anotherProjectType", ${anotherProjectTypeDefinition.publicTypeClassName}.class, AnotherApplyAction.class);
+                    }
+                }
+
+                static abstract class TestApplyAction implements ${ProjectTypeApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public TestApplyAction() { }
+
+                    @javax.inject.Inject
+                    abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+                        model.getId().set(definition.getId());
+                        getTaskRegistrar().register("printTestProjectTypeDefinitionConfiguration", DefaultTask.class, task -> {
+                            task.doLast("print restricted extension content", t -> {
+                                ${definition.displayDefinitionPropertyValues()}
+                                ${definition.displayModelPropertyValues()}
                             });
                         });
                     }
+                }
 
-                    ${servicesInterface}
+                static abstract class AnotherApplyAction implements ${ProjectTypeApplyAction.class.name}<${anotherProjectTypeDefinition.publicTypeClassName}, ${anotherProjectTypeDefinition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public AnotherApplyAction() { }
+
+                    @javax.inject.Inject
+                    abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${anotherProjectTypeDefinition.publicTypeClassName} definition, ${anotherProjectTypeDefinition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${anotherProjectTypeDefinition.publicTypeClassName}.class.getSimpleName());
+                        model.getId().set(definition.getId());
+                        getTaskRegistrar().register("printAnotherProjectTypeDefinitionConfiguration", DefaultTask.class, task -> {
+                            task.doLast("print restricted extension content", t -> {
+                                ${anotherProjectTypeDefinition.displayDefinitionPropertyValues()}
+                                ${anotherProjectTypeDefinition.displayModelPropertyValues()}
+                            });
+                        });
+                    }
                 }
 
                 @Override

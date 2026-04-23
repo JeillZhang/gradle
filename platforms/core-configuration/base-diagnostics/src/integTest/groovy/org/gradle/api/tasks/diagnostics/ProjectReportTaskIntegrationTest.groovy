@@ -20,6 +20,8 @@ import org.gradle.features.binding.BuildModel
 import org.gradle.features.binding.Definition
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.annotations.RegistersProjectFeatures
 import org.gradle.integtests.fixtures.AbstractIntegrationSpec
 import org.gradle.integtests.fixtures.ToBeFixedForIsolatedProjects
@@ -275,14 +277,20 @@ Root project 'my-root-project'
             import ${ProjectTypeBinding.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
 
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
+
             @${BindsProjectType.class.simpleName}(LibraryPlugin.Binding.class)
             public abstract class LibraryPlugin implements Plugin<Project> {
                 static class Binding implements ${ProjectTypeBinding.class.simpleName} {
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("library", LibraryExtension.class, (context, definition, model) -> {
-                            // binding logic
-                        });
+                        builder.bindProjectType("library", LibraryExtension.class, ApplyAction.class);
                     }
+                }
+
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.simpleName}<LibraryExtension, LibraryExtension.Model> {
+                    @javax.inject.Inject public ApplyAction() { }
+                    @Override public void apply(${ProjectFeatureApplicationContext.class.simpleName} context, LibraryExtension definition, LibraryExtension.Model model) { }
                 }
 
                 @Override
@@ -298,14 +306,20 @@ Root project 'my-root-project'
             import ${ProjectTypeBinding.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
 
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
+
             @${BindsProjectType.class.simpleName}(ApplicationPlugin.Binding.class)
             public abstract class ApplicationPlugin implements Plugin<Project> {
                 static class Binding implements ${ProjectTypeBinding.class.simpleName} {
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("application", ApplicationExtension.class, (context, definition, model) -> {
-                            // binding logic
-                        });
+                        builder.bindProjectType("application", ApplicationExtension.class, ApplyAction.class);
                     }
+                }
+
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.simpleName}<ApplicationExtension, ApplicationExtension.Model> {
+                    @javax.inject.Inject public ApplyAction() { }
+                    @Override public void apply(${ProjectFeatureApplicationContext.class.simpleName} context, ApplicationExtension definition, ApplicationExtension.Model model) { }
                 }
 
                 @Override
@@ -321,14 +335,20 @@ Root project 'my-root-project'
             import ${ProjectTypeBinding.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
 
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
+
             @${BindsProjectType.class.simpleName}(UtilityPlugin.Binding.class)
             public abstract class UtilityPlugin implements Plugin<Project> {
                 static class Binding implements ${ProjectTypeBinding.class.simpleName} {
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("utility", UtilityExtension.class, (context, definition, model) -> {
-                            // binding logic
-                        });
+                        builder.bindProjectType("utility", UtilityExtension.class, ApplyAction.class);
                     }
+                }
+
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.simpleName}<UtilityExtension, UtilityExtension.Model> {
+                    @javax.inject.Inject public ApplyAction() { }
+                    @Override public void apply(${ProjectFeatureApplicationContext.class.simpleName} context, UtilityExtension definition, UtilityExtension.Model model) { }
                 }
 
                 @Override

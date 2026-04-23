@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.features
 
 import org.gradle.features.annotations.BindsProjectFeature
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectFeatureApplyAction
 import org.gradle.features.binding.ProjectFeatureBinding
 import org.gradle.features.binding.ProjectFeatureBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectFeatureDefinitionClassBuilder
@@ -31,6 +33,9 @@ class ProjectFeaturePluginThatBindsMultipleFeaturesToTheSameName extends Project
 
     @Override
     protected String getClassContent() {
+        def simpleBindingTypeName = bindingTypeClassName.tokenize('.').last()
+        def simpleAnotherBindingTypeName = anotherBindingTypeClassName.tokenize('.').last()
+
         return """
             package org.gradle.test;
 
@@ -40,6 +45,8 @@ class ProjectFeaturePluginThatBindsMultipleFeaturesToTheSameName extends Project
             import ${ProjectFeatureBindingBuilder.class.name};
             import static ${ProjectFeatureBindingBuilder.class.name}.bindingToTargetDefinition;
             import ${ProjectFeatureBinding.class.name};
+            import ${ProjectFeatureApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
 
             @${BindsProjectFeature.class.simpleName}(${projectFeaturePluginClassName}.Binding.class)
             public class ${projectFeaturePluginClassName} implements Plugin<Project> {
@@ -50,21 +57,7 @@ class ProjectFeaturePluginThatBindsMultipleFeaturesToTheSameName extends Project
                             "${name}",
                             ${definition.publicTypeClassName}.class,
                             ${bindingTypeClassName}.class,
-                            (context, definition, model, parent) -> {
-                                Services services = context.getObjectFactory().newInstance(Services.class);
-                                System.out.println("Binding ${definition.publicTypeClassName}");
-                                System.out.println("${name} model class: " + model.getClass().getSimpleName());
-                                System.out.println("${name} parent model class: " + context.getBuildModel(parent).getClass().getSimpleName());
-
-                                ${definition.buildModelMapping}
-
-                                services.getTaskRegistrar().register("print${definition.publicTypeClassName}1Configuration", task -> {
-                                    task.doLast(t -> {
-                                        ${definition.displayDefinitionPropertyValues()}
-                                        ${definition.displayModelPropertyValues()}
-                                    });
-                                });
-                            }
+                            ${simpleBindingTypeName}ApplyAction.class
                         )
                         ${maybeDeclareDefinitionImplementationType()}
                         ${maybeDeclareBuildModelImplementationType()}
@@ -74,25 +67,43 @@ class ProjectFeaturePluginThatBindsMultipleFeaturesToTheSameName extends Project
                             "${name}",
                             ${definition.publicTypeClassName}.class,
                             ${anotherBindingTypeClassName}.class,
-                            (context, definition, model, parent) -> {
-                                Services services = context.getObjectFactory().newInstance(Services.class);
-                                System.out.println("Binding ${definition.publicTypeClassName}");
-                                System.out.println("${name} model class: " + model.getClass().getSimpleName());
-                                System.out.println("${name} parent model class: " + context.getBuildModel(parent).getClass().getSimpleName());
-
-                                ${definition.buildModelMapping}
-
-                                services.getTaskRegistrar().register("print${definition.publicTypeClassName}2Configuration", task -> {
-                                    task.doLast(t -> {
-                                        ${definition.displayDefinitionPropertyValues()}
-                                        ${definition.displayModelPropertyValues()}
-                                    });
-                                });
-                            }
+                            ${simpleAnotherBindingTypeName}ApplyAction.class
                         );
                     }
+                }
 
-                    ${servicesInterface}
+                static abstract class BaseApplyAction<T extends ${org.gradle.features.binding.Definition.class.name}> implements ${ProjectFeatureApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.getBuildModelFullPublicClassName()}, T> {
+                    @javax.inject.Inject public BaseApplyAction() { }
+
+                    ${servicesInjection}
+
+                    abstract protected String getTaskName();
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.getBuildModelFullPublicClassName()} model, T parent) {
+                        System.out.println("Binding ${definition.publicTypeClassName}");
+                        System.out.println("${name} model class: " + model.getClass().getSimpleName());
+                        System.out.println("${name} parent model class: " + context.getBuildModel(parent).getClass().getSimpleName());
+
+                        ${definition.buildModelMapping.replace('services.', '')}
+
+                        getTaskRegistrar().register(getTaskName(), task -> {
+                            task.doLast(t -> {
+                                ${definition.displayDefinitionPropertyValues()}
+                                ${definition.displayModelPropertyValues()}
+                            });
+                        });
+                    }
+                }
+
+                static abstract class ${simpleBindingTypeName}ApplyAction extends BaseApplyAction<${parentTypeForApplyAction}> {
+                    @javax.inject.Inject public ${simpleBindingTypeName}ApplyAction() { }
+                    @Override protected String getTaskName() { return "print${definition.publicTypeClassName}1Configuration"; }
+                }
+
+                static abstract class ${simpleAnotherBindingTypeName}ApplyAction extends BaseApplyAction<${anotherBindingTypeClassName}> {
+                    @javax.inject.Inject public ${simpleAnotherBindingTypeName}ApplyAction() { }
+                    @Override protected String getTaskName() { return "print${definition.publicTypeClassName}2Configuration"; }
                 }
 
                 @Override

@@ -541,6 +541,7 @@ class DefaultConfigurationSpec extends Specification {
         configuration.incoming.files.buildDependencies.getDependencies(targetTask) == requiredTasks
     }
 
+    @ExpectDeprecation("The Configuration.getTaskDependencyFromProjectDependency(boolean, String) method has been deprecated.")
     def "task dependency from project dependency without common configuration"() {
         // This test exists because a NullPointerException was thrown by getTaskDependencyFromProjectDependency()
         // if the rootProject defined a task as the same name as a subproject task, but did not define the same configuration.
@@ -1344,6 +1345,7 @@ This method is only meant to be called on configurations which allow the (non-de
         1 * resolver.resolveGraph(copy) >> graphResolved()
     }
 
+    @ExpectDeprecation("The Configuration.getTaskDependencyFromProjectDependency(boolean, String) method has been deprecated.")
     def "provides task dependency from project dependency using 'dependents'"() {
         def conf = conf("conf")
         when:

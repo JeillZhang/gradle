@@ -15,8 +15,10 @@
  */
 package org.gradle.api.internal
 
+import org.gradle.api.Action
 import org.gradle.api.DomainObjectCollection
 import org.gradle.util.TestUtil
+import spock.lang.Issue
 import spock.lang.Specification
 
 class CompositeDomainObjectSetTest extends Specification {
@@ -532,6 +534,67 @@ class CompositeDomainObjectSetTest extends Specification {
         composite.toList() == ["a", "b"]
         added == ["a", "b", "c", "d"]
         removed == ["c", "d"]
+    }
+
+    @Issue("https://github.com/gradle/gradle/issues/37498")
+    def "contains does not recursively realize a provided collection whose realization triggers a re-entrant contains"() {
+        given:
+        def composite = CompositeDomainObjectSet.create(type)
+        def inner = collection("a")
+
+        // This is a simplified reproducer. The real trace in #37498 reaches the re-entrant
+        // contains via fireObjectAdded → ItemIsUniqueInCompositeSpec → nested DelegatingDomainObjectSet
+        // → inner composite's contains, which requires a specific multi-composite wrapping shape
+        // (typical of configuration extendsFrom hierarchies) that is awkward to build in isolation.
+        // Here we substitute a DelegatingDomainObjectSet whose all(...) directly re-enters
+        // composite.contains during onRealization. Entry path differs, root cause is identical:
+        // ProvidedCollection.get() sets realized=true only AFTER onRealization.execute returns,
+        // so any re-entrant get() during that window executes onRealization again and loops.
+        def provided = TestUtil.providerFactory().provider {
+            new DelegatingDomainObjectSet(inner) {
+                @Override
+                void all(Action action) {
+                    composite.contains("trigger")
+                    super.all(action)
+                }
+            }
+        }
+        composite.addCollectionProvider(provided)
+
+        when:
+        composite.contains("x")
+
+        then:
+        noExceptionThrown()
+    }
+
+    def "provided collection listener is still wired after outer iteration"() {
+        given:
+        def inner = collection("a")
+        def provided = TestUtil.providerFactory().provider { inner }
+        def composite = CompositeDomainObjectSet.create(type)
+        composite.addCollectionProvider(provided)
+
+        def seen = []
+        composite.whenObjectAdded { seen << it }
+
+        when:
+        assert composite.contains("a")
+
+        then:
+        seen == []
+
+        when:
+        composite.toList()
+
+        then:
+        seen == ["a"]
+
+        when:
+        inner.add("b")
+
+        then:
+        seen == ["a", "b"]
     }
 
     def "removing collection provider does not fire whenObjectRemoved in provided collections when not realized"() {

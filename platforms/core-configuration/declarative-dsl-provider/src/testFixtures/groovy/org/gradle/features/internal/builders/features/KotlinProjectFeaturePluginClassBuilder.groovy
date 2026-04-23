@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.features
 
 import org.gradle.features.annotations.BindsProjectFeature
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectFeatureApplyAction
 import org.gradle.features.binding.ProjectFeatureBinding
 import org.gradle.features.binding.ProjectFeatureBindingBuilder
 import org.gradle.features.file.ProjectFeatureLayout
@@ -48,6 +50,8 @@ class KotlinProjectFeaturePluginClassBuilder extends ProjectFeaturePluginClassBu
             import ${BindsProjectFeature.class.name}
             import ${ProjectFeatureBindingBuilder.class.name}
             import ${ProjectFeatureBinding.class.name}
+            import ${ProjectFeatureApplyAction.class.name}
+            import ${ProjectFeatureApplicationContext.class.name}
             import org.gradle.features.dsl.bindProjectFeatureToDefinition
             import org.gradle.test.${bindingTypeClassName}
 
@@ -56,23 +60,27 @@ class KotlinProjectFeaturePluginClassBuilder extends ProjectFeaturePluginClassBu
 
                 class Binding : ${ProjectFeatureBinding.class.simpleName} {
                     override fun bind(builder: ${ProjectFeatureBindingBuilder.class.simpleName}) {
-                        builder.bindProjectFeatureToDefinition("${name}", ${definition.publicTypeClassName}::class, ${bindingTypeClassName}::class) { definition, model, parent  ->
-                            val services = objectFactory.newInstance(Services::class.java)
-                            println("Binding ${definition.publicTypeClassName}")
-                            ${convertToKotlin(definition.buildModelMapping)}
-                            services.taskRegistrar.register("print${definition.publicTypeClassName}Configuration") { task: Task ->
-                                task.doLast { _: Task ->
-                                    ${definition.displayDefinitionPropertyValues().replaceAll(';', '')}
-                                    ${definition.displayModelPropertyValues().replaceAll(';', '')}
-                                }
-                            }
-                        }
+                        builder.bindProjectFeatureToDefinition("${name}", ${definition.publicTypeClassName}::class, ${bindingTypeClassName}::class, ApplyAction::class)
                         ${maybeDeclareDefinitionImplementationType()}
                         ${maybeDeclareBuildModelImplementationType()}
                         ${maybeDeclareBindingModifiers()}
                     }
+                }
 
-                    ${servicesInterface}
+                abstract class ApplyAction @javax.inject.Inject constructor() : ${ProjectFeatureApplyAction.class.simpleName}<${definition.publicTypeClassName}, ${definition.buildModelFullPublicClassName}, ${bindingTypeClassName}> {
+
+                    ${injectedServices}
+
+                    override fun apply(context: ${ProjectFeatureApplicationContext.class.simpleName}, definition: ${definition.publicTypeClassName}, model: ${definition.buildModelFullPublicClassName}, parent: ${bindingTypeClassName}) {
+                        println("Binding ${definition.publicTypeClassName}")
+                        ${convertToKotlin(definition.buildModelMapping.replace('services.', ''))}
+                        taskRegistrar.register("print${definition.publicTypeClassName}Configuration") { task: Task ->
+                            task.doLast { _: Task ->
+                                ${definition.displayDefinitionPropertyValues().replaceAll(';', '')}
+                                ${definition.displayModelPropertyValues().replaceAll(';', '')}
+                            }
+                        }
+                    }
                 }
 
                 override fun apply(project: Project) {
@@ -87,16 +95,14 @@ class KotlinProjectFeaturePluginClassBuilder extends ProjectFeaturePluginClassBu
             .replaceAll("getProjectFeatureLayout\\Q()\\E", 'projectFeatureLayout')
     }
 
-    @Override
-    String getServicesInterface() {
+    String getInjectedServices() {
         return """
-            interface Services {
-                @get:javax.inject.Inject
-                val taskRegistrar: ${TaskRegistrar.class.name}
+            @get:javax.inject.Inject
+            abstract val taskRegistrar: ${TaskRegistrar.class.name}
 
-                @get:javax.inject.Inject
-                val projectFeatureLayout: ${ProjectFeatureLayout.class.name}
-            }
+            @get:javax.inject.Inject
+            abstract val projectFeatureLayout: ${ProjectFeatureLayout.class.name}
         """
     }
+
 }

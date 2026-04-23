@@ -17,6 +17,8 @@
 package org.gradle.features.internal.builders.types
 
 import org.gradle.features.annotations.BindsProjectType
+import org.gradle.features.binding.ProjectFeatureApplicationContext
+import org.gradle.features.binding.ProjectTypeApplyAction
 import org.gradle.features.binding.ProjectTypeBinding
 import org.gradle.features.binding.ProjectTypeBindingBuilder
 import org.gradle.features.internal.builders.definitions.ProjectTypeDefinitionClassBuilder
@@ -43,6 +45,8 @@ class ProjectTypePluginThatReadsValuesEagerlyClassBuilder extends ProjectTypePlu
             import org.gradle.api.Plugin;
             import org.gradle.api.Project;
             import org.gradle.api.provider.Property;
+            import ${ProjectTypeApplyAction.class.name};
+            import ${ProjectFeatureApplicationContext.class.name};
             import ${ProjectTypeBinding.class.name};
             import ${BindsProjectType.class.name};
             import ${ProjectTypeBindingBuilder.class.name};
@@ -54,32 +58,35 @@ class ProjectTypePluginThatReadsValuesEagerlyClassBuilder extends ProjectTypePlu
 
                 static class Binding implements ${ProjectTypeBinding.class.simpleName} {
                     public void bind(${ProjectTypeBindingBuilder.class.simpleName} builder) {
-                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, (context, definition, model) -> {
-                            Services services = context.getObjectFactory().newInstance(Services.class);
-
-                            System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
-
-                            // Eagerly read values at apply time.
-                            // These reads throw MissingValueException if the definition
-                            // hasn't been configured yet - that is what this fixture tests against.
-                            String idAtApplyTime = definition.getId().get();
-                            String barAtApplyTime = definition.getFoo().getBar().get();
-
-                            ${definition.buildModelMapping}
-
-                            services.getTaskRegistrar().register("printApplyTimeValues", DefaultTask.class, task -> {
-                                task.doLast("print", t -> {
-                                    System.out.println("apply time id = " + idAtApplyTime);
-                                    System.out.println("apply time foo.bar = " + barAtApplyTime);
-                                });
-                            });
-                        })
-                        .withUnsafeApplyAction();
+                        builder.bindProjectType("${name}", ${definition.publicTypeClassName}.class, ApplyAction.class)
+                            .withUnsafeApplyAction();
                     }
+                }
 
-                    interface Services {
-                        @javax.inject.Inject
-                        ${TaskRegistrar.class.name} getTaskRegistrar();
+                static abstract class ApplyAction implements ${ProjectTypeApplyAction.class.name}<${definition.publicTypeClassName}, ${definition.fullyQualifiedBuildModelClassName}> {
+                    @javax.inject.Inject public ApplyAction() { }
+
+                    @javax.inject.Inject
+                    abstract protected ${TaskRegistrar.class.name} getTaskRegistrar();
+
+                    @Override
+                    public void apply(${ProjectFeatureApplicationContext.class.name} context, ${definition.publicTypeClassName} definition, ${definition.fullyQualifiedBuildModelClassName} model) {
+                        System.out.println("Binding " + ${definition.publicTypeClassName}.class.getSimpleName());
+
+                        // Eagerly read values at apply time.
+                        // These reads throw MissingValueException if the definition
+                        // hasn't been configured yet - that is what this fixture tests against.
+                        String idAtApplyTime = definition.getId().get();
+                        String barAtApplyTime = definition.getFoo().getBar().get();
+
+                        ${definition.buildModelMapping}
+
+                        getTaskRegistrar().register("printApplyTimeValues", DefaultTask.class, task -> {
+                            task.doLast("print", t -> {
+                                System.out.println("apply time id = " + idAtApplyTime);
+                                System.out.println("apply time foo.bar = " + barAtApplyTime);
+                            });
+                        });
                     }
                 }
 

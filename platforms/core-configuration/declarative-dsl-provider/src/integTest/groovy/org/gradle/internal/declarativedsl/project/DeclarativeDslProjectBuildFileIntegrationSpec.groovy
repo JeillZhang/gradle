@@ -62,18 +62,21 @@ class DeclarativeDslProjectBuildFileIntegrationSpec extends AbstractIntegrationS
                 primaryAccess {
                     read = false
                     write = false
+                    exec = listOf(USER)
                 }
 
                 secondaryAccess {
                     name = "two"
                     read = true
                     write = false
+                    exec = listOf(GROUP, USER)
                 }
 
                 secondaryAccess {
                     name = "three"
                     read = true
                     write = true
+                    exec = listOf(USER, GROUP, ALL)
                 }
             }
         """
@@ -87,9 +90,9 @@ referencePoint = (1, 2)
 arguments = [one, two]
 flags = []
 mapProperty = {}
-primaryAccess = { primary, false, false}
-secondaryAccess { two, true, false}
-secondaryAccess { three, true, true}"""
+primaryAccess = { primary, false, false, [USER] }
+secondaryAccess { two, true, false, [GROUP, USER] }
+secondaryAccess { three, true, true, [USER, GROUP, ALL] }"""
         )
 
         where:
@@ -233,16 +236,16 @@ secondaryAccess { three, true, true}"""
                                 System.out.println("flags = " + definition.getFlags());
                                 System.out.println("mapProperty = " + definition.getMapProperty().get());
                                 System.out.println("primaryAccess = { " +
-                                        acc.getName().get() + ", " + acc.getRead().get() + ", " + acc.getWrite().get() + "}"
-                                );
-                                secondaryAccess.get().forEach(it -> {
-                                    System.out.println("secondaryAccess { " +
-                                            it.getName().get() + ", " + it.getRead().get() + ", " + it.getWrite().get() +
-                                            "}"
+                                        acc.getName().get() + ", " + acc.getRead().get() + ", " + acc.getWrite().get() + ", " + acc.getExec().get() + " }"
                                     );
+                                    secondaryAccess.get().forEach(it -> {
+                                        System.out.println("secondaryAccess { " +
+                                                it.getName().get() + ", " + it.getRead().get() + ", " + it.getWrite().get() + ", " + it.getExec().get() + " }"
+                                        );
+                                    });
                                 });
                             });
-                        });
+
                     }
                 }
 
@@ -359,6 +362,12 @@ secondaryAccess { three, true, true}"""
                 public abstract Property<Boolean> getRead();
 
                 public abstract Property<Boolean> getWrite();
+
+                public abstract ListProperty<ExecutionAccess> getExec();
+
+                public enum ExecutionAccess {
+                    USER, GROUP, ALL
+                }
             }
 
             public static class Point {
@@ -443,6 +452,12 @@ secondaryAccess { three, true, true}"""
                 abstract val read: Property<Boolean>
 
                 abstract val write: Property<Boolean>
+
+                abstract val exec: ListProperty<ExecutionAccess>
+
+                enum class ExecutionAccess {
+                    USER, GROUP, ALL
+                }
             }
 
             class Point(val x: Int, val y: Int)

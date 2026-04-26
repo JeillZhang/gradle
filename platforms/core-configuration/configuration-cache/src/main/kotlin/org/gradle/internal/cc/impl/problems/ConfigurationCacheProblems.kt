@@ -43,6 +43,7 @@ import org.gradle.internal.cc.impl.TooManyConfigurationCacheProblemsException
 import org.gradle.internal.cc.impl.initialization.ConfigurationCacheStartParameter
 import org.gradle.internal.configuration.problems.CommonReport
 import org.gradle.internal.configuration.problems.DocumentationSection
+import org.gradle.internal.configuration.problems.IsolatedProjectsProblemsListener
 import org.gradle.internal.configuration.problems.ProblemFactory
 import org.gradle.internal.configuration.problems.ProblemReportDetails
 import org.gradle.internal.configuration.problems.ProblemReportDetailsJsonSource
@@ -94,7 +95,7 @@ class ConfigurationCacheProblems(
 
     private
     val degradationController: DefaultConfigurationCacheDegradationController
-) : AbstractProblemsListener(), ProblemReporter, AutoCloseable {
+) : AbstractProblemsListener(), IsolatedProjectsProblemsListener, ProblemReporter, AutoCloseable {
 
     private
     val summarizer = ConfigurationCacheProblemsSummary()
@@ -247,6 +248,10 @@ class ConfigurationCacheProblems(
             .build()
         summarizer.onIncompatibleFeature(problem)
         report.onProblem(problem)
+    }
+
+    override fun onIsolatedProjectsProblem(problem: PropertyProblem) {
+        onProblem(problem, ProblemSeverity.Deferred)
     }
 
     override fun onProblem(problem: PropertyProblem) {

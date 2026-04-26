@@ -389,6 +389,7 @@ abstract class AbstractIsolateContext<T>(
         get() = currentProblemsListener
 
     override fun onProblem(problem: PropertyProblem) {
+        // TODO:isolated where does this violation belong? Should it be interrupting?
         currentProblemsListener.onProblem(problem)
     }
 

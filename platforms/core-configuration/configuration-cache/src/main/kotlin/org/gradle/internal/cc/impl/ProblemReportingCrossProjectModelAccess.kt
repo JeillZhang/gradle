@@ -60,8 +60,8 @@ import org.gradle.internal.cc.impl.CrossProjectModelAccessPattern.ALLPROJECTS
 import org.gradle.internal.cc.impl.CrossProjectModelAccessPattern.CHILD
 import org.gradle.internal.cc.impl.CrossProjectModelAccessPattern.DIRECT
 import org.gradle.internal.cc.impl.CrossProjectModelAccessPattern.SUBPROJECT
+import org.gradle.internal.configuration.problems.IsolatedProjectsProblemsListener
 import org.gradle.internal.configuration.problems.ProblemFactory
-import org.gradle.internal.configuration.problems.ProblemsListener
 import org.gradle.internal.configuration.problems.StructuredMessage
 import org.gradle.internal.extensions.stdlib.uncheckedCast
 import org.gradle.internal.logging.StandardOutputCapture
@@ -82,7 +82,7 @@ import java.util.concurrent.Callable
 
 internal
 class ProblemReportingCrossProjectModelAccess(
-    private val problems: ProblemsListener,
+    private val ipProblems: IsolatedProjectsProblemsListener,
     private val coupledProjectsListener: CoupledProjectsListener,
     private val problemFactory: ProblemFactory,
     private val dynamicCallProblemReporting: DynamicCallProblemReporting,
@@ -127,17 +127,17 @@ class ProblemReportingCrossProjectModelAccess(
     }
 
     override fun taskDependencyUsageTracker(referrerProject: ProjectInternal): TaskDependencyUsageTracker {
-        return ReportingTaskDependencyUsageTracker(referrerProject, coupledProjectsListener, problems, problemFactory)
+        return ReportingTaskDependencyUsageTracker(referrerProject, coupledProjectsListener, ipProblems, problemFactory)
     }
 
     override fun taskGraphForProject(referrerProject: ProjectInternal, taskGraph: TaskExecutionGraphInternal): TaskExecutionGraphInternal {
-        return CrossProjectConfigurationReportingTaskExecutionGraph(taskGraph, referrerProject, problems, this, coupledProjectsListener, problemFactory)
+        return CrossProjectConfigurationReportingTaskExecutionGraph(taskGraph, referrerProject, ipProblems, this, coupledProjectsListener, problemFactory)
     }
 
     override fun parentProjectDynamicInheritedScope(referrerProject: ProjectInternal): HierarchicalDynamicObject? {
         val parent = referrerProject.parent ?: return null
         return CrossProjectModelAccessTrackingParentDynamicObject(
-            parent, parent.inheritedScope, referrerProject, problems, coupledProjectsListener, problemFactory, dynamicCallProblemReporting
+            parent, parent.inheritedScope, referrerProject, ipProblems, coupledProjectsListener, problemFactory, dynamicCallProblemReporting
         )
     }
 
@@ -152,7 +152,7 @@ class ProblemReportingCrossProjectModelAccess(
             this,
             referrer,
             access,
-            problems,
+            ipProblems,
             coupledProjectsListener,
             problemFactory,
             buildModelParameters,
@@ -165,7 +165,7 @@ class ProblemReportingCrossProjectModelAccess(
         delegate: ProjectInternal,
         referrer: ProjectInternal,
         private val access: CrossProjectModelAccessInstance,
-        private val problems: ProblemsListener,
+        private val ipProblems: IsolatedProjectsProblemsListener,
         private val coupledProjectsListener: CoupledProjectsListener,
         private val problemFactory: ProblemFactory,
         private val buildModelParameters: BuildModelParameters,
@@ -573,7 +573,7 @@ class ProblemReportingCrossProjectModelAccess(
                 .exception()
                 .build()
 
-            problems.onProblem(problem)
+            ipProblems.onIsolatedProjectsProblem(problem)
         }
 
         private

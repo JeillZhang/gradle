@@ -63,6 +63,8 @@ dependencies {
     smokeTestImplementation(testFixtures(projects.modelReflect))
     smokeTestImplementation(testFixtures(projects.pluginDevelopment))
     smokeTestImplementation(testFixtures(projects.testingBase))
+    smokeTestImplementation(testFixtures(projects.kotlinDslToolingBuilders))
+    smokeTestImplementation(testFixtures(projects.toolingApi))
     smokeTestImplementation(testFixtures(projects.versionControl))
 
     smokeTestDistributionRuntimeOnly(projects.distributionsFull)

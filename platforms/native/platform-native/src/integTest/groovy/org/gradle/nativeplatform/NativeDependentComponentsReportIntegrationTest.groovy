@@ -226,10 +226,13 @@ class NativeDependentComponentsReportIntegrationTest extends AbstractIntegration
     }
 
     String removeIrrelevantOutput(String output) {
-        return output.readLines().findAll {
-             !(it ==~ /^Problem found.*$/) && !(it ==~ /.*caused invocation of 'Task.project' in other task at execution.*$/)
-            && !(it ==~ /.*Documentation: https:\/\/docs.gradle.org\/.*$/)
-        }.join('\n')
+        // Strip entire "Problem found: ... For more information, ..." blocks that bleed into this
+        // report from configuration-cache problem rendering. The "For more information" line ends
+        // with either a URL, a URL + ".", or "... in the Gradle documentation." depending on the
+        // DocLink implementation, so match greedily to end-of-line.
+        String stripped = output.replaceAll(/(?s)Problem found:.*?For more information, please refer to [^\n]*/, '')
+        // Collapse runs of blank lines (left behind by the stripped blocks) down to one.
+        return stripped.replaceAll(/\n\s*\n(\s*\n)+/, '\n\n')
     }
 
     @Requires(TestExecutionPreconditions.NotParallelExecutor)

@@ -455,15 +455,21 @@ class ListPropertyCodec(
 ) : AbstractPropertyCodec<DefaultListProperty<*>>(providerCodec){
 
     override suspend fun WriteContext.encodeThis(value: DefaultListProperty<*>) {
-        writeClass(value.elementType)
-        providerCodec.run { encodeValue(value.calculateExecutionTimeValue()) }
+        encodePreservingIdentityOf(value) {
+            writeClass(value.elementType)
+            providerCodec.run { encodeValue(value.calculateExecutionTimeValue()) }
+        }
     }
 
     override suspend fun ReadContext.decodeThis(): DefaultListProperty<*> {
-        val type: Class<Any> = readClass().uncheckedCast()
-        val value: ValueSupplier.ExecutionTimeValue<List<Any>> = providerCodec.run { decodeValue() }.uncheckedCast()
-        return propertyFactory.listProperty(type).apply {
-            fromState(value)
+        return decodePreservingIdentity { id ->
+            val type: Class<Any> = readClass().uncheckedCast()
+            val property = propertyFactory.listProperty(type) as DefaultListProperty<*>
+            isolate.identities.putInstance(id, property)
+            val value = providerCodec.run { decodeValue() }
+            property.apply {
+                fromState(value.uncheckedCast())
+            }
         }
     }
 }
@@ -475,15 +481,21 @@ class SetPropertyCodec(
 ) : AbstractPropertyCodec<DefaultSetProperty<*>>(providerCodec) {
 
     override suspend fun WriteContext.encodeThis(value: DefaultSetProperty<*>) {
-        writeClass(value.elementType)
-        providerCodec.run { encodeValue(value.calculateExecutionTimeValue()) }
+        encodePreservingIdentityOf(value) {
+            writeClass(value.elementType)
+            providerCodec.run { encodeValue(value.calculateExecutionTimeValue()) }
+        }
     }
 
     override suspend fun ReadContext.decodeThis(): DefaultSetProperty<*> {
-        val type: Class<Any> = readClass().uncheckedCast()
-        val value: ValueSupplier.ExecutionTimeValue<Set<Any>> = providerCodec.run { decodeValue() }.uncheckedCast()
-        return propertyFactory.setProperty(type).apply {
-            fromState(value)
+        return decodePreservingIdentity { id ->
+            val type: Class<Any> = readClass().uncheckedCast()
+            val property = propertyFactory.setProperty(type) as DefaultSetProperty<*>
+            isolate.identities.putInstance(id, property)
+            val value = providerCodec.run { decodeValue() }
+            property.apply {
+                fromState(value.uncheckedCast())
+            }
         }
     }
 }
@@ -495,17 +507,23 @@ class MapPropertyCodec(
 ) : AbstractPropertyCodec<DefaultMapProperty<*, *>>(providerCodec) {
 
     override suspend fun WriteContext.encodeThis(value: DefaultMapProperty<*, *>) {
-        writeClass(value.keyType)
-        writeClass(value.valueType)
-        providerCodec.run { encodeValue(value.calculateExecutionTimeValue()) }
+        encodePreservingIdentityOf(value) {
+            writeClass(value.keyType)
+            writeClass(value.valueType)
+            providerCodec.run { encodeValue(value.calculateExecutionTimeValue()) }
+        }
     }
 
     override suspend fun ReadContext.decodeThis(): DefaultMapProperty<*, *> {
-        val keyType: Class<Any> = readClass().uncheckedCast()
-        val valueType: Class<Any> = readClass().uncheckedCast()
-        val state: ValueSupplier.ExecutionTimeValue<Map<Any, Any>> = providerCodec.run { decodeValue() }.uncheckedCast()
-        return propertyFactory.mapProperty(keyType, valueType).apply {
-            fromState(state)
+        return decodePreservingIdentity { id ->
+            val keyType: Class<Any> = readClass().uncheckedCast()
+            val valueType: Class<Any> = readClass().uncheckedCast()
+            val property = propertyFactory.mapProperty(keyType, valueType) as DefaultMapProperty<*, *>
+            isolate.identities.putInstance(id, property)
+            val value = providerCodec.run { decodeValue() }
+            property.apply {
+                fromState(value.uncheckedCast())
+            }
         }
     }
 }

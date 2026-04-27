@@ -85,7 +85,7 @@ reviews:
     unit_tests:
       enabled: true
   high_level_summary: true
-  high_level_summary_in_walkthrough: false
+  high_level_summary_in_walkthrough: true
   high_level_summary_instructions: ""
   high_level_summary_placeholder: "@coderabbitai summary"
   in_progress_fortune: true

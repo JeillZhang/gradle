@@ -423,13 +423,12 @@ public class BuildExceptionReporter implements Action<Throwable> {
 
         Collection<ProblemInternal> all = failure.getProblems();
         for (ProblemInternal problem : all) {
-            // TODO (donat) integrate type validation failure rendering with problems-rendering and get rid of the special-casing here
+            // Java compilation problems are rendered by JavaCompilationWriter which emits only the details,
+            // so their solutions still need to reach the user via the resolution section.
+            // All other problem writers render solutions and doc links inline.
             ProblemGroup group = problem.getDefinition().getId().getGroup();
-            if (!GradleCoreProblemGroup.validation().type().equals(group) && !GradleCoreProblemGroup.validation().property().equals(group)) {
+            if (GradleCoreProblemGroup.compilation().java().equals(group)) {
                 resolutions.addAll(problem.getSolutions());
-                if (problem.getDefinition().getDocumentationLink() != null) {
-                    resolutions.add("For more information, see " + problem.getDefinition().getDocumentationLink().getUrl());
-                }
             }
         }
 

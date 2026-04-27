@@ -119,6 +119,7 @@ dependencies {
     integTestImplementation(testLibs.playwright)
 
     integTestImplementation(testFixtures(projects.toolingApi))
+    integTestImplementation(testFixtures(projects.kotlinDslToolingBuilders))
     integTestImplementation(testFixtures(projects.dependencyManagement))
     integTestImplementation(testFixtures(projects.jacoco))
     integTestImplementation(testFixtures(projects.modelReflect))

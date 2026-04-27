@@ -53,7 +53,7 @@ class ValidatePluginsPart1IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'tree.nonAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -458,7 +458,7 @@ class ValidatePluginsPart1IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(1)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTransformAction\' property \'badTime\' is missing an input annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input annotation',
                 'Mark it as @Internal',
@@ -471,7 +471,7 @@ class ValidatePluginsPart1IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(2)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTransformAction\' property \'oldThing\' is missing an input annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input annotation',
                 'Mark it as @Internal',
@@ -573,7 +573,7 @@ class ValidatePluginsPart1IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(2)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTransformParameters\' property \'badTime\' is missing an input annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input annotation',
                 'Mark it as @Internal',
@@ -586,7 +586,7 @@ class ValidatePluginsPart1IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(3)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTransformParameters\' property \'oldThing\' is missing an input annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input annotation',
                 'Mark it as @Internal',

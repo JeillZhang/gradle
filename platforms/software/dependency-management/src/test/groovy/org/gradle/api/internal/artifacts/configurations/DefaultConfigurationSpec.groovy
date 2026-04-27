@@ -775,24 +775,22 @@ class DefaultConfigurationSpec extends Specification {
         baseRole << [
             ConfigurationRoles.ALL,
             ConfigurationRoles.RESOLVABLE,
-            ConfigurationRoles.RESOLVABLE_DEPENDENCY_SCOPE
-        ] + ConfigurationRolesForMigration.ALL - ConfigurationRolesForMigration.CONSUMABLE_TO_RETIRED - deprecatedRoles
+            ConfigurationRoles.RESOLVABLE_DEPENDENCY_SCOPE,
+            ConfigurationRolesForMigration.LEGACY_TO_RESOLVABLE_DEPENDENCY_SCOPE
+        ]
     }
 
     @ExpectDeprecation("The conf configuration has been deprecated for dependency declaration")
-    void "deprecations are passed to copies when corresponding role is #baseRole (deprecated)"() {
+    void "deprecations are passed to copies when role deprecates declaration"() {
         expect:
-        deprecationsArePassedToCopies(baseRole)
-
-        where:
-        baseRole << deprecatedRoles
+        deprecationsArePassedToCopies(ConfigurationRolesForMigration.RESOLVABLE_DEPENDENCY_SCOPE_TO_RESOLVABLE)
     }
 
-    private static deprecatedRoles = [
-        ConfigurationRolesForMigration.RESOLVABLE_DEPENDENCY_SCOPE_TO_RESOLVABLE,
-        ConfigurationRolesForMigration.LEGACY_TO_RESOLVABLE_DEPENDENCY_SCOPE,
-        ConfigurationRolesForMigration.RESOLVABLE_DEPENDENCY_SCOPE_TO_DEPENDENCY_SCOPE
-    ]
+    @ExpectDeprecation("Calling copy() on configuration ':conf' has been deprecated")
+    void "deprecations are passed to copies when role deprecates resolution"() {
+        expect:
+        deprecationsArePassedToCopies(ConfigurationRolesForMigration.RESOLVABLE_DEPENDENCY_SCOPE_TO_DEPENDENCY_SCOPE)
+    }
 
     private void deprecationsArePassedToCopies(ConfigurationRole baseRole) {
         // given:

@@ -442,7 +442,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(0)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'doubleIterableOptions.*.*.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -456,7 +456,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(1)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'iterableMappedOptions.*.<key>.*.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -470,7 +470,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(2)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'iterableOptions.*.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -484,7 +484,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(3)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'mappedOptions.<key>.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -498,7 +498,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(4)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'namedIterable.<name>.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -512,7 +512,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(5)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'options.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -526,7 +526,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(6)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'optionsList.*.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',
@@ -540,7 +540,7 @@ class ValidatePluginsPart2IntegrationTest extends AbstractIntegrationSpec implem
         verifyAll(receivedProblem(7)) {
             fqid == 'validation:property-validation:missing-annotation'
             contextualLabel == 'Type \'MyTask\' property \'providedOptions.notAnnotated\' is missing an input or output annotation'
-            details == 'A property without annotation isn\'t considered during up-to-date checking'
+            details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
             solutions == [
                 'Add an input or output annotation',
                 'Mark it as @Internal',

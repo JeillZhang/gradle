@@ -49,7 +49,7 @@ class DefaultExecutionProblemHandlerTest extends Specification implements Valida
     def handler = new DefaultExecutionProblemHandler(warningReporter, virtualFileSystem)
 
     def setup() {
-        ProblemsProgressEventEmitterHolder.init(TestUtil.problemsService())
+        ProblemsProgressEventEmitterHolder.init(problems)
         work.displayName >> "job ':test'"
     }
 

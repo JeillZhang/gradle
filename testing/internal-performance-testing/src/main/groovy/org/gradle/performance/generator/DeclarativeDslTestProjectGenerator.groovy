@@ -330,7 +330,7 @@ class DeclarativeDslTestProjectGenerator extends AbstractTestProjectGenerator {
                     @javax.inject.Inject public ApplyAction() { }
 
                     @javax.inject.Inject
-                    abstract PluginManager getPluginManager();
+                    public abstract PluginManager getPluginManager();
 
                     @Override
                     public void apply(${ProjectFeatureApplicationContext.class.simpleName} context, JavaApplication definition, JavaApplicationModel model) {

@@ -136,7 +136,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(0)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'badTime\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -149,7 +149,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(1)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'oldThing\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -162,7 +162,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(2)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'options.badNested\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -176,7 +176,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(3)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'ter\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -404,7 +404,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(0)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'badTime\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -417,7 +417,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(1)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'options.badNested\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -793,7 +793,7 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
             verifyAll(receivedProblem(0)) {
                 fqid == 'validation:property-validation:missing-annotation'
                 contextualLabel == 'Type \'MyTask\' property \'readWrite\' is missing an input or output annotation'
-                details == 'A property without annotation isn\'t considered during up-to-date checking'
+                details == 'Properties must be annotated so that Gradle knows how to handle them during up-to-date checking'
                 solutions == [
                     'Add an input or output annotation',
                     'Mark it as @Internal',
@@ -896,6 +896,87 @@ abstract class AbstractPluginValidationIntegrationSpec extends AbstractIntegrati
                 additionalData.asMap == [
                     'typeName' : 'MyTask',
                     'propertyName' : 'oldProperty',
+                ]
+            }
+        }
+    }
+
+    def "reports @Optional used without an input or output annotation"() {
+        javaTaskSource << """
+            import org.gradle.api.*;
+            import org.gradle.api.tasks.*;
+            import org.gradle.work.*;
+
+            @DisableCachingByDefault(because = "test task")
+            public class MyTask extends DefaultTask {
+                @Optional
+                public String getBadProperty() {
+                    return null;
+                }
+
+                @TaskAction public void execute() {}
+            }
+        """
+
+        expect:
+        assertValidationFailsWith([
+            error(missingAnnotationWithOptionalConfig { type('MyTask').property('badProperty').missingInputOrOutput() }, 'validation_problems', 'missing_annotation'),
+        ])
+
+        and:
+        if (isProblemsApiCheckEnabled()) {
+            verifyAll(receivedProblem(0)) {
+                fqid == 'validation:property-validation:missing-annotation'
+                contextualLabel == "Type 'MyTask' property 'badProperty' is missing an input or output annotation"
+                details == "@Optional is a modifier annotation and has no effect without an input or output annotation"
+                solutions == [
+                    'Add an input or output annotation',
+                    'Replace @Optional with @Internal for ignoring this property',
+                ]
+                additionalData.asMap == [
+                    'typeName' : 'MyTask',
+                    'propertyName' : 'badProperty',
+                ]
+            }
+        }
+    }
+
+    def "reports @Optional combined with @Internal"() {
+        javaTaskSource << """
+            import org.gradle.api.*;
+            import org.gradle.api.tasks.*;
+            import org.gradle.work.*;
+
+            @DisableCachingByDefault(because = "test task")
+            public class MyTask extends DefaultTask {
+                @Internal
+                @Optional
+                public String getBadProperty() {
+                    return null;
+                }
+
+                @TaskAction public void execute() {}
+            }
+        """
+
+        expect:
+        assertValidationFailsWith([
+            error(ignoredAnnotatedWithOptionalConfig { type('MyTask').property('badProperty').ignoring('Internal') }, 'validation_problems', 'ignored_property_must_not_be_annotated')
+        ])
+
+        and:
+        if (isProblemsApiCheckEnabled()) {
+            verifyAll(receivedProblem(0)) {
+                fqid == 'validation:property-validation:ignored-property-must-not-be-annotated'
+                contextualLabel == "Type 'MyTask' property 'badProperty' annotated with @Internal should not be also annotated with @Optional"
+                details == '@Internal properties are excluded from up-to-date checks; @Optional is redundant and not allowed here'
+                solutions == [
+                    'Remove the @Optional annotation',
+                    'Remove the @Internal annotation and add an input or output annotation',
+                ]
+                additionalData.asMap == [
+                    'typeName' : 'MyTask',
+                    'propertyName' : 'badProperty',
                 ]
             }
         }

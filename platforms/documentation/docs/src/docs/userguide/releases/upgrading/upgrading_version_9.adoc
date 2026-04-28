@@ -41,6 +41,89 @@ The previous step will help you identify potential problems by issuing deprecati
 
 === Deprecations
 
+[[deprecated_maven_artifact_urls]]
+==== Deprecation of `artifactUrls` on Maven repositories
+
+The `artifactUrls` family of methods on link:{javadocPath}/org/gradle/api/artifacts/repositories/MavenArtifactRepository.html[`MavenArtifactRepository`] is deprecated and will be removed in Gradle 10.
+
+This includes:
+
+- `MavenArtifactRepository.getArtifactUrls()`
+- `MavenArtifactRepository.artifactUrls(Object...)`
+- `MavenArtifactRepository.setArtifactUrls(Set)`
+- `MavenArtifactRepository.setArtifactUrls(Iterable)`
+
+The same deprecation applies to passing `artifactUrls` as a key in the map argument to `RepositoryHandler.mavenCentral(Map)`, since that path delegates to the methods above.
+
+These methods let a single Maven repository declaration look for POMs at the base URL while looking for artifacts (such as JARs) at one or more additional URLs.
+This is a Gradle-specific extension with no equivalent in Maven, and there is no direct replacement.
+
+[[deprecated_repository_handler_map_overloads]]
+==== Deprecation of `RepositoryHandler.flatDir(Map)` and `RepositoryHandler.mavenCentral(Map)`
+
+The map-argument overloads `RepositoryHandler.flatDir(Map)` and `RepositoryHandler.mavenCentral(Map)` are deprecated and will be removed in Gradle 10.
+Use the action-based overloads (`flatDir(Action)`, `mavenCentral(Action)`) instead — they are typed, work in both the Groovy and Kotlin DSLs, and are the canonical way to configure a repository.
+
+For `flatDir`:
+
+====
+[.multi-language-sample]
+=====
+.build.gradle
+[source,groovy]
+----
+repositories {
+    flatDir {
+        name = "libs"
+        dirs "libs1", "libs2"
+    }
+}
+----
+=====
+[.multi-language-sample]
+=====
+.build.gradle.kts
+[source,kotlin]
+----
+repositories {
+    flatDir {
+        name = "libs"
+        dirs("libs1", "libs2")
+    }
+}
+----
+=====
+====
+
+For `mavenCentral`:
+
+====
+[.multi-language-sample]
+=====
+.build.gradle
+[source,groovy]
+----
+repositories {
+    mavenCentral {
+        name = "nonDefaultName"
+    }
+}
+----
+=====
+[.multi-language-sample]
+=====
+.build.gradle.kts
+[source,kotlin]
+----
+repositories {
+    mavenCentral {
+        name = "nonDefaultName"
+    }
+}
+----
+=====
+====
+
 [[dependency_project_notation]]
 ==== Deprecation of using Project objects as dependency notation
 

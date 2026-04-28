@@ -2,11 +2,13 @@ import gradlebuild.basics.BuildEnvironment
 import gradlebuild.basics.buildCommitId
 import gradlebuild.integrationtests.addDependenciesAndConfigurations
 import gradlebuild.integrationtests.configureTestSourceSetInIde
+import gradlebuild.integrationtests.ide.IdeProvisioningPlugin
 import gradlebuild.integrationtests.tasks.SmokeIdeTest
 import gradlebuild.performance.generator.tasks.RemoteProject
 
 plugins {
     id("gradlebuild.internal.java")
+    id("gradlebuild.ide-provisioning")
 }
 
 description = "Tests are checking Gradle behavior during IDE synchronization process"
@@ -91,6 +93,9 @@ tasks {
             objects.newInstance<IdeStarterPathProvider>().apply {
                 ideStarterDir = ideStarterBuildDir
             }
+        )
+        jvmArgumentProviders.add(
+            IdeProvisioningPlugin.ideArchivesProvider(project)
         )
     }
 }

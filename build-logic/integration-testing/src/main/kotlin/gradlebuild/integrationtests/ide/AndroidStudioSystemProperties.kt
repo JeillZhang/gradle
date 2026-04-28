@@ -28,7 +28,7 @@ import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
-import org.gradle.kotlin.dsl.newInstance
+import org.gradle.kotlin.dsl.*
 import org.gradle.process.CommandLineArgumentProvider
 
 
@@ -61,6 +61,7 @@ private class AndroidStudioSystemProperties(
 
     @get:Optional
     @get:Nested
+    @Suppress("UNUSED") // required to ensure that the installation directory is treated as an input
     val studioInstallationProvider = autoDownloadAndroidStudio.map { if (it) studioInstallation else null }
 
     override fun asArguments(): Iterable<String> {
@@ -100,9 +101,9 @@ private class AndroidStudioSystemProperties(
  * @param androidStudioJvmArgs additional JVM arguments forwarded to the Studio process, such as `-Xmx8g`.
  */
 fun Project.composeAndroidStudioSystemProperties(androidStudioJvmArgs: List<String>): CommandLineArgumentProvider {
-    val unpackAndroidStudio = project.tasks.named(AndroidStudioProvisioningPlugin.UNPACK_TASK_NAME, ExtractAndroidStudioTask::class.java)
+    val installPath = project.extensions.getByType<IdeProvisioningExtension>().androidStudioInstallPath
     val androidStudioInstallation = project.objects.newInstance<AndroidStudioInstallation>().apply {
-        studioInstallLocation.fileProvider(unpackAndroidStudio.map { it.outputDir.asFile.get() })
+        studioInstallLocation.set(installPath)
     }
     return AndroidStudioSystemProperties(
         androidStudioInstallation,

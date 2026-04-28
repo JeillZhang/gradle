@@ -32,7 +32,7 @@ class IsolatedProjectsAndroidSyncPerformanceRegressionTest extends AbstractCross
 
     private static int maxWorkers = 8
 
-    def setup() {
+    private void studioSetup() {
         // NOTE: see the javadoc for required environment and possible configuration
         AndroidSyncPerformanceTestFixture.configureStudio(runner)
     }
@@ -41,6 +41,7 @@ class IsolatedProjectsAndroidSyncPerformanceRegressionTest extends AbstractCross
         @Scenario(type = PER_DAY, operatingSystems = [LINUX], testProjects = ["android500Kts"])
     ])
     def "sync Studio after included build logic refactoring with #daemon daemon"() {
+        studioSetup()
         def runner = getRunner() // otherwise, IDEA thinks it's PerformanceTestRunner despite the override
         runner.useDaemon = daemon == warm
         // Use multiple warm-ups for cold scenario to warm-up Android Studio itself

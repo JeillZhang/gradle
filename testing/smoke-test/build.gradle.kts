@@ -149,6 +149,8 @@ tasks {
     register<SmokeTest>("smokeTest") {
         description = "Runs Smoke tests"
         configureForSmokeTest(excludes = listOf(gradleBuildTestPattern, androidProjectTestPattern))
+        
+        dependsOn("androidHomeWarmup")
     }
 
     register<SmokeTest>("configCacheSmokeTest") {

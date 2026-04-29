@@ -266,9 +266,10 @@ These hooks let you:
 - configure all projects before their own build scripts are evaluated,
 - debug or collect information during configuration.
 
+[[sec:lifecycle_api]]
 === Lifecycle API
 
-The link:{javadocPath}/org/gradle/api/invocation/GradleLifecycle.html[`GradleLifecycle`] API, accessible the link:{javadocPath}/org/gradle/api/invocation/Gradle.html[`gradle`] object, can be used to register actions to be executed at certain points in the build lifecycle:
+The link:{javadocPath}/org/gradle/api/invocation/GradleLifecycle.html[`GradleLifecycle`] API, accessible through the link:{javadocPath}/org/gradle/api/invocation/Gradle.html[`gradle`] object, can be used to register actions to be executed at certain points in the build lifecycle:
 
 [source,text]
 ----

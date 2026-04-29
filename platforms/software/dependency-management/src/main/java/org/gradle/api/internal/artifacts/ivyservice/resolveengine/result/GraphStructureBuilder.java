@@ -60,7 +60,7 @@ public class GraphStructureBuilder {
     private final IntArrayList nodeOwnerIndices = new IntArrayList();
     private final List<ImmutableAttributes> nodeAttributes = new ArrayList<>();
     private final List<ImmutableCapabilities> nodeCapabilities = new ArrayList<>();
-    private final List<String> nodeDisplayNames = new ArrayList<>();
+    private final List<String> nodeVariantNames = new ArrayList<>();
     private final Int2LongMap externalVariantIds = new Int2LongOpenHashMap();
 
     // Edges
@@ -147,7 +147,7 @@ public class GraphStructureBuilder {
         long ownerId,
         ImmutableAttributes attributes,
         ImmutableCapabilities rawCapabilities,
-        String displayName,
+        String variantName,
         long externalVariantId
     ) {
         int nodeIndex = nodeOwnerIndices.size();
@@ -160,7 +160,7 @@ public class GraphStructureBuilder {
         nodeOwnerIndices.add(ownerIndex);
         nodeAttributes.add(attributes);
         nodeCapabilities.add(capabilitiesFor(rawCapabilities, ownerIndex));
-        nodeDisplayNames.add(displayName);
+        nodeVariantNames.add(variantName);
         if (externalVariantId != -1) {
             externalVariantIds.put(nodeIndex, externalVariantId);
         }
@@ -257,7 +257,7 @@ public class GraphStructureBuilder {
                 nodeOwnerIndices,
                 ImmutableList.copyOf(nodeAttributes),
                 ImmutableList.copyOf(nodeCapabilities),
-                ImmutableList.copyOf(nodeDisplayNames),
+                ImmutableList.copyOf(nodeVariantNames),
                 externalVariantIndices
             ),
             new DefaultEdges(
@@ -282,7 +282,7 @@ public class GraphStructureBuilder {
         IntList owners,
         ImmutableList<ImmutableAttributes> attributes,
         ImmutableList<ImmutableCapabilities> capabilities,
-        ImmutableList<String> displayNames,
+        ImmutableList<String> variantNames,
         Int2IntMap externalVariantIndices
     ) implements GraphStructure.Nodes {
 
@@ -307,8 +307,8 @@ public class GraphStructureBuilder {
         }
 
         @Override
-        public String displayName(int index) {
-            return displayNames.get(index);
+        public String variantName(int index) {
+            return variantNames.get(index);
         }
 
         @Override

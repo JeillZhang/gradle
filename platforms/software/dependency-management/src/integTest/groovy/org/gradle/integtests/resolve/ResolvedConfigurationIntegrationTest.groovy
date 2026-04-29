@@ -250,7 +250,7 @@ class ResolvedConfigurationIntegrationTest extends AbstractHttpDependencyResolut
                     def resolved = compile.firstLevelModuleDependencies
 
                     assert resolved.size() == 4
-                    assert resolved.collect { it.moduleName } == ['a', 'd', 'e', 'b']
+                    assert resolved.collect { it.moduleName } == ['a', 'b', 'd', 'e']
 
                     def artifacts = compile.artifacts.collect { it.file.name }
 
@@ -418,7 +418,7 @@ class ResolvedConfigurationIntegrationTest extends AbstractHttpDependencyResolut
 
                     def resolved = compile.firstLevelModuleDependencies
 
-                    assert resolved.collect { "\${it.moduleName}:\${it.moduleVersion}" } == ['bar:1', 'foo:2']
+                    assert resolved.collect { "\${it.moduleName}:\${it.moduleVersion}" } == ['foo:2', 'bar:1']
 
                     def artifacts = compile.artifacts
 

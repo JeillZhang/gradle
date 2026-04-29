@@ -82,6 +82,8 @@ import org.gradle.initialization.ClassLoaderScopeRegistryListener
 import org.gradle.internal.Actions
 import org.gradle.internal.Describables
 import org.gradle.internal.build.BuildState
+import org.gradle.internal.buildoption.DefaultInternalOptions
+import org.gradle.internal.buildoption.InternalOptions
 import org.gradle.internal.deprecation.DeprecationLogger
 import org.gradle.internal.instantiation.InstantiatorFactory
 import org.gradle.internal.logging.LoggingManagerInternal
@@ -273,6 +275,7 @@ class DefaultProjectTest extends Specification {
         serviceRegistryMock.get((Type) ObjectFactory) >> Stub(ObjectFactory)
         serviceRegistryMock.get((Type) DependencyLockingHandler) >> Stub(DependencyLockingHandler)
         serviceRegistryMock.get((Type) DynamicCallContextTracker) >> Stub(DynamicCallContextTracker)
+        serviceRegistryMock.get(InternalOptions) >> new DefaultInternalOptions([:])
 
         projectState = Mock(ProjectState)
         projectState.name >> 'root'

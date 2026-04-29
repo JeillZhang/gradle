@@ -100,7 +100,7 @@ public class ResolvedGraphResult {
 
             variant = new DefaultResolvedVariantResult(
                 structure.components().id(nodes.owner(index)),
-                Describables.of(nodes.displayName(index)),
+                Describables.of(nodes.variantName(index)),
                 nodes.attributes(index),
                 nodes.capabilities(index).asSet().asList(),
                 externalVariant

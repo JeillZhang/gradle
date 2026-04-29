@@ -41,6 +41,8 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.util.internal.PatternSets
 import org.gradle.configuration.internal.ListenerBuildOperationDecorator
 import org.gradle.internal.Describables
+import org.gradle.internal.buildoption.DefaultInternalOptions
+import org.gradle.internal.buildoption.InternalOptions
 import org.gradle.internal.instantiation.InstantiatorFactory
 import org.gradle.internal.management.DependencyResolutionManagementInternal
 import org.gradle.internal.project.ImmutableProjectDescriptor
@@ -267,6 +269,7 @@ class DefaultProjectSpec extends Specification {
         serviceRegistry.add(GradleLifecycleActionExecutor, Stub(GradleLifecycleActionExecutor))
         serviceRegistry.add(ProjectFeatureDeclarations, Stub(ProjectFeatureDeclarations))
         serviceRegistry.add(ProjectFeatureApplicator, Stub(ProjectFeatureApplicator))
+        serviceRegistry.add(InternalOptions, new DefaultInternalOptions([:]))
 
         def antBuilder = Mock(AntBuilder)
         serviceRegistry.add(AntBuilderFactory, Mock(AntBuilderFactory) {

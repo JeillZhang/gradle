@@ -87,6 +87,8 @@ import org.gradle.internal.Actions;
 import org.gradle.internal.Cast;
 import org.gradle.internal.Factories;
 import org.gradle.internal.Factory;
+import org.gradle.internal.buildoption.InternalOption;
+import org.gradle.internal.buildoption.InternalOptions;
 import org.gradle.internal.deprecation.DeprecationLogger;
 import org.gradle.internal.event.ListenerBroadcast;
 import org.gradle.internal.extensibility.ExtensibleDynamicObject;
@@ -158,6 +160,18 @@ public abstract class DefaultProject extends AbstractPluginAware implements Proj
     private static final ModelType<ProjectIdentifier> PROJECT_IDENTIFIER_MODEL_TYPE = ModelType.of(ProjectIdentifier.class);
     private static final ModelType<ExtensionContainer> EXTENSION_CONTAINER_MODEL_TYPE = ModelType.of(ExtensionContainer.class);
     private static final Logger BUILD_LOGGER = Logging.getLogger(Project.class);
+
+    /**
+     * Internal flag that, when set, makes any property or method that resolves through the
+     * parent-project chain throw {@link org.gradle.api.InvalidUserCodeException} at the lookup
+     * site. Used as a CI-side enforcement / pre-flight-check mechanism for the eventual
+     * Gradle 10 behavior in which parent-project lookup is removed entirely.
+     *
+     * <p>Wired into {@link ExtensibleDynamicObject#setFailOnParentAccess(boolean)} on every
+     * Project that has a parent.
+     */
+    public static final InternalOption<Boolean> FAIL_ON_PARENT_PROPERTY_LOOKUP =
+        InternalOptions.ofBoolean("org.gradle.internal.fail-on-parent-property-lookup", false);
 
     private final ProjectState owner;
     private final ClassLoaderScope classLoaderScope;
@@ -247,6 +261,7 @@ public abstract class DefaultProject extends AbstractPluginAware implements Proj
         @Nullable HierarchicalDynamicObject parentInherited = services.get(CrossProjectModelAccess.class).parentProjectDynamicInheritedScope(this);
         if (parentInherited != null) {
             extensibleDynamicObject.setParent(parentInherited);
+            extensibleDynamicObject.setFailOnParentAccess(services.get(InternalOptions.class).getBoolean(FAIL_ON_PARENT_PROPERTY_LOOKUP));
         }
         extensibleDynamicObject.addObject(taskContainer.getTasksAsDynamicObject(), ExtensibleDynamicObject.Location.AfterConvention);
 

@@ -28,7 +28,7 @@ public class ValueSanitizers {
         @Override
         @Nullable
         public Object sanitize(@Nullable Object value) {
-            if (value instanceof GString) {
+            if (value instanceof GString || value instanceof Integer || value instanceof Long) {
                 return value.toString();
             } else {
                 return value;

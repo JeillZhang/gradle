@@ -408,6 +408,38 @@ assert custom.prop.get() == "value 4"
         succeeds()
     }
 
+    def "can set String property value using a number"() {
+        given:
+        buildFile """
+            interface SomeExtension {
+                Property<String> getProp()
+            }
+
+            extensions.create('custom', SomeExtension)
+            custom.prop = 1
+            assert custom.prop.get() == "1"
+
+            custom.prop = 2L
+            assert custom.prop.get() == "2"
+
+            custom.prop = providers.provider { 3 }
+            assert custom.prop.get() == "3"
+
+            custom.prop = providers.provider { 4L }
+            assert custom.prop.get() == "4"
+
+            custom.prop = null
+            custom.prop.convention(5)
+            assert custom.prop.get() == "5"
+
+            custom.prop.convention(providers.provider { 6L })
+            assert custom.prop.get() == "6"
+        """
+
+        expect:
+        succeeds()
+    }
+
     def "can set Enum property value using an string"() {
         given:
         buildFile """
@@ -475,15 +507,15 @@ assert custom.prop.get() == "value 4"
         failure.assertHasCause(expectedCause)
 
         where:
-        errorType                             | setter                                                          | typeDescription
-        "wrong type, dsl"                     | "prop = 123"                                                    | "using an instance of type java.lang.Integer."
-        "wrong type, api"                     | "prop.set(123)"                                                 | "using an instance of type java.lang.Integer."
-        "wrong Property type, dsl"            | "prop = objectFactory.property(Integer)"                        | "using a provider of type java.lang.Integer."
-        "wrong Property type, api"            | "prop.set(objectFactory.property(Integer))"                     | "using a provider of type java.lang.Integer."
-        "wrong runtime type"                  | "prop = providerFactory.provider { 123 }; prop.get()"           | "as the provider associated with this property returned a value of type java.lang.Integer."
-        "wrong convention value type"         | "prop.convention(123)"                                          | "using an instance of type java.lang.Integer."
-        "wrong convention Property type"      | "prop.convention(objectFactory.property(Integer))"              | "using a provider of type java.lang.Integer."
-        "wrong convention runtime value type" | "prop.convention(providerFactory.provider { 123 }); prop.get()" | "as the provider associated with this property returned a value of type java.lang.Integer."
+        errorType                             | setter                                                           | typeDescription
+        "wrong type, dsl"                     | "prop = true"                                                    | "using an instance of type java.lang.Boolean."
+        "wrong type, api"                     | "prop.set(true)"                                                 | "using an instance of type java.lang.Boolean."
+        "wrong Property type, dsl"            | "prop = objectFactory.property(Integer)"                         | "using a provider of type java.lang.Integer."
+        "wrong Property type, api"            | "prop.set(objectFactory.property(Integer))"                      | "using a provider of type java.lang.Integer."
+        "wrong runtime type"                  | "prop = providerFactory.provider { true }; prop.get()"           | "as the provider associated with this property returned a value of type java.lang.Boolean."
+        "wrong convention value type"         | "prop.convention(true)"                                          | "using an instance of type java.lang.Boolean."
+        "wrong convention Property type"      | "prop.convention(objectFactory.property(Integer))"               | "using a provider of type java.lang.Integer."
+        "wrong convention runtime value type" | "prop.convention(providerFactory.provider { true }); prop.get()" | "as the provider associated with this property returned a value of type java.lang.Boolean."
     }
 
     def "fails when specialized factory method is not used"() {

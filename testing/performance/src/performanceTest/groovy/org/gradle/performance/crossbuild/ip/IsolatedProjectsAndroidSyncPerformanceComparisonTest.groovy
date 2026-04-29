@@ -34,6 +34,11 @@ class IsolatedProjectsAndroidSyncPerformanceComparisonTest extends AbstractCross
 
     private static int maxWorkers = 8
 
+    // Invoked from feature methods rather than Spock's setup() because
+    // :performance:writeTmpPerformanceScenarioDefinitions (run by sanityCheck)
+    // executes setup() for every feature even though the bodies are skipped.
+    // configureStudio() requires ANDROID_SDK_ROOT, which would then break
+    // sanityCheck on machines without that variable set.
     private void studioSetup() {
         // NOTE: see the javadoc for required environment and possible configuration
         AndroidSyncPerformanceTestFixture.configureStudio(runner)

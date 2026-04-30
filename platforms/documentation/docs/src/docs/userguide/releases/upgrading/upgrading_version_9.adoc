@@ -210,6 +210,41 @@ Problem severity can no longer be set explicitly when creating a new instance.
 Instead, it is determined by the reporting method: `ProblemReporter.report()` produces warnings and `ProblemReporter.throwing()` produces errors.
 Calling `.severity()` on `ProblemSpec` is now a no-op and will be removed in Gradle 10.0.
 
+[[task_in_task_dependency_closure]]
+==== Accessing Task in `dependsOn` Closure
+
+Accessing a task provided to closures passed to the link:{javadocPath}/org/gradle/api/Task.html#dependsOn(java.lang.Object...)[`Task.dependsOn`] method has been deprecated.
+Starting in Gradle 10, Gradle will no longer provide the `Task` as an argument to closures passed to the `Task.dependsOn` method.
+
+The following code will not be permitted starting in Gradle 10:
+
+[source,groovy]
+----
+def foo = tasks.register("foo")
+
+// The below usages of dependsOn access the Task object provided as a parameter.
+// This is deprecated behavior.
+tasks.register("bar") {
+    dependsOn { task ->
+        task.getName()
+        foo
+    }
+}
+tasks.register("baz") {
+    dependsOn {
+        it.getName()
+        foo
+    }
+}
+
+// Build logic may continue to pass closures to dependsOn without accessing the provided Task.
+tasks.register("okay") {
+    dependsOn {
+        foo
+    }
+}
+----
+
 [[deprecated_get_properties]]
 ==== Deprecation of `getProperties()`
 

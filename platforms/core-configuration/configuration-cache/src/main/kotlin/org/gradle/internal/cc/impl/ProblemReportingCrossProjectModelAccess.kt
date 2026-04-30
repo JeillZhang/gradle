@@ -42,6 +42,7 @@ import org.gradle.api.internal.project.MutableStateAccessAwareProject
 import org.gradle.api.internal.project.ProjectIdentifier
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.internal.project.ProjectRegistry
+import org.gradle.api.internal.project.ProjectState
 import org.gradle.api.internal.tasks.TaskDependencyFactory
 import org.gradle.api.internal.tasks.TaskDependencyUsageTracker
 import org.gradle.api.logging.Logger
@@ -101,7 +102,15 @@ class ProblemReportingCrossProjectModelAccess(
     }
 
     override fun access(referrer: ProjectInternal, project: ProjectInternal): ProjectInternal {
+        // We purposefully leak mutable state here, as we wrap all mutable access with immediate failures in the case of cross-project access,
+        // so there's no risk of race conditions.
         return project.wrap(referrer, CrossProjectModelAccessInstance(DIRECT, project), instantiator)
+    }
+
+    override fun accessFromState(referrer: ProjectInternal, projectState: ProjectState): ProjectInternal {
+        return projectState.fromMutableState { project ->
+            access(referrer, project)
+        }
     }
 
     override fun getChildProjects(referrer: ProjectInternal, target: ProjectInternal): MutableMap<String, Project> {

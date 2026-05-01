@@ -512,6 +512,22 @@ Since AGP 8.x relied on these internal classes directly, it is no longer compati
 
 To resolve this, upgrade to AGP 9.x, which only uses the public Gradle API and fully supports Gradle 9.6.
 
+[[v9_upgrade_to_pmd_7_24_0]]
+==== Upgrade to PMD 7.24.0
+
+The default version of PMD has been updated from 7.13.0 to link:https://github.com/pmd/pmd/releases/tag/pmd_releases%2F7.24.0[7.24.0].
+
+[[v9_upgrade_to_codenarc_3_7_0]]
+==== Upgrade to CodeNarc 3.7.0
+
+The default version of CodeNarc has been updated from 3.6.0 to link:https://github.com/CodeNarc/CodeNarc/blob/v3.7.0/CHANGELOG.md[3.7.0].
+
+[[v9_upgrade_to_ant_1_10_17]]
+==== Upgrade to Ant 1.10.17
+
+Ant has been updated to link:https://github.com/apache/ant/blob/rel/1.10.17/WHATSNEW[1.10.17].
+Since the previous version was 1.10.15, the link:https://github.com/apache/ant/blob/rel/1.10.16/WHATSNEW[1.10.16] changes are also included.
+
 [[changes_9.5.0]]
 == Upgrading from 9.4.0 and earlier
 

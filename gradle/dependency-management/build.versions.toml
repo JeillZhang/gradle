@@ -15,12 +15,12 @@ objenesis = "2.6"
 spock = "2.4-groovy-4.0"
 
 [libraries]
-ant = { module = "org.apache.ant:ant", version = "1.10.15" } # Bump the version brought in transitively by gradle-guides-plugin
+ant = { module = "org.apache.ant:ant", version = "1.10.17" } # Bump the version brought in transitively by gradle-guides-plugin
 asciidoctor = { module = "org.asciidoctor:asciidoctorj", version.ref = "asciidoctor" }
 asciidoctorApi = { module = "org.asciidoctor:asciidoctorj-api", version.ref = "asciidoctor" }
 asciidoctorJvm = { module = "org.asciidoctor:asciidoctor-gradle-jvm", version = "4.0.2" }
 bytebuddy = { group = "net.bytebuddy", name = "byte-buddy", version.ref = "bytebuddy" }
-codenarc = { module = "org.codenarc:CodeNarc", version = "3.6.0-groovy-4.0" }
+codenarc = { module = "org.codenarc:CodeNarc", version = "3.7.0-groovy-4.0" }
 commonsIo = { module = "commons-io:commons-io", version = "2.14.0" }
 commonsLang3 = { module = "org.apache.commons:commons-lang3", version = "3.20.0" }
 dependencyAnalysisPlugin = { module = "com.autonomousapps:dependency-analysis-gradle-plugin", version = "3.4.0" }

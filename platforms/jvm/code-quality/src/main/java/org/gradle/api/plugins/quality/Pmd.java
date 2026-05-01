@@ -193,7 +193,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     }
 
     /**
-     * The built-in rule sets to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_rules_java.html">official list</a> of built-in rule sets.
+     * The built-in rule sets to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_rules_java.html">official list</a> of built-in rule sets.
      *
      * <pre>
      *     ruleSets = ["basic", "braces"]
@@ -206,7 +206,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     }
 
     /**
-     * The built-in rule sets to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_rules_java.html">official list</a> of built-in rule sets.
+     * The built-in rule sets to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_rules_java.html">official list</a> of built-in rule sets.
      *
      * <pre>
      *     ruleSets = ["basic", "braces"]
@@ -235,7 +235,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     /**
      * The custom rule set to be used (if any). Replaces {@code ruleSetFiles}, except that it does not currently support multiple rule sets.
      *
-     * See the <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set.
+     * See the <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set.
      *
      * <pre>
      *     ruleSetConfig = resources.text.fromFile(resources.file("config/pmd/myRuleSets.xml"))
@@ -253,7 +253,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     /**
      * The custom rule set to be used (if any). Replaces {@code ruleSetFiles}, except that it does not currently support multiple rule sets.
      *
-     * See the <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set.
+     * See the <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set.
      *
      * <pre>
      *     ruleSetConfig = resources.text.fromFile(resources.file("config/pmd/myRuleSets.xml"))
@@ -266,7 +266,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     }
 
     /**
-     * The custom rule set files to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set file.
+     * The custom rule set files to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set file.
      * If you want to only use custom rule sets, you must clear {@code ruleSets}.
      *
      * <pre>
@@ -281,7 +281,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     }
 
     /**
-     * The custom rule set files to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set file.
+     * The custom rule set files to be used. See the <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_userdocs_making_rulesets.html">official documentation</a> for how to author a rule set file.
      * This adds to the default rule sets defined by {@link #getRuleSets()}.
      *
      * <pre>
@@ -375,7 +375,7 @@ public abstract class Pmd extends AbstractCodeQualityTask implements Reporting<P
     /**
      * Controls whether to use incremental analysis or not.
      *
-     * This is only supported for PMD 6.0.0 or better. See <a href="https://docs.pmd-code.org/pmd-doc-7.13.0/pmd_userdocs_incremental_analysis.html"></a> for more details.
+     * This is only supported for PMD 6.0.0 or better. See <a href="https://docs.pmd-code.org/pmd-doc-7.24.0/pmd_userdocs_incremental_analysis.html"></a> for more details.
      *
      * @since 5.6
      */

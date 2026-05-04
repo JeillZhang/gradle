@@ -42,6 +42,33 @@ The previous step will help you identify potential problems by issuing deprecati
 [[v9_deprecations_9_6]]
 === Deprecations
 
+[[deprecated_develocity_plugin_pre_4_0]]
+==== Develocity plugin versions before 4.0 are no longer supported in Gradle 10
+
+Gradle 10 requires Develocity plugin 4.0 or later.
+Earlier versions rely on Gradle's implicit parent-project property lookup, which will be removed in Gradle 10 and silently ignored if applied.
+
+Upgrade to the link:https://plugins.gradle.org/plugin/com.gradle.develocity[latest Develocity plugin] from the Gradle Plugin Portal.
+See the link:https://gradle.com/help/gradle-plugin-compatibility/[Develocity plugin compatibility matrix] for details.
+
+[[deprecated_pmd_target_jdk]]
+==== Deprecation of `targetJdk` on the PMD plugin
+
+The `targetJdk` property on link:{javadocPath}/org/gradle/api/plugins/quality/Pmd.html[`Pmd`] and link:{javadocPath}/org/gradle/api/plugins/quality/PmdExtension.html[`PmdExtension`], along with the link:{javadocPath}/org/gradle/api/plugins/quality/TargetJdk.html[`TargetJdk`] enum, are deprecated and will be removed in Gradle 10.
+
+This includes:
+
+- `Pmd.getTargetJdk()` / `Pmd.setTargetJdk(TargetJdk)`
+- `PmdExtension.getTargetJdk()` / `PmdExtension.setTargetJdk(TargetJdk)` / `PmdExtension.setTargetJdk(Object)`
+- The `TargetJdk` enum and its `toVersion(Object)` static method
+- `PmdPlugin.getDefaultTargetJdk(JavaVersion)`
+
+These were used by PMD versions older than 5.0 to select the target Java language level via Ant's `targetjdk` attribute.
+PMD 5.0 and later infer the language version from the configured rule sets, so this property has been a no-op for all supported PMD versions.  Gradle does not support PMD versions earlier than PMD 5.1.0.
+
+There is no replacement.
+Remove any `targetJdk` configuration from your build.
+
 [[deprecated_maven_artifact_urls]]
 ==== Deprecation of `artifactUrls` on Maven repositories
 

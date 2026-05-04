@@ -35,6 +35,7 @@
                   <project path="$PROJECT_DIR$/build-logic-commons" />
                   <project path="$PROJECT_DIR$/build-logic-commons/basics" />
                   <project path="$PROJECT_DIR$/build-logic-commons/build-platform" />
+                  <project path="$PROJECT_DIR$/build-logic-commons/build-platform-plugin" />
                   <project path="$PROJECT_DIR$/build-logic-commons/code-quality-rules" />
                   <project path="$PROJECT_DIR$/build-logic-commons/gradle-plugin" />
                   <project path="$PROJECT_DIR$/build-logic-commons/module-identity" />
@@ -62,6 +63,7 @@
             <option value="$PROJECT_DIR$/build-logic-commons" />
             <option value="$PROJECT_DIR$/build-logic-commons/basics" />
             <option value="$PROJECT_DIR$/build-logic-commons/build-platform" />
+            <option value="$PROJECT_DIR$/build-logic-commons/build-platform-plugin" />
             <option value="$PROJECT_DIR$/build-logic-commons/code-quality-rules" />
             <option value="$PROJECT_DIR$/build-logic-commons/gradle-plugin" />
             <option value="$PROJECT_DIR$/build-logic-commons/module-identity" />
@@ -153,6 +155,7 @@
             <option value="$PROJECT_DIR$/platforms/core-execution/hashing-services" />
             <option value="$PROJECT_DIR$/platforms/core-execution/normalization" />
             <option value="$PROJECT_DIR$/platforms/core-execution/normalization-api" />
+            <option value="$PROJECT_DIR$/platforms/core-execution/normalization-java" />
             <option value="$PROJECT_DIR$/platforms/core-execution/persistent-cache" />
             <option value="$PROJECT_DIR$/platforms/core-execution/request-handler-worker" />
             <option value="$PROJECT_DIR$/platforms/core-execution/scoped-persistent-cache" />
@@ -172,8 +175,8 @@
             <option value="$PROJECT_DIR$/platforms/core-runtime/build-process-services" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/build-profile" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/build-state" />
-            <option value="$PROJECT_DIR$/platforms/core-runtime/classpath" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/classloaders" />
+            <option value="$PROJECT_DIR$/platforms/core-runtime/classpath" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/cli" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/client-services" />
             <option value="$PROJECT_DIR$/platforms/core-runtime/collections" />
@@ -261,7 +264,6 @@
             <option value="$PROJECT_DIR$/platforms/jvm/language-groovy" />
             <option value="$PROJECT_DIR$/platforms/jvm/language-java" />
             <option value="$PROJECT_DIR$/platforms/jvm/language-jvm" />
-            <option value="$PROJECT_DIR$/platforms/jvm/normalization-java" />
             <option value="$PROJECT_DIR$/platforms/jvm/platform-jvm" />
             <option value="$PROJECT_DIR$/platforms/jvm/plugins-application" />
             <option value="$PROJECT_DIR$/platforms/jvm/plugins-groovy" />

@@ -1,7 +1,7 @@
 # some versions are in shared-versions.properties
 [versions]
 asciidoctor = "2.5.13"
-bytebuddy = "1.17.5"
+bytebuddy = "1.18.8"
 checkstyle = "10.25.0"
 develocity = "4.4.1"
 groovy = "4.0.31"
@@ -10,8 +10,8 @@ javaPoet = "1.13.0"
 javaparser = "3.18.0"
 junit = "6.0.3"
 log4j="2.25.3" # CVE-2025-68161 on lower versions
-mockitoKotlin = "4.1.0"
-objenesis = "2.6"
+mockitoKotlin = "6.3.0"
+objenesis = "3.5"
 spock = "2.4-groovy-4.0"
 
 [libraries]

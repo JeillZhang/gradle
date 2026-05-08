@@ -58,8 +58,10 @@ import org.gradle.internal.cc.impl.services.DefaultEnvironment
 import org.gradle.internal.cc.impl.services.RemoteScriptUpToDateChecker
 import org.gradle.internal.concurrent.ExecutorFactory
 import org.gradle.internal.configuration.problems.CommonReport
+import org.gradle.internal.configuration.problems.DefaultIsolatedProjectsProblemsReporter
 import org.gradle.internal.configuration.problems.DefaultProblemFactory
 import org.gradle.internal.configuration.problems.IsolatedProjectsProblemsReporter
+import org.gradle.internal.configuration.problems.NoOpIsolatedProjectsProblemsReporter
 import org.gradle.internal.configuration.problems.ProblemFactory
 import org.gradle.internal.configuration.problems.ProblemsListener
 import org.gradle.internal.nativeintegration.filesystem.FileSystem
@@ -96,6 +98,14 @@ object BuildTreeModelControllerServices : ServiceRegistrationProvider {
         add(InputTrackingState::class.java)
         add(InstrumentedExecutionAccessListener::class.java)
         add(ConfigurationCacheProblemsListener::class.java, DefaultConfigurationCacheProblemsListener::class.java)
+        if (modelParameters.isIsolatedProjects) {
+            add(IsolatedProjectsProblemsReporter::class.java, DefaultIsolatedProjectsProblemsReporter::class.java)
+        } else {
+            // Reporter is registered unconditionally so call sites in :core can invoke it without
+            // gating on BuildModelParameters.isIsolatedProjects(). Outside IP, the no-op variant
+            // discards problems and runs the action directly.
+            add(IsolatedProjectsProblemsReporter::class.java, NoOpIsolatedProjectsProblemsReporter::class.java)
+        }
         // TODO: do these services have to be registered in all modes?
         add(DefaultConfigurationCacheDegradationController::class.java)
         add(ConfigurationCacheFingerprintEventHandler::class.java)
@@ -112,6 +122,9 @@ object BuildTreeModelControllerServices : ServiceRegistrationProvider {
             else -> add(ProblemsListener::class.java, IgnoringProblemsListener)
         }
 
+        add(InstrumentedExecutionAccessListenerRegistry::class.java)
+        add(ExecutionAccessChecker::class.java, ConfigurationTimeBarrierBasedExecutionAccessChecker::class.java)
+
         if (modelParameters.isVintage) {
             // region ALL MODES
             add(Environment::class.java, DefaultEnvironment::class.java)
@@ -121,7 +134,6 @@ object BuildTreeModelControllerServices : ServiceRegistrationProvider {
             add(ProjectScopedScriptResolution::class.java, ProjectScopedScriptResolution.NO_OP)
             add(ConfigurationCacheInputsListener::class.java, PromoInputsListener::class.java)
             add(BuildTreeModelSideEffectExecutor::class.java, DefaultBuildTreeModelSideEffectExecutor::class.java)
-            add(ExecutionAccessChecker::class.java, DefaultExecutionAccessChecker::class.java)
             // endregion
 
             // region VT-only
@@ -140,7 +152,6 @@ object BuildTreeModelControllerServices : ServiceRegistrationProvider {
                 ConfigurationCacheBuildTreeModelSideEffectExecutor::class.java,
                 ConfigurationCacheBuildTreeModelSideEffectExecutor::class.java
             )
-            add(ExecutionAccessChecker::class.java, ConfigurationTimeBarrierBasedExecutionAccessChecker::class.java)
             // endregion
 
             // region CC and IP
@@ -148,7 +159,6 @@ object BuildTreeModelControllerServices : ServiceRegistrationProvider {
             add(ConfigurationCacheKey::class.java)
             add(ConfigurationCacheClassLoaderScopeRegistryListener::class.java)
             add(BuildTreeConfigurationCache::class.java, DefaultConfigurationCache::class.java)
-            add(InstrumentedExecutionAccessListenerRegistry::class.java)
             add(DefaultDeferredRootBuildGradle::class.java)
             add(
                 ConfigurationCacheInputFileChecker.Host::class.java,
@@ -157,7 +167,6 @@ object BuildTreeModelControllerServices : ServiceRegistrationProvider {
 
             if (modelParameters.isIsolatedProjects) {
                 add(ClassLoaderScopesFingerprintController::class.java, IsolatedProjectsClassLoaderScopesFingerprintController::class.java)
-                add(IsolatedProjectsProblemsReporter::class.java)
             } else {
                 add(ClassLoaderScopesFingerprintController::class.java, ConfigurationCacheClassLoaderScopesFingerprintController::class.java)
             }

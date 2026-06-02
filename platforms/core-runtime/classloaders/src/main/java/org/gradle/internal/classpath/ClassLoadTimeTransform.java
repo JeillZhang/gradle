@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 the original author or authors.
+ * Copyright 2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package org.gradle.internal.enterprise
+package org.gradle.internal.classpath;
 
-class DevelocityPluginUnsafeConfigurationServiceIntegrationTest extends AbstractDevelocityInputIgnoringServiceIntegrationTest {
-    @Override
-    String runIgnoringInputs(String code) {
-        """
-            def unsafeService = (${plugin.serviceOfGradleEnterprisePluginServiceRef()}.get()._requiredServices.unsafeConfigurationService)
-            unsafeService.withConfigurationInputTrackingDisabled {
-                $code
-            }
-        """
-    }
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+import java.security.ProtectionDomain;
+
+/**
+ * Transforms a single class's bytecode at class-load time, layering on top of bytes
+ * produced by any earlier Java agent's {@code ClassFileTransformer}.
+ */
+@NullMarked
+public interface ClassLoadTimeTransform {
+
+    byte[] transform(@Nullable ProtectionDomain protectionDomain, String className, byte[] classfileBuffer);
 }

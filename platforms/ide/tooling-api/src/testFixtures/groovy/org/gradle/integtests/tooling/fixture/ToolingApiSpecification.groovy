@@ -548,6 +548,20 @@ abstract class ToolingApiSpecification extends Specification implements CommonTe
         GradleVersion.version(targetDist.version.baseVersion.version)
     }
 
+    /**
+     * Collects the message of the given throwable and of every cause in its cause chain.
+     */
+    protected static List<String> collectCauseMessages(Throwable throwable) {
+        def messages = []
+        Throwable current = throwable
+        int depth = 0
+        while (current != null && depth++ < 50) {
+            messages << current.message
+            current = current.cause
+        }
+        return messages
+    }
+
     protected static String mavenCentralRepository() {
         RepoScriptBlockUtil.mavenCentralRepository()
     }

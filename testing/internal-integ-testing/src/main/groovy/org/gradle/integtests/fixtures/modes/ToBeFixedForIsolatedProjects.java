@@ -23,54 +23,28 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Assert that this test fails when run with Isolated Projects enabled.
- * <p>
- * In case the {@link #skip()} reason is anything but {@link Skip#DO_NOT_SKIP DO_NOT_SKIP}, the test will be skipped.
- */
+/// Under Isolated Projects, expect this test (or all tests in this spec) to fail.
+/// The specific failure is not asserted; an unexpected success fails the test.
+///
+/// Set [#skipBecause()] to skip instead of expecting failure (e.g. flaky, hangs).
+/// Use [UnsupportedWithIsolatedProjects] when the feature is not meant to be supported.
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
-@ExtensionAnnotation(ToBeFixedForIsolatedProjectsExtension.class)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@ExtensionAnnotation(GradleModeTestingExtension.ToBeFixedForIP.class)
 public @interface ToBeFixedForIsolatedProjects {
 
-    /**
-     * Set to some {@link Skip} to skip the annotated test.
-     */
-    Skip skip() default Skip.DO_NOT_SKIP;
-
+    /// Why this test is expected to fail under Isolated Projects.
     String because() default "";
 
-    /**
-     * Link to the issue tracking the incompatibility addressed by this annotation.
-     * Distinct from {@code @spock.lang.Issue}, which links the test itself to its tracking issue.
-     */
+    /// Non-empty reason to skip instead of expecting failure.
+    String skipBecause() default "";
+
+    /// Link to the issue tracking the incompatibility. Distinct from `@spock.lang.Issue`.
     String issue() default "";
 
-    /**
-     * Reason for skipping a test with isolated projects.
-     */
-    enum Skip {
+    /// Limit to specific leaf specs by simple class name. Empty means all subclasses.
+    String[] bottomSpecs() default {};
 
-        /**
-         * Do not skip this test, this is the default.
-         */
-        DO_NOT_SKIP {
-            @Override
-            public String getReason() {
-                throw new UnsupportedOperationException("Must not be skipped");
-            }
-        },
-
-        /**
-         * Use this reason on tests that intermittently fail with isolated projects.
-         */
-        FLAKY {
-            @Override
-            public String getReason() {
-                return "flaky";
-            }
-        };
-
-        public abstract String getReason();
-    }
+    /// Regexes matched against parameterized iteration display names. Empty means all iterations.
+    String[] iterationMatchers() default {};
 }

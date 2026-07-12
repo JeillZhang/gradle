@@ -64,7 +64,6 @@ import org.gradle.api.internal.project.DefaultProjectTaskLister;
 import org.gradle.api.internal.project.HoldsProjectState;
 import org.gradle.api.internal.project.IProjectFactory;
 import org.gradle.api.internal.project.ProjectFactory;
-import org.gradle.api.internal.project.ProjectRegistry;
 import org.gradle.api.internal.project.ProjectStateRegistry;
 import org.gradle.api.internal.project.ProjectTaskLister;
 import org.gradle.api.internal.project.taskfactory.AnnotationProcessingTaskFactory;
@@ -180,6 +179,7 @@ import org.gradle.initialization.TaskExecutionPreparer;
 import org.gradle.initialization.buildsrc.BuildSourceBuilder;
 import org.gradle.initialization.buildsrc.BuildSrcBuildListenerFactory;
 import org.gradle.initialization.buildsrc.BuildSrcProjectConfigurationAction;
+import org.gradle.initialization.internal.settings.StartParameterMutationReportingSettingsProcessor;
 import org.gradle.initialization.layout.BuildLayout;
 import org.gradle.initialization.layout.BuildLayoutFactory;
 import org.gradle.initialization.layout.ResolvedBuildLayout;
@@ -189,6 +189,7 @@ import org.gradle.internal.build.BuildIncluder;
 import org.gradle.internal.build.BuildLifecycleController;
 import org.gradle.internal.build.BuildLifecycleControllerFactory;
 import org.gradle.internal.build.BuildOperationFiringBuildWorkPreparer;
+import org.gradle.internal.build.BuildProjectRegistry;
 import org.gradle.internal.build.BuildState;
 import org.gradle.internal.build.BuildStateRegistry;
 import org.gradle.internal.build.BuildWorkGraphController;
@@ -324,6 +325,11 @@ public class BuildScopeServices implements ServiceRegistrationProvider {
     }
 
     @Provides
+    BuildProjectRegistry createBuildProjectRegistry() {
+        return buildState.getProjects();
+    }
+
+    @Provides
     OrdinalGroupFactory createOrdinalGroupFactory() {
         return new OrdinalGroupFactory();
     }
@@ -397,9 +403,9 @@ public class BuildScopeServices implements ServiceRegistrationProvider {
 
     @SuppressWarnings("deprecation")
     @UsedByScanPlugin("ImportJUnitXmlReports")
-    @Provides({ProjectRegistry.class, org.gradle.api.internal.project.DefaultProjectRegistry.class})
-    protected org.gradle.api.internal.project.DefaultProjectRegistry createProjectRegistry() {
-        return new org.gradle.api.internal.project.DefaultProjectRegistry();
+    @Provides({org.gradle.api.internal.project.ProjectRegistry.class, org.gradle.api.internal.project.DefaultProjectRegistry.class})
+    protected org.gradle.api.internal.project.DefaultProjectRegistry createProjectRegistry(BuildProjectRegistry delegate) {
+        return new org.gradle.api.internal.project.DefaultProjectRegistry(delegate);
     }
 
     @Provides
@@ -626,25 +632,29 @@ public class BuildScopeServices implements ServiceRegistrationProvider {
         GradleProperties gradleProperties,
         BuildOperationRunner buildOperationRunner,
         TextFileResourceLoader textFileResourceLoader,
-        BuildIncludeListener buildIncludeListener
+        BuildIncludeListener buildIncludeListener,
+        IsolatedProjectsProblemsReporter isolatedProjectsProblemsReporter,
+        BuildModelParameters buildModelParameters
     ) {
+        SettingsProcessor settingsProcessor = new SettingsEvaluatedCallbackFiringSettingsProcessor(
+            new ScriptEvaluatingSettingsProcessor(
+                scriptPluginFactory,
+                new SettingsFactory(
+                    instantiator,
+                    buildScopeServices,
+                    scriptHandlerFactory
+                ),
+                gradleProperties,
+                textFileResourceLoader,
+                buildIncludeListener
+            )
+        );
+        if (buildModelParameters.isIsolatedProjects()) {
+            settingsProcessor = new StartParameterMutationReportingSettingsProcessor(settingsProcessor, isolatedProjectsProblemsReporter);
+        }
         return new BuildOperationSettingsProcessor(
             new RootBuildCacheControllerSettingsProcessor(
-                new SharedModelDefaultsSettingsProcessor(
-                    new SettingsEvaluatedCallbackFiringSettingsProcessor(
-                        new ScriptEvaluatingSettingsProcessor(
-                            scriptPluginFactory,
-                            new SettingsFactory(
-                                instantiator,
-                                buildScopeServices,
-                                scriptHandlerFactory
-                            ),
-                            gradleProperties,
-                            textFileResourceLoader,
-                            buildIncludeListener
-                        )
-                    )
-                )
+                new SharedModelDefaultsSettingsProcessor(settingsProcessor)
             ),
             buildOperationRunner
         );

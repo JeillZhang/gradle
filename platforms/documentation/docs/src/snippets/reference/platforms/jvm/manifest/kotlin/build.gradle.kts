@@ -14,6 +14,16 @@ tasks.jar {
 }
 // end::add-to-manifest[]
 
+// tag::provider-manifest[]
+val buildNumber = providers.gradleProperty("buildNumber").orElse("0")
+
+tasks.jar {
+    manifest {
+        attributes("Build-Number" to buildNumber)
+    }
+}
+// end::provider-manifest[]
+
 // tag::custom-manifest[]
 val sharedManifest = java.manifest {
     attributes (

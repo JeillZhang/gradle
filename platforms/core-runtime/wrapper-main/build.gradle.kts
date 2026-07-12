@@ -42,7 +42,6 @@ dependencies {
     integTestImplementation(projects.coreApi)
     integTestImplementation(libs.commonsIo)
     integTestImplementation(testLibs.littleproxy)
-    integTestImplementation(testLibs.jetty)
     integTestImplementation(testFixtures(projects.buildProcessServices))
 
     integTestNormalizedDistribution(projects.distributionsFull)
@@ -144,6 +143,4 @@ tasks.jar {
     }
 }
 
-tasks.isolatedProjectsIntegTest {
-    enabled = false
-}
+

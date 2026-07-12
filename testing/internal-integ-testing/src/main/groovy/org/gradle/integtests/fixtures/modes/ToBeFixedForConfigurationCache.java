@@ -23,81 +23,28 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
-/**
- * Expect the test to fail or skip it when running with Configuration Cache executor.
- * <p>
- * Use this annotation when the intention is to fix either the test itself or the underlying feature,
- * making it compatible with Configuration Cache. If the intention is to not support the tested feature
- * with Configuration Cache, use {@link UnsupportedWithConfigurationCache} instead.
- * <p>
- * The expectation of failure essentially flips the test result.
- * A specific failure is not verified, and we only confirm that the test is not passing.
- * <p>
- * Instead of expecting failure, you can skip the test in case the test doesn't fail consistently
- * or has other undesirable effects, such as timeouts.
- * Set {@link #skip()} into any other value apart from {@link Skip#DO_NOT_SKIP DO_NOT_SKIP} to skip the test.
- */
+/// Under Configuration Cache, expect this test (or all tests in this spec) to fail.
+/// The specific failure is not asserted; an unexpected success fails the test.
+///
+/// Set [#skipBecause()] to skip instead of expecting failure (e.g. flaky, hangs).
+/// Use [UnsupportedWithConfigurationCache] when the feature is not meant to be supported.
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@ExtensionAnnotation(ToBeFixedForConfigurationCacheExtension.class)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@ExtensionAnnotation(GradleModeTestingExtension.ToBeFixedForCC.class)
 public @interface ToBeFixedForConfigurationCache {
 
-    /**
-     * Set to some {@link Skip} to skip the annotated test.
-     */
-    Skip skip() default Skip.DO_NOT_SKIP;
-
+    /// Why this test is expected to fail under Configuration Cache.
     String because() default "";
 
-    /**
-     * Link to the issue tracking the incompatibility addressed by this annotation.
-     * Distinct from {@code @spock.lang.Issue}, which links the test itself to its tracking issue.
-     */
+    /// Non-empty reason to skip instead of expecting failure.
+    String skipBecause() default "";
+
+    /// Link to the issue tracking the incompatibility. Distinct from `@spock.lang.Issue`.
     String issue() default "";
 
-    /**
-     * Declare to which bottom spec this annotation should be applied.
-     * Defaults to an empty array, meaning this annotation applies to all bottom specs.
-     */
+    /// Limit to specific leaf specs by simple class name. Empty means all subclasses.
     String[] bottomSpecs() default {};
 
-    /**
-     * Declare regular expressions matching the iteration name.
-     * Defaults to an empty array, meaning this annotation applies to all iterations of the annotated feature.
-     */
+    /// Regexes matched against parameterized iteration display names. Empty means all iterations.
     String[] iterationMatchers() default {};
-
-    /**
-     * Reason for skipping a test with configuration cache.
-     */
-    enum Skip {
-
-        /**
-         * Do not skip this test, this is the default.
-         */
-        DO_NOT_SKIP,
-
-        /**
-         * Use this reason on unrolled tests in super classes that fail on some subclasses.
-         * Spock doesn't allow to override test methods and annotate them.
-         */
-        UNROLLED_FAILS_IN_SUBCLASS,
-
-        /**
-         * Use this reason on tests that intermittently fail with configuration cache.
-         */
-        FLAKY,
-
-        /**
-         * Use this reason on tests that take a long time to fail, slowing down the CI feedback.
-         * Use sparingly, only in dramatic cases.
-         */
-        LONG_TIMEOUT,
-
-        /**
-         * This test has been seen failing, but we did not have time to investigate the reason yet.
-         */
-        INVESTIGATE
-    }
 }

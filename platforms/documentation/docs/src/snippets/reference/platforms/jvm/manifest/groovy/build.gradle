@@ -12,6 +12,16 @@ jar {
 }
 // end::add-to-manifest[]
 
+// tag::provider-manifest[]
+def buildNumber = providers.gradleProperty('buildNumber').orElse('0')
+
+jar {
+    manifest {
+        attributes('Build-Number': buildNumber)
+    }
+}
+// end::provider-manifest[]
+
 // tag::custom-manifest[]
 def sharedManifest = java.manifest {
     attributes("Implementation-Title": "Gradle",

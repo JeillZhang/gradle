@@ -26,6 +26,7 @@ import org.gradle.api.internal.initialization.ScriptHandlerFactory
 import org.gradle.api.internal.initialization.ScriptHandlerInternal
 import org.gradle.api.internal.initialization.StandaloneDomainObjectContext
 import org.gradle.api.internal.project.ProjectInternal
+import org.gradle.api.internal.project.ProjectOrderingUtil
 import org.gradle.api.invocation.Gradle
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
@@ -100,7 +101,7 @@ object KotlinBuildScriptModelBuilder : ToolingModelBuilder {
             ?: return projectScriptModelBuilder(null, modelRequestProject)
 
         modelRequestProject.findProjectWithBuildFile(scriptFile)?.let { buildFileProject ->
-            return projectScriptModelBuilder(scriptFile, buildFileProject as ProjectInternal)
+            return projectScriptModelBuilder(scriptFile, buildFileProject)
         }
 
         modelRequestProject.enclosingSourceSetOf(scriptFile)?.let { enclosingSourceSet ->
@@ -140,14 +141,17 @@ fun log(message: String) {
 
 
 private
-fun Project.findProjectWithBuildFile(file: File) =
-    allprojects.find { it.buildFile == file }
+fun ProjectInternal.findProjectWithBuildFile(file: File) =
+    ProjectOrderingUtil.orderedAllProjectsOf(owner)
+        .asSequence()
+        .map { it.mutableModelEvenAfterFailure }
+        .find { it.buildFile == file }
 
 
 private
-fun Project.enclosingSourceSetOf(file: File): EnclosingSourceSet? =
+fun ProjectInternal.enclosingSourceSetOf(file: File): EnclosingSourceSet? =
     findSourceSetOf(file)
-        ?: findSourceSetOfFileIn(subprojects, file)
+        ?: findSourceSetOfFileInSubprojects(file)
 
 
 private
@@ -155,10 +159,10 @@ data class EnclosingSourceSet(val project: Project, val sourceSet: SourceSet)
 
 
 private
-fun findSourceSetOfFileIn(projects: Iterable<Project>, file: File): EnclosingSourceSet? =
-    projects
+fun ProjectInternal.findSourceSetOfFileInSubprojects(file: File): EnclosingSourceSet? =
+    ProjectOrderingUtil.orderedSubprojectsOf(owner)
         .asSequence()
-        .mapNotNull { it.findSourceSetOf(file) }
+        .mapNotNull { it.mutableModelEvenAfterFailure.findSourceSetOf(file) }
         .firstOrNull()
 
 
@@ -481,7 +485,7 @@ val Project.hierarchy: Sequence<Project>
     }
 
 
-private
+internal
 val Project.isLocationAwareEditorHintsEnabled: Boolean
     get() = findProperty(EditorReports.locationAwareEditorHintsPropertyName) == "true"
 
